@@ -7,5 +7,6 @@ Ovo je README novog **Raspored Bota 3.0.0** koji je još u izradi, stoga će bit
 //Upute za rasporedScraper1
 
 Da se kreira projekt "npm init -y"
+
 Instalacija librariya "npm install puppeteer"
 
