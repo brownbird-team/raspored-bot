@@ -1,0 +1,23 @@
+{
+  "name": "raspored-bot",
+  "version": "3.0.0",
+  "description": "Raspored Bot prati promjene u dnevnim izmjenama rasporeda sati, na stranicama TSRB-a.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brownbird-team/raspored-bot.git"
+  },
+  "keywords": [],
+  "author": "BrownBird Team",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/brownbird-team/raspored-bot/issues"
+  },
+  "homepage": "https://github.com/brownbird-team/raspored-bot#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0"
+  }
+}
