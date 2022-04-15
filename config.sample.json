@@ -1,3 +1,9 @@
 {
-    "discordBotToken": ""
+    "database": {
+        "host": "",
+        "port": "",
+        "name": "",
+        "user": "",
+        "pass": ""
+    }
 }

@@ -19,6 +19,7 @@
   "homepage": "https://github.com/brownbird-team/raspored-bot#readme",
   "dependencies": {
     "discord.js": "^13.6.0",
-    "puppeteer": "^13.5.2"
+    "puppeteer": "^13.5.2",
+    "mysql": "^2.18.1"
   }
 }
