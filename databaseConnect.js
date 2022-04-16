@@ -193,7 +193,7 @@ pool.getConnection((err, con) => {
                     FOREIGN KEY(razred_id) REFERENCES general_razred(id),
                     FOREIGN KEY(zadnja_poslana) REFERENCES izmjene_razred(id)
                 )
-            `, (err) => { if (err) throw err});
+            `, throwError);
         }
         // Kreiraj tablice skupine mail ako ne postoje
         if (!tables.includes("mail_settings")) {
