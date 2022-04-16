@@ -50,24 +50,24 @@ con.connect((err) => {
                 )
             `);
         }
+        if (!tables.includes("izmjene_settings")) {
+            con.query(`
+                CREATE TABLE izmjene_settings (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    option CHAR(30) NOT NULL,
+                    value TEXT
+                )
+            `);
+        }
         // Kreiraj tablice skupine izmjene ako ne postoje
         if(!tables.includes("izmjene_tablica")) {
             con.query(`
                 CREATE TABLE izmjene_tablica (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    datum DATETIME NOT NULL,
                     naslov TEXT,
                     smjena CHAR(1) NOT NULL,
                     prijepodne BOOL NOT NULL,
                     INDEX (id)
-                )
-            `);
-        }
-        if (!tables.includes("izmjene_aktivne")) {
-            con.query(`
-                CREATE TABLE izmjene_aktivne (
-                    tablica_id INT PRIMARY KEY,
-                    FOREIGN KEY(tablica_id) REFERENCES izmjene_tablica(id)
                 )
             `);
         }
@@ -77,6 +77,7 @@ con.connect((err) => {
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     razred_id INT NOT NULL,
                     tablica_id INT NOT NULL,
+                    datum DATETIME NOT NULL,
                     1sat CHAR(50),
                     2sat CHAR(50),
                     3sat CHAR(50),
