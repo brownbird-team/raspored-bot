@@ -74,7 +74,6 @@ let css = `
         }
         </style>`
 
-let test;
 /*let htmlMessage = `
     <style>
         * {
