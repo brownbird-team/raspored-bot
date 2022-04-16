@@ -34,48 +34,49 @@ con.connect((err) => {
             console.log("Kreiram tablicu general_razred");
             con.query(`
                 CREATE TABLE general_razred (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    id INT AUTO_INCREMENT PRIMARY KEY,
                     ime CHAR(10) NOT NULL,
-                    smjena CHAR(1) NOT NULL
+                    smjena CHAR(1) NOT NULL,
+                    aktivan BOOL DEFAULT true
                 )
             `);
         }
         if (!tables.includes("general_settings")) {
             con.query(`
                 CREATE TABLE general_settings (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    id INT AUTO_INCREMENT PRIMARY KEY,
                     option CHAR(30) NOT NULL,
                     value TEXT
                 )
             `);
         }
         // Kreiraj tablice skupine izmjene ako ne postoje
-        if (!tables.includes("izmjene_smjena")) {
-            con.query(`
-                CREATE TABLE izmjene_smjena (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    smjena CHAR(1),
-                    primljena DATETIME
-                )
-            `);
-        }
         if(!tables.includes("izmjene_tablica")) {
             con.query(`
                 CREATE TABLE izmjene_tablica (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    smjena_id INT NOT NULL,
-                    redni_broj INT,
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    datum DATETIME NOT NULL,
                     naslov TEXT,
-                    prijepodne BOOL NOT NULL
+                    smjena CHAR(1) NOT NULL,
+                    prijepodne BOOL NOT NULL,
+                    INDEX (id)
+                )
+            `);
+        }
+        if (!tables.includes("izmjene_aktivne")) {
+            con.query(`
+                CREATE TABLE izmjene_aktivne (
+                    tablica_id INT PRIMARY KEY,
+                    FOREIGN KEY(tablica_id) REFERENCES izmjene_tablica(id)
                 )
             `);
         }
         if(!tables.includes("izmjene_razred")) {
             con.query(`
                 CREATE TABLE izmjene_razred (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    tablica_id INT NOT NULL,
+                    id INT AUTO_INCREMENT PRIMARY KEY,
                     razred_id INT NOT NULL,
+                    tablica_id INT NOT NULL,
                     1sat CHAR(50),
                     2sat CHAR(50),
                     3sat CHAR(50),
@@ -84,7 +85,10 @@ con.connect((err) => {
                     6sat CHAR(50),
                     7sat CHAR(50),
                     8sat CHAR(50),
-                    9sat CHAR(50)
+                    9sat CHAR(50),
+                    INDEX (id, razred_id, tablica_id),
+                    FOREIGN KEY(razred_id) REFERENCES general_razred(id),
+                    FOREIGN KEY(tablica_id) REFERENCES izmjene_tablica(id)
                 )
             `);
         }
@@ -92,7 +96,7 @@ con.connect((err) => {
         if (!tables.includes("wap_settings")) {
             con.query(`
                 CREATE TABLE wap_settings (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    id INT AUTO_INCREMENT PRIMARY KEY,
                     option CHAR(30) NOT NULL,
                     value TEXT
                 )
@@ -101,24 +105,30 @@ con.connect((err) => {
         if (!tables.includes("wap_kontakti")) {
             con.query(`
                 CREATE TABLE wap_kontakti (
-                    broj INT NOT NULL PRIMARY KEY,
+                    broj INT PRIMARY KEY,
                     razred_id INT,
                     prefix TEXT NOT NULL DEFAULT '.',
                     zadnja_poslana INT,
                     salji_izmjene BOOL NOT NULL DEFAULT false,
-                    salji_sve BOOL NOT NULL DEFAULT false
+                    salji_sve BOOL NOT NULL DEFAULT false,
+                    INDEX (broj),
+                    FOREIGN KEY(razred_id) REFERENCES general_razred(id),
+                    FOREIGN KEY(zadnja_poslana) REFERENCES izmjene_razred(id)
                 )
             `);
         }
         if (!tables.includes("wap_grupe")) {
             con.query(`
                 CREATE TABLE wap_grupe (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    id INT PRIMARY KEY,
                     razred_id INT,
                     prefix TEXT NOT NULL DEFAULT '.',
                     zadnja_poslana INT,
                     salji_izmjene BOOL NOT NULL DEFAULT false,
-                    salji_sve BOOL NOT NULL DEFAULT false
+                    salji_sve BOOL NOT NULL DEFAULT false,
+                    INDEX (id),
+                    FOREIGN KEY(razred_id) REFERENCES general_razred(id),
+                    FOREIGN KEY(zadnja_poslana) REFERENCES izmjene_razred(id)
                 )
             `);
         }
@@ -126,7 +136,7 @@ con.connect((err) => {
         if (!tables.includes("disc_settings")) {
             con.query(`
                 CREATE TABLE disc_settings (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    id INT AUTO_INCREMENT PRIMARY KEY,
                     option CHAR(30) NOT NULL,
                     value TEXT
                 )
@@ -135,20 +145,25 @@ con.connect((err) => {
         if (!tables.includes("disc_serveri")) {
             con.query(`
                 CREATE TABLE disc_serveri (
-                    server_id INT NOT NULL PRIMARY KEY,
-                    prefix TEXT NOT NULL DEFAULT '.'
+                    server_id INT PRIMARY KEY,
+                    prefix TEXT NOT NULL DEFAULT '.',
+                    INDEX (server_id)
                 )
             `);
         }
         if (!tables.includes("disc_kanali")) {
             con.query(`
                 CREATE TABLE disc_kanali (
-                    kanal_id INT NOT NULL PRIMARY KEY,
+                    kanal_id INT PRIMARY KEY,
                     server_id INT NOT NULL,
                     razred_id INT,
                     zadnja_poslana INT,
                     salji_izmjene BOOL NOT NULL DEFAULT false,
-                    salji_sve BOOL NOT NULL DEFAULT false
+                    salji_sve BOOL NOT NULL DEFAULT false,
+                    INDEX (kanal_id),
+                    FOREIGN KEY(server_id) REFERENCES disc_serveri(server_id),
+                    FOREIGN KEY(razred_id) REFERENCES general_razred(id),
+                    FOREIGN KEY(zadnja_poslana) REFERENCES izmjene_razred(id)
                 )
             `);
         }
@@ -156,7 +171,7 @@ con.connect((err) => {
         if (!tables.includes("mail_settings")) {
             con.query(`
                 CREATE TABLE mail_settings (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    id INT AUTO_INCREMENT PRIMARY KEY,
                     option CHAR(30) NOT NULL,
                     value TEXT
                 )
@@ -165,12 +180,15 @@ con.connect((err) => {
         if (!tables.includes("mail_korisnici")) {
             con.query(`
                 CREATE TABLE mail_korisnici (
-                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    id INT AUTO_INCREMENT PRIMARY KEY,
                     adresa char(100) NOT NULL,
                     razred_id INT,
                     unsubscribed BOOL NOT NULL DEFAULT false,
                     zadnja_poslana INT,
-                    salji_sve BOOL NOT NULL DEFAULT false
+                    salji_sve BOOL NOT NULL DEFAULT false,
+                    INDEX (adresa),
+                    FOREIGN KEY(razred_id) REFERENCES general_razred(id),
+                    FOREIGN KEY(zadnja_poslana) REFERENCES izmjene_razred(id)
                 )
             `);
         }
@@ -178,7 +196,7 @@ con.connect((err) => {
         if (!tables.includes("panel_admins")) {
             con.query(`
                 CREATE TABLE panel_admins (
-                    discord_user_id INT NOT NULL PRIMARY KEY
+                    discord_user_id INT PRIMARY KEY
                 )
             `);
         }
