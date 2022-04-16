@@ -1,32 +1,32 @@
 const puppeteer = require('puppeteer');
 const {query}=require('./../databaseConnect.js')
 async function scraper(raz){
-    let izmjena={
-        naslov:null,
-        smjena:null,
-        prijepode:null,
-        datum:null,
-        razred:null,
-        sat1:null,
-        sat2:null,
-        sat3:null,
-        sat4:null,
-        sat5:null,
-        sat6:null,
-        sat7:null,
-        sat8:null,
-        sat9:null,
-        iframe:null,
-    };
-    let izmjene_array=[];
+    
+    let izmjena=[];
     for(i=0;i<60;i++){
-        izmjene_array.push(izmjena);
+        izmjena[i]={
+            naslov:null,
+            smjena:null,
+            prijepode:null,
+            datum:null,
+            razred:null,
+            sat1:null,
+            sat2:null,
+            sat3:null,
+            sat4:null,
+            sat5:null,
+            sat6:null,
+            sat7:null,
+            sat8:null,
+            sat9:null,
+            iframe:null,
+        };
     }
     
     url='https://www.tsrb.hr/'+raz[0].smjena.toLowerCase()+'-smjena/';
     console.log(url);
     const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+    const page = await browser.newPage();   
     await page.goto(url, {
         waitUntil: 'networkidle2',
         timeout: 0,
@@ -35,11 +35,16 @@ async function scraper(raz){
     const src=await iframe.getProperty('src');
     const iframeTXT=await src.jsonValue();
     await page.goto(iframeTXT);
+    console.log(iframeTXT);
     const svi_spanovi= await page.$x('//*/div/table/tbody/tr/td');
     const col = await page.$x("//*/div/table/tbody/tr/td/@colspan");
-    for(j=0;j<raz.length;j){
-        for(k=0;k<60;k++){
+    
+    
+    let j=0;
+        for(k=0;k<60;k=k){
+            
             for(i=0;i<svi_spanovi.length;i++){
+                
                 const str_txt=await svi_spanovi[i].getProperty('textContent');
                 let str_rawTxt=await str_txt.jsonValue();
                 const col_txt=await col[i].getProperty('textContent');
@@ -48,24 +53,42 @@ async function scraper(raz){
         
         
                 if(str_rawTxt.startsWith('IZMJENE U RASPOREDU')){
-                    console.log(str_rawTxt);
-                    izmjene_array[k].naslov=str_rawTxt;
+                    
+                    izmjena[k].naslov=str_rawTxt;
+                    
                 }
-                if(str_rawTxt==raz[j]){
-                    console.log(str_rawTxt);
+                if(str_rawTxt==raz[j].ime){
+                    
+                    console.log(str_rawTxt,k);
+                    izmjena[k].razred=str_rawTxt;
+                    
                     var control=1;
                 }
                 else if(control < 10 && control > 0){
-                    for(j=0;j<col_rawTxt;j++){
-                    console.log(control,".sat =",str_rawTxt,"(",col_rawTxt,")");
+                    for(l=0;l<col_rawTxt;l++){
+                        
+                        izmjena[k][`sat${l+1}`] = str_rawTxt;
+                        
                     control++;
+                    if(control==10){
+                        
+                        k++;
+                        control=0;
+                       
+                    }
                     }
                 }
+                
             }
+            console.log(izmjena[0]);
+            j++;
+            
         }
-    }
-        return izmjene_array;
-    
+        
+       
+    console.log(izmjena[0])
+        
+    return izmjena;
 }
 async function sql(){
     let razredi_A;
@@ -77,7 +100,7 @@ async function sql(){
         query("SELECT * FROM general_razred WHERE smjena='B';",async function (err, razredi_B){
             console.log(razredi_A);
             izmjena=await scraper(razredi_A);
-            console.log(izmjena[1]);
+            console.log(izmjena);
         });
       });   
       
