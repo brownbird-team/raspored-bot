@@ -1,11 +1,7 @@
 // Dodavanje potrebnih libraryja
 var nodemailer = require('nodemailer');
-var mysql = require('mysql');
 
-// Importanje rasporedMessage.js
-const message = require('./rasporedMessage');
-
-function send_email(){
+function send_email(receiver, message){
     // povezivanje s posiljateljom
     var transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -17,9 +13,9 @@ function send_email(){
     // kreiranje e-mail poruke
     var mailOptions = {
       from: 'bot.raspored@gmail.com', // navesti posiljatelja
-      to: 'luka.dimjasevic@gmail.com', // navesti primatelja
+      to: receiver, // navesti primatelja
       subject: 'Izmjene u rasporedu sati', // dodati na kraju 'za <razred>'
-      html: message.htmlMessage
+      html: message
     };
   
     // slanje e-maila
@@ -31,6 +27,6 @@ function send_email(){
       }
     });
   }
-  
-  // pozivanje funkcije
-  send_email();
+
+// Eksportanje funkcije
+module.exports = { send_email }
