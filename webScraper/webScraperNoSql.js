@@ -30,12 +30,13 @@ async function raspored(url,raz){
     let svi_spanovi=[];
     let col=[];
     let naslovi=[];
-    let tablica={broj:0,redni_broj:[]};
-    let izmjena=[];
     //brojac za tablica.redni_broj
     let k=0;
-    let control=0;
 
+    let broj_tablica=0;
+    let result=[];
+    
+    
     for(index in svi_spanovi_scrape){
         const str_txt=await svi_spanovi_scrape[index].getProperty('textContent');
         svi_spanovi[index]=await str_txt.jsonValue();
@@ -50,36 +51,46 @@ async function raspored(url,raz){
     }
     for(index in naslovi){
         if(naslovi[index].startsWith('IZMJENE U RASPOREDU')){
-            tablica.redni_broj[tablica.broj]=naslovi[index];
-            tablica.broj++;
-            
+            broj_tablica++;
         }
     }
-    
-    for(i=0;i<tablica.broj;i++){
-        izmjena[i]={
-            naslov:null,
-            smjena:null,
-            prijepode:null,
-            datum:null,
-            razred:null,
-            sat1:null,
-            sat2:null,
-            sat3:null,
-            sat4:null,
-            sat5:null,
-            sat6:null,
-            sat7:null,
-            sat8:null,
-            sat9:null,
-        };
+    for(i=0;i<broj_tablica;i++){
+        console.log('asda');
+        result[i]={
+            izmjene_tablica:{naslov:null,smjena:null,prijepode:null},
+            izmjene_razred:[],
+        }
+        for(j=0;j<5;j++){
+            result[i].izmjene_razred[j]={
+                datum:null,
+                razred:null,
+                sat1:null,
+                sat2:null,
+                sat3:null,
+                sat4:null,
+                sat5:null,
+                sat6:null,
+                sat7:null,
+                sat8:null,
+                sat9:null,
+            }
+
+        }
+        
     }
+    broj_tablica=0;
+    for(index in naslovi){
+        if(naslovi[index].startsWith('IZMJENE U RASPOREDU')){
+            result[broj_tablica].naslov=naslovi[index];
+            broj_tablica++;
+        }
+
     for(index in svi_spanovi){
         if(svi_spanovi[index]=='PRIJE PODNE'){
-            izmjena[k].prijepode=1;
+            result[k%broj_tablica].izmjene_tablica.naslov=0;
         }
         if(svi_spanovi[index]=='POSLIJEPODNE'){
-            izmjena[k].prijepode=0;
+            result[k%broj_tablica].izmjene_tablica.naslov=0;
         }
         else if(svi_spanovi[index]==raz){
             izmjena[k].razred=svi_spanovi[index];
@@ -96,11 +107,14 @@ async function raspored(url,raz){
             }
         }
     }
+  
     console.log(izmjena);
-   /*for(i in svi_spanovi){
+    /*
+   for(i in svi_spanovi){
         console.log(svi_spanovi[i]);
     }
     */
+    console.log(result[2].izmjene_razred[4]);
     browser.close();
     
 }
