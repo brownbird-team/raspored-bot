@@ -31,24 +31,10 @@ async function raspored(url,raz){
     let col=[];
     let naslovi=[];
     let tablica={broj:0,redni_broj:[]};
-
-    izmjena={
-        naslov:null,
-        smjena:null,
-        prijepode:null,
-        datum:null,
-        razred:raz,
-        sat1:null,
-        sat2:null,
-        sat3:null,
-        sat4:null,
-        sat5:null,
-        sat6:null,
-        sat7:null,
-        sat8:null,
-        sat9:null,
-        iframe:null,
-    };
+    let izmjena=[];
+    //brojac za tablica.redni_broj
+    let k=0;
+    let control=0;
 
     for(index in svi_spanovi_scrape){
         const str_txt=await svi_spanovi_scrape[index].getProperty('textContent');
@@ -66,13 +52,56 @@ async function raspored(url,raz){
         if(naslovi[index].startsWith('IZMJENE U RASPOREDU')){
             tablica.redni_broj[tablica.broj]=naslovi[index];
             tablica.broj++;
-            console.log(naslovi[index]);
+            
         }
     }
-    console.log(tablica.broj);
-    for(i in tablica.redni_broj){
-        console.log(tablica.redni_broj[i]);
+    
+    for(i=0;i<tablica.broj;i++){
+        izmjena[i]={
+            naslov:null,
+            smjena:null,
+            prijepode:null,
+            datum:null,
+            razred:null,
+            sat1:null,
+            sat2:null,
+            sat3:null,
+            sat4:null,
+            sat5:null,
+            sat6:null,
+            sat7:null,
+            sat8:null,
+            sat9:null,
+        };
     }
+    for(index in svi_spanovi){
+        if(svi_spanovi[index]=='PRIJE PODNE'){
+            izmjena[k].prijepode=1;
+        }
+        if(svi_spanovi[index]=='POSLIJEPODNE'){
+            izmjena[k].prijepode=0;
+        }
+        else if(svi_spanovi[index]==raz){
+            izmjena[k].razred=svi_spanovi[index];
+            control=1;
+        }
+        else if(control < 10 && control > 0){
+            for(j=0;j<col[index];j++){
+                izmjena[k][`sat${control}`]=svi_spanovi[index];
+                control++
+                if(control==10){
+                    izmjena[k].naslov=tablica.redni_broj[k%tablica.broj];
+                    k++;
+                }
+            }
+        }
+    }
+    console.log(izmjena);
+   /*for(i in svi_spanovi){
+        console.log(svi_spanovi[i]);
+    }
+    */
     browser.close();
+    
 }
 raspored(url,raz);
