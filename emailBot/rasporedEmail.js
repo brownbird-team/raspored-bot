@@ -1,9 +1,9 @@
 // Dodavanje potrebnih libraryja
-var nodemailer = require('nodemailer');
+let nodemailer = require('nodemailer');
 
 function send_email(receiver, message){
     // povezivanje s posiljateljom
-    var transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: 'bot.raspored@gmail.com',
@@ -11,7 +11,7 @@ function send_email(receiver, message){
       }
     });
     // kreiranje e-mail poruke
-    var mailOptions = {
+    let mailOptions = {
       from: 'bot.raspored@gmail.com', // navesti posiljatelja
       to: receiver, // navesti primatelja
       subject: 'Izmjene u rasporedu sati', // dodati na kraju 'za <razred>'
