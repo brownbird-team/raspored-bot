@@ -2,7 +2,7 @@
 const puppeteer = require('puppeteer');
 
 //Definira url i razred
-let url='https://www.tsrb.hr/b-smjena/';
+let url='https://www.tsrb.hr/a-smjena/';
 let raz='3.D';
 
 //Funkcija
@@ -30,7 +30,7 @@ async function raspored(url,raz){
     let svi_spanovi=[];
     let col=[];
     let naslovi=[];
-    let broj_tablica=0;
+    let tablica={broj:0,redni_broj:[]};
 
     izmjena={
         naslov:null,
@@ -64,10 +64,15 @@ async function raspored(url,raz){
     }
     for(index in naslovi){
         if(naslovi[index].startsWith('IZMJENE U RASPOREDU')){
-            broj_tablica++;
+            tablica.redni_broj[tablica.broj]=naslovi[index];
+            tablica.broj++;
+            console.log(naslovi[index]);
         }
     }
-    console.log(broj_tablica);
+    console.log(tablica.broj);
+    for(i in tablica.redni_broj){
+        console.log(tablica.redni_broj[i]);
+    }
     browser.close();
 }
 raspored(url,raz);
