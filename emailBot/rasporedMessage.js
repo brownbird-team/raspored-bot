@@ -1,217 +1,63 @@
-let send = require("./rasporedEmail");
-let mysql = require("mysql");
+let rasporedEmail = require("./rasporedEmail");
 
 const {query} = require('./../databaseConnect.js');
 
-let css = `     
-        <style>
-        * {
-        padding: 0;
-        margin: 0;
-        }
-
-        html {
-        font-family: sans-serif, "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS";
-        font-weight: 400;
-        color: rgb(239, 255, 238);
-        padding-top: 50px;
-        }
-
-        table, tr, td, th {
-        border: 1px solid rgb(255, 255, 255);
-        border-collapse: collapse;
-        border-style: none;
-        padding: 5px;
-        }
-
-        td {
-        text-align: center;
-        color: rgb(73, 71, 71);
-        }
-
-        table {
-        width: 250px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-        }
-
-        table.center {
-        margin-left: auto;
-        margin-right: auto;
-        }
-
-        tr {
-        background-color: #EEEEEE;
-        border-bottom: thin solid #C3C3C3;
-        }
-
-        tr:first-child {
-        background-color: #009879;
-        border: none;
-        }
-
-        tr:last-child {
-        border: none;
-        }
-        </style>`
-
 // query za mail_korisnici
-mailKorisnici = `SELECT * FROM mail_korisnici`;
-query(mailKorisnici, function(error, result) {
+mailUsers = `SELECT * FROM mail_korisnici`;
+query(mailUsers, function(error, result) {
     if (error) throw error;
-    console.log("Duljina objekta: " + result.length);
 
-    for (let i = 0; i < result.length; i++) {
+    for (i in result) {
+        let j;
         let tableData = {};
-        let satiUjutro = {};
-        let satiPopodne = {};
+        let classSchedule = {};
         
         if (result[i].unsubscribed == 0) {  // provjera da li korisnik prima izmjene
             // korisnik prima izmjene
             if (result[i].salji_sve == 0) {
                 // korisnik ne zeli da mu dolaze sve izmjene
                 tableData.receiverEmail = result[i].adresa;
-                tableData.razredID = result[i].razred_id;
+                tableData.classID = result[i].razred_id;
 
-                // query za general_razred
-                generalRazred = `SELECT * FROM general_razred WHERE id = '${tableData.razredID}'`;
-                query(generalRazred, function(error, result){
+                // query za general_razred 
+                generalClass = `SELECT * FROM general_razred WHERE id = '${tableData.classID}'`;
+                query(generalClass, function(error, result){
                     if (error) throw error;
-
+                    
+                    tableData.className = result[0].ime;
                     if (result[0].aktivan == 1) {
                         console.log(`Razred ${result[0].ime} je aktivan.`);
 
                         // query za izmjene_razred
-                        izmjeneRazred = `SELECT id,razred_id,tablica_id,sat1,sat2,sat3,sat4,sat5,sat6,sat7,sat8,sat9 
-                        FROM izmjene_razred WHERE razred_id = '${tableData.razredID}'`;
-
-                        query(izmjeneRazred, function(error, result) {
+                        classChanges = `SELECT id,razred_id,tablica_id,sat1,sat2,sat3,sat4,sat5,sat6,sat7,sat8,sat9 
+                                        FROM izmjene_razred WHERE razred_id = '${tableData.classID}'`;
+                        query(classChanges, function(error, result) {
                             if (error) throw error;
-                            tableData.tablicaID = result[0].tablica_id;
+                            tableData.tableID = result[0].tablica_id;
                             
                             for (let j = 1; j < 10; j++)
-                                satiUjutro[`sat${j}`] = result[0][`sat${j}`];
-                                
-                            for (let j = -1, k = 1; k < 10; j++, k++)
-                                if (j == -1)
-                                    satiPopodne[`sat_${j+2}`] = result[0][`sat${k}`];
-                                else
-                                    satiPopodne[`sat${j}`] = result[0][`sat${k}`];
+                                classSchedule[`sat${j}`] = result[0][`sat${j}`];
 
+                            tableData.scheduleChanges = classSchedule;
+                             
                             // query za izmjene_tablica
-                            izmjeneTablica = `SELECT * FROM izmjene_tablica WHERE id = '${tableData.tablicaID}'`;
-
-                            query(izmjeneTablica, function(error, result) {
+                            tableChanges = `SELECT * FROM izmjene_tablica WHERE id = '${tableData.tableID}'`;
+                            query(tableChanges, function(error, result) {
                                 if (error) throw error;
                                 
-                                tableData.naslovTablice = result[0].naslov;
-                                tableData.ujutro = result[0].prijepodne;
+                                tableData.tableHeading = result[0].naslov;
+                                tableData.morning = result[0].prijepodne;
 
-                                if (tableData.ujutro == 0){
-                                    // razred je popodne
-                                    tableData.izmjeneSati = satiPopodne;
-                                    tableData.naslovSmjene = "POSLIJEPODNE";
-                                    html = `
-                                    <table class="center">
-                                        <caption style="color:rgb(73, 71, 71);
-                                        font-weight: bold;padding-bottom: 10px;text-align: left;"
-                                        >${tableData.naslovTablice}<br>${tableData.naslovSmjene}</caption>
-                                        <tr>
-                                            <th>Sat</th>
-                                            <th>Izmjena</th>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">-1.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat_1}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;0.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat0}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;1.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat1}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;2.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat2}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;3.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat3}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;4.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat4}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;5.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat5}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;6.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat6}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;7.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat7}</b></td>
-                                        </tr>
-                                    </table>`
-                                    message = css + html;
-                                    send.send_email(tableData.receiverEmail, message);
-                                    
+                                if (tableData.morning == 0) {
+                                    j = -1;
+                                    tableData.shiftHeading = "POSLIJEPODNE";
                                 } else {
-                                    // razred je ujutro
-                                    tableData.izmjeneSati = satiUjutro;
-                                    tableData.naslovSmjene = "PRIJEPODNE";
-                                    html = `
-                                    <table class="center">
-                                        <caption style="color:rgb(73, 71, 71);
-                                        font-weight: bold;padding-bottom: 10px;text-align: left;"
-                                        >${tableData.naslovTablice}<br>${tableData.naslovSmjene}</caption>
-                                        <tr>
-                                            <th>Sat</th>
-                                            <th>Izmjena</th>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">1.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat1}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;2.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat2}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;3.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat3}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;4.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat4}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;5.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat5}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;6.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat6}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;7.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat7}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;8.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat8}</b></td>
-                                        </tr>
-                                        <tr name="red">
-                                            <td name="sat">&nbsp;9.</td>
-                                            <td><b name="izmjena">${tableData.izmjeneSati.sat9}</b></td>
-                                        </tr>
-                                    </table>`
-                                    message = css + html;
-                                    send.send_email(tableData.receiverEmail, message);
+                                    j = 1;
+                                    tableData.shiftHeading = "PRIJEPODNE";
                                 }
+                                
+                                console.log(tableData);
+                                rasporedEmail.send_email(tableData, j);
                             });    
                         });
                     } else {
@@ -228,4 +74,3 @@ query(mailKorisnici, function(error, result) {
         }
     }
 });
-
