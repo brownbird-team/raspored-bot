@@ -59,6 +59,7 @@ query(mailUsers, function(error, result) {
                             for (change in tableData.scheduleChanges) {
                                 if (tableData.scheduleChanges[change] == null) {
                                     countEmptyChanges++;
+                                    tableData.scheduleChanges[change] = "";
                                 } 
                             }
 
