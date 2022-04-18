@@ -79,8 +79,10 @@ exports.dajIzmjene = (razred_id, zadnja_poslana) => {
     });
 }
 
+// Kreiraj funkciju koja vraća zadnju izmjenu za traženi razred
 exports.dajZadnju = (razred_id) => {
     return new Promise((resolve, reject) => {
+        // Povuci zadnju izmjenu za razred
         query(`
             SELECT *
             FROM izmjene_razred
@@ -90,6 +92,7 @@ exports.dajZadnju = (razred_id) => {
         `, (err, razred) => {
             if (err) throw err;
 
+            // Povuci podatke o tablici te izmjene
             query(`
                 SELECT naslov, prijepodne
                 FROM izmjene_tablica
@@ -103,7 +106,8 @@ exports.dajZadnju = (razred_id) => {
                     ujutro: tablica[0].prijepodne,
                     datum: razred[0].datum,
                 };
-
+                
+                // Dodaj polja za sate i provjeri jesu li svi sati null
                 sve_null = true
                 for(let i = 1; i < 10; i++) {
                     izmjena[`sat${i}`] = razred[0][`sat${i}`];
@@ -118,6 +122,7 @@ exports.dajZadnju = (razred_id) => {
     });
 }
 
+// Kreiraj funkciju koja vraća podatke za traženi razred
 exports.dajRazred = (razred_id) => {
     return new Promise((resolve, reject) => {
         query(`
@@ -130,7 +135,8 @@ exports.dajRazred = (razred_id) => {
             razred = {
                 id: result[0].id,
                 ime: result[0].ime,
-                smjena: result[0].smjena
+                smjena: result[0].smjena,
+                aktivan: result[0].aktivan
             };
 
             resolve(razred);
