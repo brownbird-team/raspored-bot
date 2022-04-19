@@ -4,15 +4,15 @@ let nodemailer = require('nodemailer');
 let hbs = require('nodemailer-express-handlebars');
 
 function send_email(tableData, j){
-    let testObject = {};
+    let isEmpty = {};
     for (let i = 1; i < 10; i++) {
         if (tableData.scheduleChanges[`sat${i}`] != "") {
-            testObject[`sat${i}`] = true;
+            isEmpty[`sat${i}`] = true;
         } else {
-            testObject[`sat${i}`] = false;
+            isEmpty[`sat${i}`] = false;
         }
     }
-    console.log(testObject);
+    console.log(isEmpty);
     // povezivanje s posiljateljom
     let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -41,6 +41,7 @@ function send_email(tableData, j){
         subject: `Izmjene u rasporedu sati za ${tableData.className}`,
         template: 'raspored',
         context: {
+            class               : tableData.className,
             tableHeading        : tableData.tableHeading,
             shiftHeading        : tableData.shiftHeading,
             j                   : j,
@@ -61,15 +62,15 @@ function send_email(tableData, j){
             scheduleChangesSat8 : tableData.scheduleChanges.sat8,
             j8                  : j + 8,
             scheduleChangesSat9 : tableData.scheduleChanges.sat9,
-            sat1                : testObject.sat1,
-            sat2                : testObject.sat2,
-            sat3                : testObject.sat3,
-            sat4                : testObject.sat4,
-            sat5                : testObject.sat5,
-            sat6                : testObject.sat6,
-            sat7                : testObject.sat7,
-            sat8                : testObject.sat8,
-            sat9                : testObject.sat9
+            sat1                : isEmpty.sat1,
+            sat2                : isEmpty.sat2,
+            sat3                : isEmpty.sat3,
+            sat4                : isEmpty.sat4,
+            sat5                : isEmpty.sat5,
+            sat6                : isEmpty.sat6,
+            sat7                : isEmpty.sat7,
+            sat8                : isEmpty.sat8,
+            sat9                : isEmpty.sat9
         }
     };
     // slanje e-maila
