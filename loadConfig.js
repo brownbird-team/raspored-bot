@@ -26,6 +26,17 @@ exports.configCheck = () => {
 
 exports.getData = () => {
     let rawdata = fs.readFileSync("./config.json");
-    let mydata = JSON.parse(rawdata);
-    return mydata;
+    let jsonData = JSON.parse(rawdata);
+    return jsonData;
+}
+
+exports.promiseGetData = () => {
+    return new Promise((resolve, reject) => {
+        fs.readFile("./config.json", (err, rawdata) => {
+            if(err) throw err;
+
+            let jsonData = JSON.parse(rawdata);
+            resolve(jsonData);
+        });
+    });
 }

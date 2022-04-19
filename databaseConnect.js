@@ -1,7 +1,7 @@
 // Spoji se na bazu i provjeri postojanje svih potrebnih tablica
 
 const mysql = require("mysql");
-const { configCheck, getData } = require("./configCheck.js");
+const { configCheck, getData } = require("./loadConfig.js");
 
 configCheck();
 const database = getData().database;
@@ -175,7 +175,9 @@ pool.getConnection((err, con) => {
                 CREATE TABLE disc_serveri (
                     server_id INT PRIMARY KEY,
                     prefix TEXT NOT NULL DEFAULT '.',
-                    INDEX (server_id)
+                    razred_id INT,
+                    INDEX (server_id),
+                    FOREIGN KEY(razred_id) REFERENCES general_razred(id)
                 )
             `, throwError);
         }
@@ -253,6 +255,21 @@ exports.query = (query, callback) => {
         } else {
             return callback("No connection", null, null);
         }
+    });
+}
+
+// Kreiraj funkciju koja vraća Promise za napravit Query iz baze
+exports.promiseQuery = (query) => {
+    return new Promise((resolve, reject) => {
+        pool.getConnection((err, con) => {
+            if(err) throw err;
+
+            con.query(query, (err, rows, fields) => {
+                if(err) throw err;
+
+                resolve(rows);
+            });
+        });
     });
 }
 
