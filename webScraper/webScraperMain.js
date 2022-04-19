@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const {query}=require('./../databaseConnect.js')
+const {promiseQuery}=require('./../databaseConnect.js')
 async function scraper(raz){
     //url
     let url='https://www.tsrb.hr/'+raz[0].smjena.toLowerCase()+'-smjena/';
@@ -61,7 +61,7 @@ async function scraper(raz){
 
     //Kreiranje result polja
     for(i=0;i<broj_tablica;i++){
-        console.log('asda');
+        
         result[i]={
             izmjene_tablica:{naslov:null,smjena:null,prijepode:null},
             izmjene_razred:[],
@@ -95,49 +95,42 @@ async function scraper(raz){
     let l=0;
     for(index in svi_spanovi){
         if(svi_spanovi[index].startsWith('9')){
-            console.log("True",k)
+            
             result[k].izmjene_tablica.prijepode=1;
         }
         if(svi_spanovi[index].startsWith('-1')){
-            console.log("False",k)
+            
             result[k].izmjene_tablica.prijepode=0;
         }
         else if(svi_spanovi[index]==raz[l].ime){
             
             result[k].izmjene_razred[l].razred=svi_spanovi[index];
-            console.log(svi_spanovi[index],'|',k)
+            
             control=1;
         }
         else if(control < 10 && control > 0){
             for(j=0;j<col[index];j++){
                 //izmjena[k][`sat${control}`]=svi_spanovi[index];
                 result[k].izmjene_razred[l][`sat${control}`]=svi_spanovi[index];
-                console.log
-                control++
                 
+                control++
             }
             if(control==10){
-                    
-                
                 l++
             }
-            
             if(l==broj_razreda){
                 l=0;
                 k++
             }
         }
-        
-        
     }
-    
-    for(i in result){
+  /*  for(i in result){
         console.log(result[i].izmjene_razred)
     }
     for(i in result){
     console.log(result[i].izmjene_tablica);
-    }
-    return 0;
+    }*/
+    return result;
 }
     
     
@@ -145,15 +138,30 @@ async function sql(){
     let razredi_A;
     let razredi_B;
     let izmjena;
-    query("SELECT * FROM general_razred WHERE smjena='A';", async function (err, razredi_A){
-        if (err) throw err;
+    let upis=false
+    razredi_A=await promiseQuery("SELECT * FROM general_razred WHERE smjena='A';");
+    razredi_B=await promiseQuery("SELECT * FROM general_razred WHERE smjena='B';");
+    console.log(razredi_A);
+    izmjena=await scraper(razredi_B);
+    for (index in izmjena){
+        console.log(izmjena[index].izmjene_tablica.naslov);
+        tablica=await promiseQuery(`SELECT * FROM izmjene_tablica WHERE 
+        naslov='${izmjena[index].izmjene_tablica.naslov}' AND 
+        smjena='${izmjena[index].izmjene_tablica.smjena}' AND 
+        prijepodne=${izmjena[index].izmjene_tablica.prijepode}`);
         
-        query("SELECT * FROM general_razred WHERE smjena='B';",async function (err, razredi_B){
-            console.log(razredi_A);
-            izmjena=await scraper(razredi_B);
-            console.log(izmjena);
-        });
-      });   
-      
+            if(tablica==null){
+                upis=true;
+            }
+            else if(tablica[0]==null || upis){
+                upis=false;
+                console.log('Upisujem: ',izmjena[index].izmjene_tablica.naslov);
+                tablica_upis=await promiseQuery(`INSERT INTO izmjene_tablica (naslov,smjena,prijepodne) 
+                VALUES('${izmjena[index].izmjene_tablica.naslov}','${izmjena[index].izmjene_tablica.smjena}',${izmjena[index].izmjene_tablica.prijepode})`); 
+            }
+            else {
+                console.log('Tablica je u bazi')
+        }
+    }
 }
 sql();
