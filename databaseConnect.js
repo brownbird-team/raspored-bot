@@ -217,6 +217,7 @@ pool.getConnection((err, con) => {
                     unsubscribed BOOL NOT NULL DEFAULT false,
                     zadnja_poslana INT,
                     salji_sve BOOL NOT NULL DEFAULT false,
+                    tamna_tema BOOL NOT NULL DEFAULT false,
                     INDEX (adresa),
                     FOREIGN KEY(razred_id) REFERENCES general_razred(id),
                     FOREIGN KEY(zadnja_poslana) REFERENCES izmjene_razred(id)
