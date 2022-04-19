@@ -3,19 +3,95 @@ const path = require('path');
 let nodemailer = require('nodemailer');
 let hbs = require('nodemailer-express-handlebars');
 
-function send_email(tableData, j, dT){
-    let isEmpty = {}, selectedTemplate;
-    for (let i = 1; i < 10; i++) {
-        if (tableData.scheduleChanges[`sat${i}`] != "") {
-            isEmpty[`sat${i}`] = true;
-        } else {
-            isEmpty[`sat${i}`] = false;
+function send_email(tableData, j, cT){
+    let isEmpty = {}, selectedTemplate, selectedContext, selectedSubject;
+
+    if (cT != 2) {
+        for (let i = 1; i < 10; i++) {
+            if (tableData.scheduleChanges[`sat${i}`] != "") {
+                isEmpty[`sat${i}`] = true;
+            } else {
+                isEmpty[`sat${i}`] = false;
+            }
         }
     }
-    if (dT) {
+    if (cT == 1) {
+        // tamna tema
         selectedTemplate = 'raspored_dark_theme';
-    } else {
+        selectedContext = {
+            j                   : j,
+            j1                  : j + 1,
+            j2                  : j + 2,
+            j3                  : j + 3,
+            j4                  : j + 4,
+            j5                  : j + 5,
+            j6                  : j + 6,
+            j7                  : j + 7,
+            j8                  : j + 8,
+            sat1                : isEmpty.sat1,
+            sat2                : isEmpty.sat2,
+            sat3                : isEmpty.sat3,
+            sat4                : isEmpty.sat4,
+            sat5                : isEmpty.sat5,
+            sat6                : isEmpty.sat6,
+            sat7                : isEmpty.sat7,
+            sat8                : isEmpty.sat8,
+            sat9                : isEmpty.sat9,
+            class               : tableData.className,
+            tableHeading        : tableData.tableHeading,
+            shiftHeading        : tableData.shiftHeading,
+            email               : tableData.receiverEmail,
+            scheduleChangesSat1 : tableData.scheduleChanges.sat1,
+            scheduleChangesSat2 : tableData.scheduleChanges.sat2,
+            scheduleChangesSat3 : tableData.scheduleChanges.sat3,
+            scheduleChangesSat4 : tableData.scheduleChanges.sat4,
+            scheduleChangesSat5 : tableData.scheduleChanges.sat5,
+            scheduleChangesSat6 : tableData.scheduleChanges.sat6, 
+            scheduleChangesSat7 : tableData.scheduleChanges.sat7,
+            scheduleChangesSat8 : tableData.scheduleChanges.sat8,
+            scheduleChangesSat9 : tableData.scheduleChanges.sat9};
+        selectedSubject = `Izmjene u rasporedu sati za ${tableData.className}`;
+    } else if (cT == 0){
+        // svijetla tema
         selectedTemplate = 'raspored_light_theme';
+        selectedContext = {
+            j                   : j,
+            j1                  : j + 1,
+            j2                  : j + 2,
+            j3                  : j + 3,
+            j4                  : j + 4,
+            j5                  : j + 5,
+            j6                  : j + 6,
+            j7                  : j + 7,
+            j8                  : j + 8,
+            sat1                : isEmpty.sat1,
+            sat2                : isEmpty.sat2,
+            sat3                : isEmpty.sat3,
+            sat4                : isEmpty.sat4,
+            sat5                : isEmpty.sat5,
+            sat6                : isEmpty.sat6,
+            sat7                : isEmpty.sat7,
+            sat8                : isEmpty.sat8,
+            sat9                : isEmpty.sat9,
+            class               : tableData.className,
+            tableHeading        : tableData.tableHeading,
+            shiftHeading        : tableData.shiftHeading,
+            email               : tableData.receiverEmail,
+            scheduleChangesSat1 : tableData.scheduleChanges.sat1,
+            scheduleChangesSat2 : tableData.scheduleChanges.sat2,
+            scheduleChangesSat3 : tableData.scheduleChanges.sat3,
+            scheduleChangesSat4 : tableData.scheduleChanges.sat4,
+            scheduleChangesSat5 : tableData.scheduleChanges.sat5,
+            scheduleChangesSat6 : tableData.scheduleChanges.sat6, 
+            scheduleChangesSat7 : tableData.scheduleChanges.sat7,
+            scheduleChangesSat8 : tableData.scheduleChanges.sat8,
+            scheduleChangesSat9 : tableData.scheduleChanges.sat9};
+        selectedSubject = `Izmjene u rasporedu sati za ${tableData.className}`;
+    } else {
+        // dobrodoslica
+        selectedTemplate = 'raspored_welcome';
+        selectedContext = {email: tableData.receiverEmail}; 
+        selectedSubject = `Raspored bot ti želi dobrodošlicu!`;
     }
     console.log(isEmpty);
     // povezivanje s posiljateljom
@@ -43,41 +119,9 @@ function send_email(tableData, j, dT){
     let mailOptions = {
         from: 'bot.raspored@gmail.com', // posiljatelj
         to: tableData.receiverEmail, // primatelj
-        subject: `Izmjene u rasporedu sati za ${tableData.className}`,
+        subject: selectedSubject,
         template: selectedTemplate,
-        context: {
-            class               : tableData.className,
-            tableHeading        : tableData.tableHeading,
-            shiftHeading        : tableData.shiftHeading,
-            j                   : j,
-            scheduleChangesSat1 : tableData.scheduleChanges.sat1,
-            j1                  : j + 1,
-            scheduleChangesSat2 : tableData.scheduleChanges.sat2,
-            j2                  : j + 2,
-            scheduleChangesSat3 : tableData.scheduleChanges.sat3,
-            j3                  : j + 3,
-            scheduleChangesSat4 : tableData.scheduleChanges.sat4,
-            j4                  : j + 4,
-            scheduleChangesSat5 : tableData.scheduleChanges.sat5,
-            j5                  : j + 5,
-            scheduleChangesSat6 : tableData.scheduleChanges.sat6,
-            j6                  : j + 6,
-            scheduleChangesSat7 : tableData.scheduleChanges.sat7,
-            j7                  : j + 7,
-            scheduleChangesSat8 : tableData.scheduleChanges.sat8,
-            j8                  : j + 8,
-            scheduleChangesSat9 : tableData.scheduleChanges.sat9,
-            sat1                : isEmpty.sat1,
-            sat2                : isEmpty.sat2,
-            sat3                : isEmpty.sat3,
-            sat4                : isEmpty.sat4,
-            sat5                : isEmpty.sat5,
-            sat6                : isEmpty.sat6,
-            sat7                : isEmpty.sat7,
-            sat8                : isEmpty.sat8,
-            sat9                : isEmpty.sat9,
-            email               : tableData.receiverEmail
-        }
+        context: selectedContext
     };
     // slanje e-maila
     transporter.sendMail(mailOptions, function(error, info){
