@@ -3,14 +3,19 @@ const path = require('path');
 let nodemailer = require('nodemailer');
 let hbs = require('nodemailer-express-handlebars');
 
-function send_email(tableData, j){
-    let isEmpty = {};
+function send_email(tableData, j, dT){
+    let isEmpty = {}, selectedTemplate;
     for (let i = 1; i < 10; i++) {
         if (tableData.scheduleChanges[`sat${i}`] != "") {
             isEmpty[`sat${i}`] = true;
         } else {
             isEmpty[`sat${i}`] = false;
         }
+    }
+    if (dT) {
+        selectedTemplate = 'raspored_dark_theme';
+    } else {
+        selectedTemplate = 'raspored_light_theme';
     }
     console.log(isEmpty);
     // povezivanje s posiljateljom
@@ -39,7 +44,7 @@ function send_email(tableData, j){
         from: 'bot.raspored@gmail.com', // posiljatelj
         to: tableData.receiverEmail, // primatelj
         subject: `Izmjene u rasporedu sati za ${tableData.className}`,
-        template: 'raspored',
+        template: selectedTemplate,
         context: {
             class               : tableData.className,
             tableHeading        : tableData.tableHeading,
@@ -70,7 +75,8 @@ function send_email(tableData, j){
             sat6                : isEmpty.sat6,
             sat7                : isEmpty.sat7,
             sat8                : isEmpty.sat8,
-            sat9                : isEmpty.sat9
+            sat9                : isEmpty.sat9,
+            email               : tableData.receiverEmail
         }
     };
     // slanje e-maila
