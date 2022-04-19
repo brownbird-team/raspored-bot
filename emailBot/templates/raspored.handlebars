@@ -3,7 +3,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>Document</title>
+        <title>Izmjene u rasporedu sati za {{class}}</title>
 
         <style>
             * {
@@ -55,34 +55,42 @@
                 text-align: left;
             }
 
-            #row1 {
-                
-            }
-            #row2 {
-
-            }
-            #row3 {
-
-            }
-            #row4 {
-
-            }
-            #row5 {
-
-            }
-            #row6 {
-
-            }
-            #row7 {
-
-            }
-            #row8 {
-
-            }
-            #row9 {
-
-            }
         </style>
+        {{#if sat1}}
+        <style>#row1 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat2}}
+        <style>#row2 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat3}}
+        <style>#row3 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat4}}
+        <style>#row4 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat5}}
+        <style>#row5 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat6}}
+        <style>#row6 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat7}}
+        <style>#row7 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat8}}
+        <style>#row8 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat9}}
+        <style>#row9 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
     </head>
     <body>
         <table class="center">
@@ -128,41 +136,5 @@
                 <td><b>{{scheduleChangesSat9}}</b></td>
             </tr>
         </table>
-
-        {{#if sat1}}
-        <style>#row1 { background-color: #009879; }</style>
-        {{/if}}
-
-        {{#if sat2}}
-        <style>#row2 { background-color: #009879; }</style>
-        {{/if}}
-
-        {{#if sat3}}
-        <style>#row3 { background-color: #009879; }</style>
-        {{/if}}
-
-        {{#if sat4}}
-        <style>#row4 { background-color: #009879; }</style>
-        {{/if}}
-
-        {{#if sat5}}
-        <style>#row5 { background-color: #009879; }</style>
-        {{/if}}
-
-        {{#if sat6}}
-        <style>#row6 { background-color: #009879; }</style>
-        {{/if}}
-
-        {{#if sat7}}
-        <style>#row7 { background-color: #009879; }</style>
-        {{/if}}
-
-        {{#if sat8}}
-        <style>#row8 { background-color: #009879; }</style>
-        {{/if}}
-
-        {{#if sat9}}
-        <style>#row9 { background-color: #009879; }</style>
-        {{/if}}
     </body>
 </html>
