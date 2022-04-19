@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Izmjene u rasporedu sati za {{class}}</title>
+
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+            }
+            html {
+                font-family: sans-serif, "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS";
+                font-weight: 400;
+                color: rgb(239, 255, 238);
+                padding-top: 50px;
+            }
+
+            table, tr, td, th {
+                border: 1px solid rgb(255, 255, 255);
+                border-collapse: collapse;
+                border-style: none;
+                padding: 5px;
+            }
+            th {
+                color:#EEEEEE;
+                font-weight: bold;
+            }
+
+            td {
+                text-align: center;
+                color: rgb(73, 71, 71);      
+            }
+            table {
+                width: 250px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+            table.center {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            tr {
+                background-color: #EEEEEE;
+                border-bottom: thin solid #C3C3C3;
+            }
+            #first {
+                background-color: #009879;
+                border: none;
+            }
+
+            caption {
+                color: rgb(73, 71, 71);
+                font-weight: bold;
+                font-size: larger;
+                padding-bottom: 10px;
+                text-align: left;
+            }
+
+            .footer p {
+                color: rgb(73, 71, 71);
+            }
+
+            .footer {
+                width: 400px;
+                margin-left: auto;
+                margin-right: auto;
+                padding-top: 200px;
+            }
+
+            #row9 {
+                border: none;
+            }
+
+        </style>
+        {{#if sat1}}
+        <style>#row1 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat2}}
+        <style>#row2 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat3}}
+        <style>#row3 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat4}}
+        <style>#row4 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat5}}
+        <style>#row5 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat6}}
+        <style>#row6 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat7}}
+        <style>#row7 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat8}}
+        <style>#row8 { background-color: #009879; font-weight: bold;}</style>
+        {{/if}}
+
+        {{#if sat9}}
+        <style>#row9 { background-color: #009879; font-weight: bold; border: none;}</style>
+        {{/if}}
+    </head>
+    <body>
+        <table class="center">
+            <caption>{{tableHeading}}<br>{{shiftHeading}}</caption>
+            <tr id="first">
+                <th>Sat</th>
+                <th>Izmjena</th>
+            </tr>
+            <tr id="row1">
+                <td id="period1">{{j}}.</td>
+                <td><b>{{scheduleChangesSat1}}</b></td>
+            </tr>
+            <tr id="row2">
+                <td id="period2">&nbsp;{{j1}}.</td>
+                <td><b>{{scheduleChangesSat2}}</b></td>
+            </tr>
+            <tr id="row3">
+                <td id="period3">&nbsp;{{j2}}.</td>
+                <td><b>{{scheduleChangesSat3}}</b></td>
+            </tr>
+            <tr id="row4">
+                <td id="period4">&nbsp;{{j3}}.</td>
+                <td><b>{{scheduleChangesSat4}}</b></td>
+            </tr>
+            <tr id="row5">
+                <td id="period5">&nbsp;{{j4}}.</td>
+                <td><b>{{scheduleChangesSat5}}</b></td>
+            </tr>
+            <tr id="row6">
+                <td id="period6">&nbsp;{{j5}}.</td>
+                <td><b>{{scheduleChangesSat6}}</b></td>
+            </tr>
+            <tr id="row7">
+                <td id="period7">&nbsp;{{j6}}.</td>
+                <td><b>{{scheduleChangesSat7}}</b></td>
+            </tr>
+            <tr id="row8">
+                <td id="period8">&nbsp;{{j7}}.</td>
+                <td><b>{{scheduleChangesSat8}}</b></td>
+            </tr>
+            <tr id="row9">
+                <td id="period9">&nbsp;{{j8}}.</td>
+                <td><b>{{scheduleChangesSat9}}</b></td>
+            </tr>
+        </table>
+        <div class="footer">
+            <p>
+            Ova poruka je poslana <b>{{email}}</b>. Ako ne želite
+            primati ove poruke od <b>emailBota</b> u budućnosti,
+            možete promijeniti postavke Vašeg profila ili
+            kliknuti na <a href="https://brownbird.eu/" target="_blank">unsubscribe</a>.
+            </p>
+        </div>
+    </body>
+</html>
