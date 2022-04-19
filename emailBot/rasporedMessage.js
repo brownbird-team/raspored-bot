@@ -8,7 +8,7 @@ query(mailUsers, function(error, result) {
     if (error) throw error;
 
     for (i in result) {
-        let j, countEmptyChanges = 0;
+        let j, countEmptyChanges = 0, dT;
         let tableData = {};
         let classSchedule = {};
         
@@ -18,6 +18,13 @@ query(mailUsers, function(error, result) {
             tableData.receiverEmail = result[i].adresa;
             tableData.classID = result[i].razred_id;
             tableData.sendAll = result[i].salji_sve;
+
+            if (result[i].tamna_tema == 1) {
+                // korisnik zeli tamnu temu
+                dT = 1;
+            } else {
+                dT = 0;
+            }
 
             // query za general_razred 
             generalClass = `SELECT * FROM general_razred WHERE id = '${tableData.classID}'`;
@@ -68,11 +75,11 @@ query(mailUsers, function(error, result) {
                             if (countEmptyChanges == 9) {
                                 if (tableData.sendAll == 1) {
                                     // korisnik zeli sve izmjene
-                                    rasporedEmail.send_email(tableData, j);
+                                    rasporedEmail.send_email(tableData, j, dT);
                                 }
                             } else {
                                 // korisnik ne zeli sve izmjene
-                                rasporedEmail.send_email(tableData, j);
+                                rasporedEmail.send_email(tableData, j, dT);
                             }
                         });   
                     });
