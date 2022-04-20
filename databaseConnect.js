@@ -265,6 +265,7 @@ exports.promiseQuery = (query) => {
             if(err) throw err;
 
             con.query(query, (err, rows, fields) => {
+                con.release();
                 if(err) throw err;
 
                 resolve(rows);
