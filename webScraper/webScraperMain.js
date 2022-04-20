@@ -137,8 +137,8 @@ async function sql(){
     let razredi_B;
     let izmjena;
     
-    razredi_A=await promiseQuery("SELECT * FROM general_razred WHERE smjena='A';");
-    razredi_B=await promiseQuery("SELECT * FROM general_razred WHERE smjena='B';");
+    razredi_A=await promiseQuery("SELECT * FROM general_razred WHERE smjena='A' AND aktivan=1");
+    razredi_B=await promiseQuery("SELECT * FROM general_razred WHERE smjena='B' AND aktivan=1");
     console.log(razredi_A);
     izmjena=await scraper(razredi_A);
     await sql_upis(izmjena,razredi_A);
