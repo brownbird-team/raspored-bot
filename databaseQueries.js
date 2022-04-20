@@ -63,7 +63,7 @@ exports.dajIzmjene = (razred_id, zadnja_poslana) => {
                         
                         izmjene[i][`sat${j}`] = razred[i][`sat${j}`];
 
-                        if (sve_null && izmjene[i][`sat${j}`] != null)
+                        if (sve_null && izmjene[i][`sat${j}`] != "")
                             sve_null = false;
                     }
                     izmjene[i].sve_null = sve_null;
@@ -112,7 +112,7 @@ exports.dajZadnju = (razred_id) => {
                 for(let i = 1; i < 10; i++) {
                     izmjena[`sat${i}`] = razred[0][`sat${i}`];
 
-                    if(sve_null && izmjena[`sat${i}`] != null)
+                    if(sve_null && izmjena[`sat${i}`] != "")
                         sve_null = false;
                 }
                 izmjena.sve_null = sve_null;
