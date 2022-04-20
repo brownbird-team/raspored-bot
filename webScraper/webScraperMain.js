@@ -151,7 +151,7 @@ async function sql_upis(izmjena,razredi){
     datum += d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
     console.log(datum);
     let upis=false;
-    for (index in izmjena){
+    for (index=izmjena.length-1;index>=0;index--){
         console.log(izmjena[index].izmjene_tablica.naslov);
         tablica=await promiseQuery(`SELECT * FROM izmjene_tablica WHERE 
         naslov='${izmjena[index].izmjene_tablica.naslov}' AND 
@@ -222,5 +222,6 @@ async function sql_upis(izmjena,razredi){
             
         }
     }
+    
 }
 sql();
