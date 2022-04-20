@@ -124,10 +124,8 @@ async function scraper(raz){
             }
         }
     }
+    
   /*  for(i in result){
-        console.log(result[i].izmjene_razred)
-    }
-    for(i in result){
     console.log(result[i].izmjene_tablica);
     }*/
     return result;
@@ -138,11 +136,21 @@ async function sql(){
     let razredi_A;
     let razredi_B;
     let izmjena;
-    let upis=false
+    
     razredi_A=await promiseQuery("SELECT * FROM general_razred WHERE smjena='A';");
     razredi_B=await promiseQuery("SELECT * FROM general_razred WHERE smjena='B';");
     console.log(razredi_A);
+    izmjena=await scraper(razredi_A);
+    await sql_upis(izmjena,razredi_A);
     izmjena=await scraper(razredi_B);
+    sql_upis(izmjena,razredi_B);
+}
+async function sql_upis(izmjena,razredi){
+    let datum = "";
+    const d = new Date()
+    datum += d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+    console.log(datum);
+    let upis=false;
     for (index in izmjena){
         console.log(izmjena[index].izmjene_tablica.naslov);
         tablica=await promiseQuery(`SELECT * FROM izmjene_tablica WHERE 
@@ -161,6 +169,57 @@ async function sql(){
             }
             else {
                 console.log('Tablica je u bazi')
+            }
+            tablica_id=await promiseQuery(`SELECT id FROM izmjene_tablica WHERE 
+            naslov='${izmjena[index].izmjene_tablica.naslov}' AND 
+            smjena='${izmjena[index].izmjene_tablica.smjena}' AND 
+            prijepodne=${izmjena[index].izmjene_tablica.prijepode} GROUP BY id DESC LIMIT 1`);
+            tablica_id=tablica_id[0].id;
+            
+            
+            for(index2 in izmjena[index].izmjene_razred){
+                for(i in razredi){
+                    if(razredi[i].ime==izmjena[index].izmjene_razred[index2].razred){
+                        razred_id=razredi[i].id;
+                        
+                    }
+                }
+
+                console.log(razred_id,index);
+                razred_upis=await promiseQuery(`SELECT * FROM izmjene_razred WHERE razred_id=${razred_id} AND tablica_id=${tablica_id} 
+                AND sat1='${izmjena[index].izmjene_razred[index2].sat1}' AND sat2='${izmjena[index].izmjene_razred[index2].sat2}' AND 
+                sat3='${izmjena[index].izmjene_razred[index2].sat3}' AND sat4='${izmjena[index].izmjene_razred[index2].sat4}' AND 
+                sat5='${izmjena[index].izmjene_razred[index2].sat5}' AND sat6='${izmjena[index].izmjene_razred[index2].sat6}' AND 
+                sat7='${izmjena[index].izmjene_razred[index2].sat7}' AND sat8='${izmjena[index].izmjene_razred[index2].sat8}' AND 
+                sat9='${izmjena[index].izmjene_razred[index2].sat9}' GROUP BY id DESC LIMIT 1`);
+                console.log(razred_upis);
+                
+                upis=false;
+                
+                if(razred_upis==null){
+                    upis=true;
+                    
+                }
+                else if(razred_upis[0]==null || upis){
+                    upis=false;
+                    console.log("A");
+                    razred_upis_sad=await promiseQuery(`INSERT INTO izmjene_razred (razred_id,tablica_id,sat1,sat2,sat3,sat4,sat5,sat6,sat7,sat8,sat9,datum)
+                                                        VALUES(${razred_id},${tablica_id},'${izmjena[index].izmjene_razred[index2].sat1}'
+                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat2}'
+                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat3}'
+                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat4}'
+                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat5}'
+                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat6}'
+                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat7}'
+                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat8}'
+                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat9}','${datum}')`);
+                    console.log("B");                                                                    
+                    console.log(razred_upis_sad,index);
+        }
+            else{
+                console.log('Razred je vec upisan',razred_id);
+            }
+            
         }
     }
 }
