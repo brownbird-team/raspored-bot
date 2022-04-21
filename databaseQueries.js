@@ -122,8 +122,8 @@ exports.dajZadnju = (razred_id) => {
     });
 }
 
-// Kreiraj funkciju koja vraća podatke za traženi razred
-exports.dajRazred = (razred_id) => {
+// Kreiraj funkciju koja vraća podatke za traženi razred po ID-u
+exports.dajRazredById = (razred_id) => {
     return new Promise((resolve, reject) => {
         query(`
             SELECT *
@@ -143,3 +143,27 @@ exports.dajRazred = (razred_id) => {
         });
     });
 }
+
+// Kreiraj funkciju koja vraća podatke za traženi razred po imenu
+exports.dajRazredByName = (razred_ime) => {
+    return new Promise((resolve, reject) => {
+        query(`
+            SELECT *
+            FROM general_razred
+            WHERE ime = '${razred_ime.toUpperCase()}'
+        `, (err, result) => {
+            if (err) throw err;
+
+            razred = {
+                id: result[0].id,
+                ime: result[0].ime,
+                smjena: result[0].smjena,
+                aktivan: result[0].aktivan
+            };
+
+            resolve(razred);
+        });
+    });
+}
+
+exports.dajRazred = this.dajRazredById;
