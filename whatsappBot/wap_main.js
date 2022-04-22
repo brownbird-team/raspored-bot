@@ -40,11 +40,20 @@ process.on("SIGINT", async () => {
     process.exit(0);
 });
 
+/*
+//Uzimanje broja od korisnika
+client.getChats().then(chats => {
+    const podatak = chats[0].id.user;
+    //const broj = client.getFormattedNumber(podatak);
+    console.log(podatak);
+});
+*/
+
 
 client.on('message', async msg => {
     //Pomoć korisniku
     if (msg.body == '.help') {
-        client.sendMessage(msg.from, '```.r <ime razreda> = ```\nispis rasporeda za vaš razred.'+'\n.```subscribe = ```\nza odabir ako želite da vam bot šalje izmjene');
+        client.sendMessage(msg.from, '```.r <ime razreda> = ```\nispis rasporeda za vaš razred.'+'\n```.subscribe = ```\nza odabir ako želite da vam bot šalje izmjene'+'\n```.unsubscribe = ```\nza odabir ako ne želite da vam bot šalje izmjene');
     }
     
     if (msg.body != '.help') {
@@ -77,24 +86,21 @@ client.on('message', async msg => {
             client.sendMessage(msg.from, izmjena_test);
         }
 
-        //Odgovor na subscribe
-        if (msg.body == '.subscribe') {
-            client.sendMessage(msg.from, '```Upiši 1 za primanje izmjena, a 0 ako ne želiš izmjene.```');
-            //Da li korisnik želi ili ne želi primati izmjene
-            if (msg.body == 1 || msg.body == 0) {
-                let sub = msg.body;
-                if (sub == 1) {
-                    const sub_yes = sub;
-                    console.log(sub_yes);
-                }else if (sub == 0) {
-                    const sub_no = sub;
-                    console.log(sub_no);
-                }
-            }
-        }
-
-
         
+        //Da li korisnik želi ili ne želi primati izmjene
+        //Odgovor na .subscribe
+        var sub;
+        if (msg.body == '.subscribe') {
+            client.sendMessage(msg.from, '```Raspored bot će vam od sada slati dnevne izmjene automatski.```');
+            sub = 1;
+            console.log(sub);
+        }
+        //Odgovor na .unsubscribe
+        if (msg.body == '.unsubscribe') {
+            client.sendMessage(msg.from, '```Raspored bot vam neće od sada slati dnevne izmjene automatski.```');
+            sub = 0;
+            console.log(sub);
+        }
     }
 });
 client.initialize();
