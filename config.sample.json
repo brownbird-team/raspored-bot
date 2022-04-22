@@ -6,5 +6,9 @@
         "user": "username",
         "password": "password",
         "connectionLimit": 15
+    },
+    "discord": {
+        "clientId": "my-client-id",
+        "clientSecret": "my-client-secret"
     }
 }
