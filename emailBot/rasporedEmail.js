@@ -89,11 +89,22 @@ function send_email(tableData, j, cT){
         selectedSubject = `Izmjene u rasporedu sati za ${tableData.className}`;
     } else {
         // dobrodoslica
+        let sendAllMessage, darkThemeMessage;
         selectedTemplate = 'raspored_welcome';
-        selectedContext = {email: tableData.receiverEmail}; 
+        if (tableData.sendAll)
+            sendAllMessage = 'Uključeno';
+        else
+            sendAllMessage = 'Isključeno';
+        if (tableData.darkTheme)
+            darkThemeMessage = 'Uključeno';
+        else
+            darkThemeMessage = 'Isključeno';
+        selectedContext = {email        : tableData.receiverEmail,
+                           class        : tableData.className, 
+                           sendAll      : sendAllMessage,
+                           darkTheme    : darkThemeMessage}; 
         selectedSubject = `Raspored bot ti želi dobrodošlicu!`;
     }
-    console.log(isEmpty);
     // povezivanje s posiljateljom
     let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -128,7 +139,7 @@ function send_email(tableData, j, cT){
         if (error) {
             console.log(error); // neuspjesno poslan
         } else {
-            console.log('Email sent: ' + info.response);  // uspjesno poslan
+            console.log('[\u001b[33mEmail\033[00m] Email sent: ' + info.response);  // uspjesno poslan
         }
     });
 }

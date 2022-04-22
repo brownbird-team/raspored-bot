@@ -6,6 +6,10 @@ const { configCheck, getData } = require("./loadConfig.js");
 configCheck();
 const database = getData().database;
 
+const databaseLog = async (logThis) => {
+    console.log('[\u001b[35mMySQL\033[00m] ' + logThis);
+}
+
 const throwError = (err) => {
     if (err) throw err;
 }
@@ -24,7 +28,7 @@ const pool = mysql.createPool({
 // Spoji se na bazu
 pool.getConnection((err, con) => {
     if (err) throw err;
-    console.log(`Uspješno spajanje na bazu ${database.name} - ${database.host}:${database.port}\n`);
+    databaseLog(`Uspješno spajanje na bazu ${database.name} - ${database.host}:${database.port}`);
 
     // Zatraži listu svih tablica u bazi
     con.query(`USE ${database.name}; SHOW TABLES`, (err, result, fields) => {
@@ -38,7 +42,7 @@ pool.getConnection((err, con) => {
 
         // Kreiraj tablice skupine general ako ne postoje
         if (!tables.includes("general_razred")) {
-            console.log("Kreiram tablicu general_razred");
+            databaseLog("Kreiram tablicu general_razred");
             con.query(`
                 CREATE TABLE general_razred (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,7 +64,7 @@ pool.getConnection((err, con) => {
             `);
         }
         if (!tables.includes("general_settings")) {
-            console.log("Kreiram tablicu general_settings");
+            databaseLog("Kreiram tablicu general_settings");
             con.query(`
                 CREATE TABLE general_settings (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,7 +74,7 @@ pool.getConnection((err, con) => {
             `, throwError);
         }
         if (!tables.includes("izmjene_settings")) {
-            console.log("Kreiram tablicu izmjene_settings");
+            databaseLog("Kreiram tablicu izmjene_settings");
             con.query(`
                 CREATE TABLE izmjene_settings (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -81,7 +85,7 @@ pool.getConnection((err, con) => {
         }
         // Kreiraj tablice skupine izmjene ako ne postoje
         if(!tables.includes("izmjene_tablica")) {
-            console.log("Kreiram tablicu izmjene_tablica");
+            databaseLog("Kreiram tablicu izmjene_tablica");
             con.query(`
                 CREATE TABLE izmjene_tablica (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -93,7 +97,7 @@ pool.getConnection((err, con) => {
             `, throwError);
         }
         if(!tables.includes("izmjene_razred")) {
-            console.log("Kreiram tablicu izmjene_razred");
+            databaseLog("Kreiram tablicu izmjene_razred");
             con.query(`
                 CREATE TABLE izmjene_razred (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -117,7 +121,7 @@ pool.getConnection((err, con) => {
         }
         // Kreiraj tablice skupine wap ako ne postoje
         if (!tables.includes("wap_settings")) {
-            console.log("Kreiram tablicu wap_settings");
+            databaseLog("Kreiram tablicu wap_settings");
             con.query(`
                 CREATE TABLE wap_settings (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -127,7 +131,7 @@ pool.getConnection((err, con) => {
             `, throwError);
         }
         if (!tables.includes("wap_kontakti")) {
-            console.log("Kreiram tablicu wap_kontakti");
+            databaseLog("Kreiram tablicu wap_kontakti");
             con.query(`
                 CREATE TABLE wap_kontakti (
                     broj INT PRIMARY KEY,
@@ -143,7 +147,7 @@ pool.getConnection((err, con) => {
             `, throwError);
         }
         if (!tables.includes("wap_grupe")) {
-            console.log("Kreiram tablicu wap_grupe");
+            databaseLog("Kreiram tablicu wap_grupe");
             con.query(`
                 CREATE TABLE wap_grupe (
                     id INT PRIMARY KEY,
@@ -160,7 +164,7 @@ pool.getConnection((err, con) => {
         }
         // Kreiraj tablice skupine disc ako ne postoje
         if (!tables.includes("disc_settings")) {
-            console.log("Kreiram tablicu disc_settings");
+            databaseLog("Kreiram tablicu disc_settings");
             con.query(`
                 CREATE TABLE disc_settings (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -170,7 +174,7 @@ pool.getConnection((err, con) => {
             `, throwError);
         }
         if (!tables.includes("disc_serveri")) {
-            console.log("Kreiram tablicu disc_serveri");
+            databaseLog("Kreiram tablicu disc_serveri");
             con.query(`
                 CREATE TABLE disc_serveri (
                     server_id BIGINT PRIMARY KEY,
@@ -182,7 +186,7 @@ pool.getConnection((err, con) => {
             `, throwError);
         }
         if (!tables.includes("disc_kanali")) {
-            console.log("Kreiram tablicu disc_kanali");
+            databaseLog("Kreiram tablicu disc_kanali");
             con.query(`
                 CREATE TABLE disc_kanali (
                     kanal_id BIGINT PRIMARY KEY,
@@ -201,7 +205,7 @@ pool.getConnection((err, con) => {
         }
         // Kreiraj tablice skupine mail ako ne postoje
         if (!tables.includes("mail_settings")) {
-            console.log("Kreiram tablicu mail_settings");
+            databaseLog("Kreiram tablicu mail_settings");
             con.query(`
                 CREATE TABLE mail_settings (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -211,7 +215,7 @@ pool.getConnection((err, con) => {
             `, throwError);
         }
         if (!tables.includes("mail_korisnici")) {
-            console.log("Kreiram tablicu mail_korisnici");
+            databaseLog("Kreiram tablicu mail_korisnici");
             con.query(`
                 CREATE TABLE mail_korisnici (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -230,7 +234,7 @@ pool.getConnection((err, con) => {
         }
         // Kreiraj tablice skupine panel ako ne postoje
         if (!tables.includes("panel_admins")) {
-            console.log("Kreiram tablicu panel_admins");
+            databaseLog("Kreiram tablicu panel_admins");
             con.query(`
                 CREATE TABLE panel_admins (
                     discord_user_id INT PRIMARY KEY
