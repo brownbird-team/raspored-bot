@@ -132,13 +132,17 @@ exports.dajRazredById = (razred_id) => {
         `, (err, result) => {
             if (err) throw err;
 
-            razred = {
-                id: result[0].id,
-                ime: result[0].ime,
-                smjena: result[0].smjena,
-                aktivan: result[0].aktivan
-            };
-
+            let razred
+            if (result.length === 0) {
+                razred = null; 
+            } else {
+                razred = {
+                    id: result[0].id,
+                    ime: result[0].ime,
+                    smjena: result[0].smjena,
+                    aktivan: result[0].aktivan
+                };
+            }
             resolve(razred);
         });
     });
@@ -154,13 +158,17 @@ exports.dajRazredByName = (razred_ime) => {
         `, (err, result) => {
             if (err) throw err;
 
-            razred = {
-                id: result[0].id,
-                ime: result[0].ime,
-                smjena: result[0].smjena,
-                aktivan: result[0].aktivan
-            };
-
+            let razred
+            if (result.length === 0) {
+                razred = null;
+            } else {
+                razred = {
+                    id: result[0].id,
+                    ime: result[0].ime,
+                    smjena: result[0].smjena,
+                    aktivan: result[0].aktivan
+                };
+            }
             resolve(razred);
         });
     });
