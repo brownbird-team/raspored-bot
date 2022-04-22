@@ -164,7 +164,7 @@ pool.getConnection((err, con) => {
             con.query(`
                 CREATE TABLE disc_settings (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    option CHAR(30) NOT NULL,
+                    option CHAR(30) NOT NULL UNIQUE,
                     value TEXT
                 )
             `, throwError);
@@ -173,8 +173,8 @@ pool.getConnection((err, con) => {
             console.log("Kreiram tablicu disc_serveri");
             con.query(`
                 CREATE TABLE disc_serveri (
-                    server_id INT PRIMARY KEY,
-                    prefix TEXT NOT NULL DEFAULT '.',
+                    server_id BIGINT PRIMARY KEY,
+                    prefix TEXT,
                     razred_id INT,
                     INDEX (server_id),
                     FOREIGN KEY(razred_id) REFERENCES general_razred(id)
@@ -185,8 +185,9 @@ pool.getConnection((err, con) => {
             console.log("Kreiram tablicu disc_kanali");
             con.query(`
                 CREATE TABLE disc_kanali (
-                    kanal_id INT PRIMARY KEY,
-                    server_id INT NOT NULL,
+                    kanal_id BIGINT PRIMARY KEY,
+                    server_id BIGINT,
+                    prefix TEXT,
                     razred_id INT,
                     zadnja_poslana INT,
                     salji_izmjene BOOL NOT NULL DEFAULT false,
