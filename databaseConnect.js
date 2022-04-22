@@ -194,7 +194,7 @@ pool.getConnection((err, con) => {
                     prefix TEXT,
                     razred_id INT,
                     zadnja_poslana INT,
-                    salji_izmjene BOOL NOT NULL DEFAULT false,
+                    salji_izmjene BOOL NOT NULL DEFAULT true,
                     salji_sve BOOL NOT NULL DEFAULT false,
                     INDEX (kanal_id),
                     FOREIGN KEY(server_id) REFERENCES disc_serveri(server_id),
