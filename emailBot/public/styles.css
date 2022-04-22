@@ -6,9 +6,22 @@
 
 html
 {
-    font-size: 16px;
-    font-family: sans-serif, Helvetica, Arial;
+    font-size: 18px;
+    font-family: LatoBold, sans-serif, Helvetica, Arial;
+    color: whitesmoke;
     background-color: white;
+}
+
+.heading
+{
+    color:#5865F2;
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+    text-align: center;
+    position: relative;
+    top: 150px;
 }
 
 .card
@@ -17,11 +30,88 @@ html
     margin-right: auto;
     width: 30rem;
     padding: 2rem;
-    background-color: antiquewhite;
+    background-color: #36393F;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0.7rem;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+}
+
+.card .form-part
+{
+    text-align: center;
+}
+
+.card .form-part input[type="email"]
+{
+    border: none;
+    background: none;
+    outline: none;
+    padding-top: 0.5rem;
+    color: aliceblue;
+    font-size: 18px;
+    text-align: center;
+    border-bottom: 2px solid whitesmoke;
+    width:250px;
+    transition: transform 0.2s, border-bottom-color 0.5s;
+}
+
+.card .form-part input[type="email"]:hover
+{
+    transform:scale(1.05);
+}
+
+.card .form-part input[type="email"]:valid
+{
+    border-bottom-color: #5865F2;
+}
+
+.card .form-part select
+{
+    border: none;
+    background: none;
+    outline: none;
+    width: 100px;
+    color:aliceblue;
+    font-weight: bold;
+    background-color: #5865F2;
+    margin-top: 5px;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.card .form-checkbox input[type="checkbox"]
+{
+    margin-top: 10px;
+}
+
+label
+{
+    font-weight: bold;
 }
 
 .card input[type="submit"]
 {
+    border: 2px solid #5865F2;
+    background: none;
+    outline: none;
+    width: 100px;
+    background-color: #5865F2;
     margin-top: 1rem;
-    padding: 0.2rem 0.5rem;
+    padding: 5px 2px;
+    border-radius: 5px;
+    color: aliceblue;
+    font-family: LatoBold;
+    font-weight: bolder;
+    font-size: 16px;
+    transition: background-color 0.5s;
+}
+
+.card input[type="submit"]:hover
+{
+    background-color: aliceblue;
+    color: #5865F2;
+    border: 2px solid #5865F2;
 }
