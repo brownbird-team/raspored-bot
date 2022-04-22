@@ -13,6 +13,7 @@ const { getCharsetNumber } = require('mysql/lib/ConnectionConfig');
 
 //funkcija za dobivanja podataka iz baze
 const baza = require('../databaseQueries.js');
+const cli = require('nodemon/lib/cli');
 
 //Novi klijent
 const client = new Client({
@@ -43,7 +44,7 @@ process.on("SIGINT", async () => {
 client.on('message', async msg => {
     //Pomoć korisniku
     if (msg.body == '.help') {
-        client.sendMessage(msg.from, '```.r <ime razreda> = ispis rasporeda za vaš razred.```');
+        client.sendMessage(msg.from, '```.r <ime razreda> = ```\nispis rasporeda za vaš razred.'+'\n.```subscribe = ```\nza odabir ako želite da vam bot šalje izmjene');
     }
     
     if (msg.body != '.help') {
@@ -53,6 +54,7 @@ client.on('message', async msg => {
         razred = razred.slice(-3);
         console.log(razred);
         
+        //Odgovor na .r <ime razreda> naredbu.
         if (msg.body == `.r ${razred}`) {
             //Dobivanje podataka o klijentovom razredu
             const razred_data = await baza.dajRazredByName(razred);
@@ -74,6 +76,25 @@ client.on('message', async msg => {
             }            
             client.sendMessage(msg.from, izmjena_test);
         }
+
+        //Odgovor na subscribe
+        if (msg.body == '.subscribe') {
+            client.sendMessage(msg.from, '```Upiši 1 za primanje izmjena, a 0 ako ne želiš izmjene.```');
+            //Da li korisnik želi ili ne želi primati izmjene
+            if (msg.body == 1 || msg.body == 0) {
+                let sub = msg.body;
+                if (sub == 1) {
+                    const sub_yes = sub;
+                    console.log(sub_yes);
+                }else if (sub == 0) {
+                    const sub_no = sub;
+                    console.log(sub_no);
+                }
+            }
+        }
+
+
+        
     }
 });
 client.initialize();
