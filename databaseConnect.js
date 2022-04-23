@@ -134,7 +134,7 @@ pool.getConnection((err, con) => {
             databaseLog("Kreiram tablicu wap_kontakti");
             con.query(`
                 CREATE TABLE wap_kontakti (
-                    broj INT PRIMARY KEY,
+                    broj CHAR(50) PRIMARY KEY,
                     razred_id INT,
                     prefix TEXT NOT NULL DEFAULT '.',
                     zadnja_poslana INT,
