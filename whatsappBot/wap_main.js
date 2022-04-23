@@ -49,7 +49,6 @@ client.getChats().then(chats => {
 });
 */
 
-
 client.on('message', async msg => {
     //Pomoć korisniku
     if (msg.body == '.help') {
@@ -57,7 +56,6 @@ client.on('message', async msg => {
     }
     
     if (msg.body != '.help') {
-
         //Dobivanje razreda iz naredbe .r
         let razred = msg.body;
         razred = razred.slice(-3);
@@ -93,13 +91,11 @@ client.on('message', async msg => {
         if (msg.body == '.subscribe') {
             client.sendMessage(msg.from, '```Raspored bot će vam od sada slati dnevne izmjene automatski.```');
             sub = 1;
-            console.log(sub);
         }
         //Odgovor na .unsubscribe
         if (msg.body == '.unsubscribe') {
             client.sendMessage(msg.from, '```Raspored bot vam neće od sada slati dnevne izmjene automatski.```');
             sub = 0;
-            console.log(sub);
         }
     }
 });
