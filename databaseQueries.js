@@ -79,6 +79,97 @@ exports.dajIzmjene = (razred_id, zadnja_poslana) => {
     });
 }
 
+// Kreiraj funkciju koja omogućuje pregled povijesti izmjena
+// za određeni razred, kao drugi argument funkciji dajemo broj tablica
+// koliko želimo ići u prošlost
+exports.dajPovijest = (razred_id, kolikoURikverc) => {
+    return new Promise((resolve, reject) => {
+        // Provjeri je li kolikoURikverc 0
+        if (kolikoURikverc < 1) throw new Error("Argument kolikoURikverc ne može biti manji od 1");
+        // Povuci podatke iz tablice izmjene_razred
+        query(`
+            WITH 
+                izmjene_nove AS (
+                    SELECT *
+                    FROM izmjene_razred
+                    WHERE razred_id = ${razred_id}
+                    ORDER BY id DESC
+                ),
+                izmjene_oznaci_zadnje AS (
+                    SELECT *,
+                    CASE
+                        WHEN LEAD(tablica_id, 1) OVER(ORDER BY id) = tablica_id THEN 0
+                        ELSE 1
+                    END AS zadnja_iz_tablice
+                    FROM izmjene_nove
+                )
+            SELECT COUNT(id) AS ukupan_broj
+            FROM izmjene_oznaci_zadnje
+            WHERE zadnja_iz_tablice = 1
+            ORDER BY id DESC;
+
+            WITH 
+                izmjene_nove AS (
+                    SELECT *
+                    FROM izmjene_razred
+                    WHERE razred_id = ${razred_id}
+                    ORDER BY id DESC
+                ),
+                izmjene_oznaci_zadnje AS (
+                    SELECT *,
+                    CASE
+                        WHEN LEAD(tablica_id, 1) OVER(ORDER BY id) = tablica_id THEN 0
+                        ELSE 1
+                    END AS zadnja_iz_tablice
+                    FROM izmjene_nove
+                )
+            SELECT id, razred_id, tablica_id, datum, sat1, sat2, sat3, sat4, sat5, sat6, sat7, sat8, sat9
+            FROM izmjene_oznaci_zadnje
+            WHERE zadnja_iz_tablice = 1
+            ORDER BY id DESC
+            LIMIT ${kolikoURikverc} OFFSET ${kolikoURikverc - 1};
+        `, (errp, result) => {
+            if (errp) throw errp;
+
+            // Izvuci tražene podatke iz rezultata Queryja
+            ukupanBroj = result[0][0];
+            trazenaIzmjena = result[1][0];
+            
+            // Kreiraj objekt koji je krajnji rezultat
+            objekt = {
+                broj: ukupanBroj.ukupan_broj,
+                izmjena: {
+                    id: trazenaIzmjena.id,
+                    datum: trazenaIzmjena.datum
+                }
+            }
+
+            // Dodaj svojstva za sate u objekt i provjeri jesu li svi null
+            sve_null = true
+            for(let j = 1; j < 10; j++) {
+                
+                objekt.izmjena[`sat${j}`] = trazenaIzmjena[`sat${j}`];
+
+                if (sve_null && objekt.izmjena[`sat${j}`] != "")
+                    sve_null = false;
+            }
+            objekt.izmjena.sve_null = sve_null;
+
+            // Povuci naslov i smjenu tablice
+            query(`
+                SELECT naslov, prijepodne
+                FROM izmjene_tablica
+                WHERE id = ${trazenaIzmjena.tablica_id}
+            `, (err, result) => {
+                if (err) throw err;
+                objekt.izmjena.naslov = result[0].naslov;
+                objekt.izmjena.ujutro = (result[0].prijepodne) ? true : false;
+                resolve(objekt);
+            });
+        });
+    });
+}
+
 // Kreiraj funkciju koja vraća zadnju izmjenu za traženi razred
 exports.dajZadnju = (razred_id) => {
     return new Promise((resolve, reject) => {
