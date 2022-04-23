@@ -88,44 +88,14 @@ exports.dajPovijest = (razred_id, kolikoURikverc) => {
         if (kolikoURikverc < 1) throw new Error("Argument kolikoURikverc ne može biti manji od 1");
         // Povuci podatke iz tablice izmjene_razred
         query(`
-            WITH 
-                izmjene_nove AS (
-                    SELECT *
-                    FROM izmjene_razred
-                    WHERE razred_id = ${razred_id}
-                    ORDER BY id DESC
-                ),
-                izmjene_oznaci_zadnje AS (
-                    SELECT *,
-                    CASE
-                        WHEN LEAD(tablica_id, 1) OVER(ORDER BY id) = tablica_id THEN 0
-                        ELSE 1
-                    END AS zadnja_iz_tablice
-                    FROM izmjene_nove
-                )
             SELECT COUNT(id) AS ukupan_broj
-            FROM izmjene_oznaci_zadnje
-            WHERE zadnja_iz_tablice = 1
+            FROM izmjene_razred
+            WHERE razred_id = ${razred_id}
             ORDER BY id DESC;
 
-            WITH 
-                izmjene_nove AS (
-                    SELECT *
-                    FROM izmjene_razred
-                    WHERE razred_id = ${razred_id}
-                    ORDER BY id DESC
-                ),
-                izmjene_oznaci_zadnje AS (
-                    SELECT *,
-                    CASE
-                        WHEN LEAD(tablica_id, 1) OVER(ORDER BY id) = tablica_id THEN 0
-                        ELSE 1
-                    END AS zadnja_iz_tablice
-                    FROM izmjene_nove
-                )
             SELECT id, razred_id, tablica_id, datum, sat1, sat2, sat3, sat4, sat5, sat6, sat7, sat8, sat9
-            FROM izmjene_oznaci_zadnje
-            WHERE zadnja_iz_tablice = 1
+            FROM izmjene_razred
+            WHERE razred_id = ${razred_id}
             ORDER BY id DESC
             LIMIT ${kolikoURikverc} OFFSET ${kolikoURikverc - 1};
         `, (errp, result) => {
