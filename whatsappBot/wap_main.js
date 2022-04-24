@@ -10,6 +10,7 @@ var mysql = require('mysql');
 const {promiseQuery, query} = require('../databaseConnect.js');
 const { get } = require('http');
 const { getCharsetNumber } = require('mysql/lib/ConnectionConfig');
+const f_baza = require('./funkcije_za_bazu');
 
 //funkcija za dobivanja podataka iz baze
 const baza = require('../databaseQueries.js');
@@ -41,22 +42,26 @@ process.on("SIGINT", async () => {
     process.exit(0);
 });
 
-
-
+//Odgovaranje na naredbe
 client.on('message', async msg => {
+    const result = await msg.getContact();
+    const broj = result.number;
+
+    const kontakt = await f_baza.dajKontakt(broj);
+
+    if (!kontakt) {
+        await f_baza.dodaj_broj(broj);
+    }
+    console.log(kontakt);
+
+     
+
     //Pomoć korisniku
     if (msg.body == '.help') {
-        client.sendMessage(msg.from, '```.r <ime razreda> = ```\nispis rasporeda za vaš razred.'+'\n```.subscribe = ```\nza odabir ako želite da vam bot šalje izmjene'+'\n```.unsubscribe = ```\nza odabir ako ne želite da vam bot šalje izmjene');
+        console.log("Korisnik traži pomoć");
+        client.sendMessage(msg.from, '```.r <ime svojeg razreda> = ```\nispis rasporeda za vaš razred.'+'\n```.subscribe = ```\nza odabir ako želite da vam bot šalje izmjene'+'\n```.unsubscribe = ```\nza odabir ako ne želite da vam bot šalje izmjene');
+    }    
 
-        //Uzimanje broja od korisnika
-        client.getChats().then(chats => {
-        const podatak = chats[0].id.user;
-        console.log(podatak);
-        });
-    }
-
-    //Korisnikov prefix
-    const prefix = ".";
     
     //Dobivanje razreda iz naredbe .r
     let razred = msg.body;
@@ -68,6 +73,7 @@ client.on('message', async msg => {
         //Dobivanje podataka o klijentovom razredu
         const razred_data = await baza.dajRazredByName(razred);
         let izmjena = await baza.dajZadnju(razred_data.id);
+        console.log("Izmjena u rasporedu.")
         console.log(izmjena);
         //Ispis izmjena korisniku
         let izmjena_test = `${izmjena.naslov}`;
@@ -81,12 +87,17 @@ client.on('message', async msg => {
             for (let i = 1; i < 10; i++) {
                 izmjena_test += '\n```'+`${ (i===-1) ? ` ` : ``}${i-2}. sat = ${izmjena[`sat${i}`]}`+'```';
             }
-        }            
+        }
         client.sendMessage(msg.from, izmjena_test);
+        await f_baza.dodaj_zadnju_poslanu(izmjena_test);
+
+
 
         //Uzimanje razred id
         const razred_id = razred_data.id;
+        console.log("Razred id.");
         console.log(razred_id);
+        await f_baza.dodaj_razred_id(razred_id);
     }
 
     
@@ -95,18 +106,16 @@ client.on('message', async msg => {
     let sub;
     if (msg.body == '.subscribe') {
         client.sendMessage(msg.from, '```Raspored bot će vam od sada slati dnevne izmjene automatski.```');
+        console.log("Subscribe");
         sub = 1;
+        await f_baza.dodaj_salji_izmjene(sub);
     }
     //Odgovor na .unsubscribe
     if (msg.body == '.unsubscribe') {
         client.sendMessage(msg.from, '```Raspored bot vam neće od sada slati dnevne izmjene automatski.```');
+        console.log("Unubscribe");
         sub = 0;
-    }
-
-
-    
-        
-    
-    
+        await f_baza.dodaj_ne_salji_izmjene(sub);
+    }    
 });
 client.initialize();
