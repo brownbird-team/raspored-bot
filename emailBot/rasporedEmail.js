@@ -15,9 +15,8 @@ function send_email(tableData, j, cT){
             }
         }
     }
-    if (cT == 1) {
-        // tamna tema
-        selectedTemplate = 'raspored_dark_theme';
+    if (cT == 1 || cT == 0) {
+        // tamna ili svijetla tema 
         selectedContext = {
             j                   : j,
             j1                  : j + 1,
@@ -41,6 +40,7 @@ function send_email(tableData, j, cT){
             tableHeading        : tableData.tableHeading,
             shiftHeading        : tableData.shiftHeading,
             email               : tableData.receiverEmail,
+            token               : tableData.token,
             scheduleChangesSat1 : tableData.scheduleChanges.sat1,
             scheduleChangesSat2 : tableData.scheduleChanges.sat2,
             scheduleChangesSat3 : tableData.scheduleChanges.sat3,
@@ -51,42 +51,10 @@ function send_email(tableData, j, cT){
             scheduleChangesSat8 : tableData.scheduleChanges.sat8,
             scheduleChangesSat9 : tableData.scheduleChanges.sat9};
         selectedSubject = `Izmjene u rasporedu sati za ${tableData.className}`;
-    } else if (cT == 0){
-        // svijetla tema
-        selectedTemplate = 'raspored_light_theme';
-        selectedContext = {
-            j                   : j,
-            j1                  : j + 1,
-            j2                  : j + 2,
-            j3                  : j + 3,
-            j4                  : j + 4,
-            j5                  : j + 5,
-            j6                  : j + 6,
-            j7                  : j + 7,
-            j8                  : j + 8,
-            sat1                : isEmpty.sat1,
-            sat2                : isEmpty.sat2,
-            sat3                : isEmpty.sat3,
-            sat4                : isEmpty.sat4,
-            sat5                : isEmpty.sat5,
-            sat6                : isEmpty.sat6,
-            sat7                : isEmpty.sat7,
-            sat8                : isEmpty.sat8,
-            sat9                : isEmpty.sat9,
-            class               : tableData.className,
-            tableHeading        : tableData.tableHeading,
-            shiftHeading        : tableData.shiftHeading,
-            email               : tableData.receiverEmail,
-            scheduleChangesSat1 : tableData.scheduleChanges.sat1,
-            scheduleChangesSat2 : tableData.scheduleChanges.sat2,
-            scheduleChangesSat3 : tableData.scheduleChanges.sat3,
-            scheduleChangesSat4 : tableData.scheduleChanges.sat4,
-            scheduleChangesSat5 : tableData.scheduleChanges.sat5,
-            scheduleChangesSat6 : tableData.scheduleChanges.sat6, 
-            scheduleChangesSat7 : tableData.scheduleChanges.sat7,
-            scheduleChangesSat8 : tableData.scheduleChanges.sat8,
-            scheduleChangesSat9 : tableData.scheduleChanges.sat9};
-        selectedSubject = `Izmjene u rasporedu sati za ${tableData.className}`;
+        if (cT)
+            selectedTemplate = 'raspored_dark_theme';
+        else
+            selectedTemplate = 'raspored_light_theme';
     } else {
         // dobrodoslica
         let sendAllMessage, darkThemeMessage;
@@ -100,6 +68,7 @@ function send_email(tableData, j, cT){
         else
             darkThemeMessage = 'Isključeno';
         selectedContext = {email        : tableData.receiverEmail,
+                           token        : tableData.token,
                            class        : tableData.className, 
                            sendAll      : sendAllMessage,
                            darkTheme    : darkThemeMessage}; 
