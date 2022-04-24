@@ -87,3 +87,23 @@ exports.dodaj_ne_salji_izmjene = (sub, broj) => {
         resolve("done");
     });
 }
+
+
+//Dodaj šalji sve u bazu
+exports.dodaj_salji_izmjene_ako_ih_nema = (sve, broj) => {
+    return new Promise(async (resolve) => {
+        let baza_salji_izmjene_ako_ih_nema = `UPDATE wap_kontakti SET salji_sve = ${sve} WHERE broj = ${broj}`;
+        await promiseQuery(baza_salji_izmjene_ako_ih_nema);
+        resolve("done");
+    });
+}
+
+
+//Dodaj ne šalji sve u bazu
+exports.dodaj_ne_salji_izmjene_ako_ih_nema = (sve, broj) => {
+    return new Promise(async (resolve) => {
+        let baza_ne_salji_izmjene_ako_ih_nema = `UPDATE wap_kontakti SET salji_sve = ${sve} WHERE broj = ${broj}`;
+        await promiseQuery(baza_ne_salji_izmjene_ako_ih_nema);
+        resolve("done");
+    });
+}

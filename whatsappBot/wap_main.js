@@ -53,13 +53,12 @@ client.on('message', async msg => {
         await f_baza.dodaj_broj(broj);
     }
     console.log(kontakt);
-
-     
+    
 
     //Pomoć korisniku
     if (msg.body == '.help') {
         console.log("Korisnik traži pomoć");
-        client.sendMessage(msg.from, '```.r <ime svojeg razreda> = ```\nispis rasporeda za vaš razred.'+'\n```.subscribe = ```\nza odabir ako želite da vam bot šalje izmjene'+'\n```.unsubscribe = ```\nza odabir ako ne želite da vam bot šalje izmjene');
+        client.sendMessage(msg.from, '```.r <ime svojeg razreda> = ```\nispis rasporeda za vaš razred.'+'\n```.subscribe = ```\nza odabir ako želite da vam bot šalje izmjene'+'\n```.unsubscribe = ```\nza odabir ako ne želite da vam bot šalje izmjene'+'\n```.saljisve = ```\nza odabir ako želite da vam bot šalje izmjene, čak i ako ih nema za taj dan'+'\n```.nesaljisve = ```\nza odabir ako ne želite da vam bot šalje izmjene, čak i ako ih nema za taj dan');
     }    
 
     
@@ -89,7 +88,7 @@ client.on('message', async msg => {
             }
         }
         client.sendMessage(msg.from, izmjena_test);
-        await f_baza.dodaj_zadnju_poslanu(izmjena_test);
+        await f_baza.dodaj_zadnju_poslanu(izmjena.id, broj);
 
 
 
@@ -97,7 +96,7 @@ client.on('message', async msg => {
         const razred_id = razred_data.id;
         console.log("Razred id.");
         console.log(razred_id);
-        await f_baza.dodaj_razred_id(razred_id);
+        await f_baza.dodaj_razred_id(razred_id, broj);
     }
 
     
@@ -108,14 +107,32 @@ client.on('message', async msg => {
         client.sendMessage(msg.from, '```Raspored bot će vam od sada slati dnevne izmjene automatski.```');
         console.log("Subscribe");
         sub = 1;
-        await f_baza.dodaj_salji_izmjene(sub);
+        await f_baza.dodaj_salji_izmjene(sub, broj);
     }
     //Odgovor na .unsubscribe
     if (msg.body == '.unsubscribe') {
         client.sendMessage(msg.from, '```Raspored bot vam neće od sada slati dnevne izmjene automatski.```');
         console.log("Unubscribe");
         sub = 0;
-        await f_baza.dodaj_ne_salji_izmjene(sub);
-    }    
+        await f_baza.dodaj_ne_salji_izmjene(sub, broj);
+    }
+
+
+    //Odgovor na .saljisve
+    let sve;
+    if (msg.body == '.saljisve') {
+        client.sendMessage(msg.from, '```Raspored bot će vam od sada slati dnevne izmjene automatski, čak i ako nema izmjena za taj dan.```');
+        console.log("Salji sve");
+        sve = 1;
+        await f_baza.dodaj_salji_izmjene_ako_ih_nema(sve, broj);
+    }
+    //Odgovor na .nesaljisve
+    if (msg.body == '.nesaljisve') {
+        client.sendMessage(msg.from, '```Raspored bot će vam od sada neće slati dnevne izmjene automatski, čak i ako nema izmjena za taj dan.```');
+        console.log("Ne salji sve");
+        sve = 0;
+        await f_baza.dodaj_ne_salji_izmjene_ako_ih_nema(sve, broj);
+    }
+
 });
 client.initialize();
