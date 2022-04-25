@@ -177,7 +177,7 @@ pool.getConnection((err, con) => {
             databaseLog("Kreiram tablicu disc_serveri");
             con.query(`
                 CREATE TABLE disc_serveri (
-                    server_id BIGINT PRIMARY KEY,
+                    server_id CHAR(50) PRIMARY KEY,
                     prefix TEXT,
                     razred_id INT,
                     INDEX (server_id),
@@ -189,8 +189,8 @@ pool.getConnection((err, con) => {
             databaseLog("Kreiram tablicu disc_kanali");
             con.query(`
                 CREATE TABLE disc_kanali (
-                    kanal_id BIGINT PRIMARY KEY,
-                    server_id BIGINT,
+                    kanal_id CHAR(50) PRIMARY KEY,
+                    server_id CHAR(50),
                     prefix TEXT,
                     razred_id INT,
                     zadnja_poslana INT,
@@ -222,6 +222,8 @@ pool.getConnection((err, con) => {
                     adresa char(100) NOT NULL,
                     razred_id INT,
                     unsubscribed BOOL NOT NULL DEFAULT false,
+                    token TEXT NOT NULL,
+                    zadnji_token DATETIME NOT NULL,
                     zadnja_poslana INT,
                     salji_sve BOOL NOT NULL DEFAULT false,
                     tamna_tema BOOL NOT NULL DEFAULT false,
