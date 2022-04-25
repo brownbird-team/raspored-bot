@@ -1,16 +1,17 @@
-let rasporedEmail = require("./rasporedEmail");
+let rasporedEmail = require('./rasporedEmail');
 
 const {promiseQuery} = require('./../databaseConnect.js');
-const { dajIzmjene } = require("../databaseQueries");
-// query za mail_korisnici
-//mailUsers = `SELECT * FROM mail_korisnici`;
+const { dajIzmjene } = require('../databaseQueries');
+const database = require('./rasporedEmailFunkcije');
+const emailToken = require('./createToken');
+
 async function sql_mail() {
     mailUsers = await promiseQuery(`SELECT * 
                                     FROM mail_korisnici`);
     for (i in mailUsers) {
         let j, cT, first = 0;
-        let tableData = {}, classSchedule = {};
-        
+        let tableData = {}, classSchedule = {}, lenOfNewChanges, tokenDate, newTokenDate;
+        const d = new Date();
         if (mailUsers[i].unsubscribed == 0) {
             // korisnik prima izmjene
 
@@ -19,7 +20,15 @@ async function sql_mail() {
             tableData.sendAll = mailUsers[i].salji_sve;
             tableData.lastSend = mailUsers[i].zadnja_poslana;
             tableData.darkTheme = mailUsers[i].tamna_tema;
-
+            tableData.token = mailUsers[i].token;
+            
+            tokenDate = mailUsers[i].zadnji_token;
+            if (d.getDate() > JSON.stringify(tokenDate).slice(9, 11)) {
+                await database.updateToken(mailUsers[i].id, emailToken.token());
+                newTokenDate = d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+                await database.updateTokenDate(mailUsers[i].id, newTokenDate);
+                //console.log('[\u001b[33mEmail\033[00m] Novi token za korisnika' + tableData.receiverEmail);
+            }
             // query za general_razred
             generalClass = await promiseQuery(`SELECT * 
                                                FROM general_razred 
@@ -30,10 +39,7 @@ async function sql_mail() {
                 // poslati email dobrodoslice
                 cT = 2;
                 first = 1;
-                updateMailUsers = await promiseQuery(`UPDATE mail_korisnici 
-                                                      SET dobrodoslica = '0' 
-                                                      WHERE dobrodoslica = '1' 
-                                                      AND id = ${mailUsers[i].id}`);
+                await database.updateWelcome(mailUsers[i].id);
                 rasporedEmail.send_email(tableData, null, cT);
             }
 
@@ -45,73 +51,48 @@ async function sql_mail() {
             if (generalClass[0].aktivan == 1) {
                 //console.log(`Razred ${tableData.className} je aktivan.`);
                 // query za izmjene_razred
-                if (first == 1) {
+                if (first) {
                     // korisnik jos nije primio niti jednu izmjenu
                     first = 0;
                     tableData.classChanges = await dajIzmjene(tableData.classID, 0);
-                    updateZadnjaPoslana = await promiseQuery(`UPDATE mail_korisnici SET zadnja_poslana = '${tableData.classChanges[0].id}'
-                                                              WHERE id = '${mailUsers[i].id}'`);
-                    for (let j = 1; j < 10; j++)
-                        classSchedule[`sat${j}`] = tableData.classChanges[0][`sat${j}`];
-
-                    tableData.scheduleChanges = classSchedule;
-                    tableData.tableHeading = tableData.classChanges[0].naslov;
-
-                    if (tableData.classChanges[0].ujutro == false) {
-                        j = -1;
-                        tableData.shiftHeading = "POSLIJEPODNE";
-                    } else {
-                        j = 1;
-                        tableData.shiftHeading = "PRIJEPODNE";
-                    }
-                    
-                    if (tableData.classChanges.sve_null == true) {
-                        if (tableData.sendAll == 1) {
-                            // korisnik zeli sve izmjene+
-                            rasporedEmail.send_email(tableData, j, cT);
-                            updateZadnjaPoslana = await promiseQuery(`UPDATE mail_korisnici SET zadnja_poslana = '${tableData.classChanges[0].id}'
-                                                                    WHERE adresa = '${tableData.receiverEmail}'`);
-                        }
-                    } else {
-                        // korisnik ne zeli sve izmjene
-                        rasporedEmail.send_email(tableData, j, cT);
-                        updateZadnjaPoslana = await promiseQuery(`UPDATE mail_korisnici SET zadnja_poslana = '${tableData.classChanges[0].id}'
-                                                                WHERE adresa = '${tableData.receiverEmail}'`);
-                    }
+                    await database.updateLastSend(tableData.classChanges[0].id, mailUsers[i].id);
+                    lenOfNewChanges = 1; // provjeri                                                         
+                } else {
+                    // korisnik je primio barem jednu izmjenu
+                    tableData.classChanges = await dajIzmjene(tableData.classID, tableData.lastSend);
+                    lenOfNewChanges = tableData.classChanges.length;
                 }
-                // korisnik je primio barem jednu izmjenu
-                tableData.classChanges = await dajIzmjene(tableData.classID, tableData.lastSend);
                 
                 if (tableData.classChanges.length != 0) {
-                    
-                    for (let j = 1; j < 10; j++)
-                        classSchedule[`sat${j}`] = tableData.classChanges[0][`sat${j}`];
+                    for (let change = lenOfNewChanges - 1; change >= 0; change--) {
+                        for (let j = 1; j < 10; j++)
+                            classSchedule[`sat${j}`] = tableData.classChanges[change][`sat${j}`];
 
-                    tableData.scheduleChanges = classSchedule;
-                    tableData.tableHeading = tableData.classChanges[0].naslov;
+                        tableData.scheduleChanges = classSchedule;
+                        tableData.tableHeading = tableData.classChanges[change].naslov;
 
-                    if (tableData.classChanges[0].ujutro == false) {
-                        j = -1;
-                        tableData.shiftHeading = "POSLIJEPODNE";
-                    } else {
-                        j = 1;
-                        tableData.shiftHeading = "PRIJEPODNE";
-                    }
-               
-                    if (tableData.classChanges[0].sve_null == true) {
-                        if (tableData.sendAll == 1) {
-                            // korisnik zeli sve izmjene
-                            console.log('[\u001b[33mEmail\033[00m] Nove izmjena za korisnika ' + tableData.receiverEmail + ': Razred: ' + tableData.className + '.');
-                            rasporedEmail.send_email(tableData, j, cT);
-                            updateZadnjaPoslana = await promiseQuery(`UPDATE mail_korisnici SET zadnja_poslana = '${tableData.classChanges[0].id}'
-                                                                      WHERE adresa = '${tableData.receiverEmail}'`);
+                        if (tableData.classChanges[change].ujutro == false) {
+                            j = -1;
+                            tableData.shiftHeading = "POSLIJEPODNE";
+                        } else {
+                            j = 1;
+                            tableData.shiftHeading = "PRIJEPODNE";
                         }
-                    } else {
-                        // korisnik ne zeli sve izmjene
-                        console.log('[\u001b[33mEmail\033[00m] Nove izmjena za korisnika ' + tableData.receiverEmail + ': Razred: ' + tableData.className + '.');
-                        rasporedEmail.send_email(tableData, j, cT);
-                        updateZadnjaPoslana = await promiseQuery(`UPDATE mail_korisnici SET zadnja_poslana = '${tableData.classChanges[0].id}'
-                                                                  WHERE adresa = '${tableData.receiverEmail}'`);
+                
+                        if (tableData.classChanges[change].sve_null == true) {
+                            if (tableData.sendAll == 1) {
+                                // korisnik zeli sve izmjene
+                                console.log('[\u001b[33mEmail\033[00m] Nova izmjena za korisnika ' + tableData.receiverEmail + ': Razred: ' + tableData.className + '.');
+                                await database.updateLastSend(tableData.classChanges[change].id, mailUsers[i].id);
+                                rasporedEmail.send_email(tableData, j, cT);
+                                console.log(`Zadnja poslana: ${tableData.classChanges[change].id}`);
+                            }
+                        } else {
+                            // korisnik ne zeli sve izmjene
+                            console.log('[\u001b[33mEmail\033[00m] Nova izmjena za korisnika ' + tableData.receiverEmail + ': Razred: ' + tableData.className + '.');
+                            await database.updateLastSend(tableData.classChanges[change].id, mailUsers[i].id);
+                            rasporedEmail.send_email(tableData, j, cT); 
+                        }
                     }
                 } else {
                     //console.log(`Nema novih izmjena za korisnika ${tableData.receiverEmail}: Razred: ${tableData.className}.`);
