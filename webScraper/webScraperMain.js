@@ -1,9 +1,11 @@
 const puppeteer = require('puppeteer');
-const {promiseQuery}=require('./../databaseConnect.js')
+const {promiseQuery}=require('./../databaseConnect.js');
+const baza =require('./funkcije_za_bazu');
+const prefix='[\u001b[31mSCRAPER\033[00m]'
 async function scraper(raz){
     //url
     let url='https://www.tsrb.hr/'+raz[0].smjena.toLowerCase()+'-smjena/';
-    console.log(url);
+    console.log(prefix+'Provjera:'+raz[0].smjena+' smjena');
     
     //Spajanje na stranicu
     const browser = await puppeteer.launch();
@@ -17,7 +19,7 @@ async function scraper(raz){
     const [iframe]= await page.$x('//*[@id="dnevne-izmjene-u-rasporedu-sati-tab"]/iframe')
     const src=await iframe.getProperty('src');
     const iframeTXT=await src.jsonValue();
-    console.log({iframeTXT});
+    
 
     //Odlazi na url od iframea
     await page.goto(iframeTXT);
@@ -137,43 +139,38 @@ async function sql(){
     let razredi_B;
     let izmjena;
     
-    razredi_A=await promiseQuery("SELECT * FROM general_razred WHERE smjena='A' AND aktivan=1");
-    razredi_B=await promiseQuery("SELECT * FROM general_razred WHERE smjena='B' AND aktivan=1");
-    console.log(razredi_A);
+    razredi_A=await baza.razredi_iz_smjene('A');
+    razredi_B=await baza.razredi_iz_smjene('B');
+    
     izmjena=await scraper(razredi_A);
     await sql_upis(izmjena,razredi_A);
+    console.log(prefix+'Gotov');
     izmjena=await scraper(razredi_B);
     sql_upis(izmjena,razredi_B);
+    console.log(prefix+'Gotov')
 }
 async function sql_upis(izmjena,razredi){
     let datum = "";
     const d = new Date()
     datum += d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-    console.log(datum);
+    
     let upis=false;
     for (index=izmjena.length-1;index>=0;index--){
-        console.log(izmjena[index].izmjene_tablica.naslov);
-        tablica=await promiseQuery(`SELECT * FROM izmjene_tablica WHERE 
-        naslov='${izmjena[index].izmjene_tablica.naslov}' AND 
-        smjena='${izmjena[index].izmjene_tablica.smjena}' AND 
-        prijepodne=${izmjena[index].izmjene_tablica.prijepode}`);
+      
+        tablica=await baza.tablica_postoji(izmjena,index);
         
             if(tablica==null){
                 upis=true;
             }
             else if(tablica[0]==null || upis){
                 upis=false;
-                console.log('Upisujem: ',izmjena[index].izmjene_tablica.naslov);
-                tablica_upis=await promiseQuery(`INSERT INTO izmjene_tablica (naslov,smjena,prijepodne) 
-                VALUES('${izmjena[index].izmjene_tablica.naslov}','${izmjena[index].izmjene_tablica.smjena}',${izmjena[index].izmjene_tablica.prijepode})`); 
+                
+                tablica_upis=await baza.upis_naslova_u_bazu(izmjena,index);
             }
             else {
-                console.log('Tablica je u bazi')
+                
             }
-            tablica_id=await promiseQuery(`SELECT id FROM izmjene_tablica WHERE 
-            naslov='${izmjena[index].izmjene_tablica.naslov}' AND 
-            smjena='${izmjena[index].izmjene_tablica.smjena}' AND 
-            prijepodne=${izmjena[index].izmjene_tablica.prijepode} GROUP BY id DESC LIMIT 1`);
+            tablica_id=await baza.dobi_id_tablice(izmjena,index);
             tablica_id=tablica_id[0].id;
             
             
@@ -185,14 +182,9 @@ async function sql_upis(izmjena,razredi){
                     }
                 }
 
-                console.log(razred_id,index);
-                razred_upis=await promiseQuery(`SELECT * FROM izmjene_razred WHERE razred_id=${razred_id} AND tablica_id=${tablica_id} 
-                AND sat1='${izmjena[index].izmjene_razred[index2].sat1}' AND sat2='${izmjena[index].izmjene_razred[index2].sat2}' AND 
-                sat3='${izmjena[index].izmjene_razred[index2].sat3}' AND sat4='${izmjena[index].izmjene_razred[index2].sat4}' AND 
-                sat5='${izmjena[index].izmjene_razred[index2].sat5}' AND sat6='${izmjena[index].izmjene_razred[index2].sat6}' AND 
-                sat7='${izmjena[index].izmjene_razred[index2].sat7}' AND sat8='${izmjena[index].izmjene_razred[index2].sat8}' AND 
-                sat9='${izmjena[index].izmjene_razred[index2].sat9}' GROUP BY id DESC LIMIT 1`);
-                console.log(razred_upis);
+               
+                razred_upis=await baza.select_baza_izmjene(izmjena,index,index2);
+               
                 
                 upis=false;
                 
@@ -202,22 +194,13 @@ async function sql_upis(izmjena,razredi){
                 }
                 else if(razred_upis[0]==null || upis){
                     upis=false;
-                    console.log("A");
-                    razred_upis_sad=await promiseQuery(`INSERT INTO izmjene_razred (razred_id,tablica_id,sat1,sat2,sat3,sat4,sat5,sat6,sat7,sat8,sat9,datum)
-                                                        VALUES(${razred_id},${tablica_id},'${izmjena[index].izmjene_razred[index2].sat1}'
-                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat2}'
-                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat3}'
-                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat4}'
-                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat5}'
-                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat6}'
-                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat7}'
-                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat8}'
-                                                                                        ,'${izmjena[index].izmjene_razred[index2].sat9}','${datum}')`);
-                    console.log("B");                                                                    
-                    console.log(razred_upis_sad,index);
+                   
+                    razred_upis_sad=await baza.upis_izmjena_u_bazu(izmjena,index,index2,datum);
+                                                                                      
+                    
         }
             else{
-                console.log('Razred je vec upisan',razred_id);
+               
             }
             
         }
