@@ -6,7 +6,7 @@ const { promiseQuery } = require("./../databaseConnect.js");
 //Ako ima kontakta
 exports.dajKontakt = (broj) => {
     return new Promise(async (resolve) => {
-        const result = await promiseQuery(`SELECT * FROM wap_kontakti WHERE broj = '${broj}'`)
+        const result = await promiseQuery(`SELECT * FROM wap_kontakti WHERE broj = '${broj}'`);
         if (result.length === 0) {
             resolve(null);
             return;
@@ -125,5 +125,14 @@ exports.daj_prefix = (broj) => {
         let baza_daj_prefix = `SELECT prefix FROM wap_kontakti WHERE broj = ${broj}`;
         let novi_prefix = await promiseQuery(baza_daj_prefix);
         resolve(novi_prefix);
+    });
+}
+
+//Dodaj resetirani prefix u bazu
+exports.reset_prefix = (broj) => {
+    return new Promise(async (resolve) => {
+        let baza_reset_prefix = `UPDATE wap_kontakti SET prefix = '.' WHERE broj = ${broj}`;
+        await promiseQuery(baza_reset_prefix);
+        resolve("done");
     });
 }

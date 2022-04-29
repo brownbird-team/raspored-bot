@@ -14,6 +14,7 @@ const f_baza = require('./funkcije_za_bazu');
 
 //funkcija za dobivanja podataka iz baze
 const baza = require('../databaseQueries.js');
+const cli = require('nodemon/lib/cli');
 
 
 //Novi klijent
@@ -56,7 +57,6 @@ client.on('message', async msg => {
     console.log(kontakt);
 
     let prefix = await f_baza.daj_prefix(broj);
-    console.log(`Trenutni prefix: ${prefix[0].prefix}`);
     prefix = prefix[0].prefix;
     
 
@@ -64,13 +64,14 @@ client.on('message', async msg => {
     if (msg.body == `${prefix}help`) {
         console.log("Korisnik traži pomoć");
         client.sendMessage(msg.from, `
-        ${prefix + '*r⎵<ime svojeg razreda>*'} = ispis rasporeda za vaš razred\n
-        ${prefix + '*subscribe*'} = za odabir ako želite da vam bot šalje izmjene\n
-        ${prefix + '*unsubscribe*'} = za odabir ako ne želite da vam bot šalje izmjene\n
-        ${prefix + '*saljisve*'} = za odabir ako želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
-        ${prefix + '*nesaljisve*'} = za odabir ako ne želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
-        ${prefix + '*prefix⎵<prefix>*'} = za promjenu svojega prefixa.(prefix ne smije sadržavati razmake)`);
-    }   
+        ${'*' + prefix + 'r⎵<ime svojeg razreda>*'} = ispis rasporeda za vaš razred\n
+        ${'*' + prefix + 'subscribe*'} = za odabir ako želite da vam bot šalje izmjene\n
+        ${'*' + prefix + 'unsubscribe*'} = za odabir ako ne želite da vam bot šalje izmjene\n
+        ${'*' + prefix + 'saljisve*'} = za odabir ako želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
+        ${'*' + prefix + 'nesaljisve*'} = za odabir ako ne želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
+        ${'*' + prefix + 'prefix⎵<prefix>*'} = za promjenu svojega prefixa. (prefix ne smije sadržavati razmake)\n
+        *.resetpre* = za promjenu svojega prefixa nazad na točku.\n`);
+    }
 
     
     //Odgovor na .prefix naredbu
@@ -78,7 +79,6 @@ client.on('message', async msg => {
         prefix = msg.body;
         prefix = prefix.split(" ");
         prefix = prefix[1];
-        console.log(prefix);
         client.sendMessage(msg.from, `Vaš novi prefix je "${prefix}"`);
         await f_baza.dodaj_prefix(prefix, broj);
     }   
@@ -88,14 +88,12 @@ client.on('message', async msg => {
     //Dobivanje razreda iz naredbe .r
     let razred = msg.body;
     razred = razred.slice(-3);
-    console.log(razred);
     
     //Odgovor na .r <ime razreda> naredbu.
     if (msg.body == `${prefix}r ${razred}`) {
         //Dobivanje podataka o klijentovom razredu
         const razred_data = await baza.dajRazredByName(razred);
         let izmjena = await baza.dajZadnju(razred_data.id);
-        console.log("Izmjena u rasporedu.")
         console.log(izmjena);
         //Ispis izmjena korisniku
         let izmjena_test = `${izmjena.naslov}`;
@@ -117,8 +115,6 @@ client.on('message', async msg => {
 
         //Uzimanje razred id
         const razred_id = razred_data.id;
-        console.log("Razred id.");
-        console.log(razred_id);
         await f_baza.dodaj_razred_id(razred_id, broj);
     }
 
@@ -160,6 +156,15 @@ client.on('message', async msg => {
     
     let brojevi = await f_baza.daj_brojeve();
     console.log(brojevi);
+
+    //Odgovor na .resetpre
+    if (msg.body == `.resetpre`) {
+        let resetirani_prefix = await f_baza.reset_prefix(broj);
+        client.sendMessage(msg.from, `Resetirali ste prefix na "."`);
+    }
+
+
+    
     /*
     setTimeout(async () => {
         for (let i = 0; i < brojevi.length; i++) {
@@ -169,15 +174,12 @@ client.on('message', async msg => {
                 "Test"
             );    
         }        
-    }, 10000);
+    }, 5000);
     */
 
     /*
     function interval() {
-        for (let i = 0; i < brojevi.length; i++) {
-            const id = client.getNumberId(brojevi[i].broj); 
-        }
-        client.sendMessage(id, 'Test');
+        client.sendMessage(broj, `${izmjena_test}`);
     }
     setInterval(interval, 5000);
     */
