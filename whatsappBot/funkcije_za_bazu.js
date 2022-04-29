@@ -53,7 +53,7 @@ exports.dodaj_razred_id = (razred_id, broj) => {
 //Dodaj prefix u bazu
 exports.dodaj_prefix = (prefix, broj) => {
     return new Promise(async (resolve) => {
-        let baza_prefix = `UPDATE wap_kontakti SET prefix = ${prefix} WHERE broj = ${broj}`;
+        let baza_prefix = `UPDATE wap_kontakti SET prefix = '${prefix}' WHERE broj = ${broj}`;
         await promiseQuery(baza_prefix);
         resolve("done");
     });
@@ -105,5 +105,25 @@ exports.dodaj_ne_salji_izmjene_ako_ih_nema = (sve, broj) => {
         let baza_ne_salji_izmjene_ako_ih_nema = `UPDATE wap_kontakti SET salji_sve = ${sve} WHERE broj = ${broj}`;
         await promiseQuery(baza_ne_salji_izmjene_ako_ih_nema);
         resolve("done");
+    });
+}
+
+
+//Daj sve brojeve iz baze
+exports.daj_brojeve = () => {
+    return new Promise(async (resolve) => {
+        let baza_brojevi = `SELECT broj FROM wap_kontakti`;
+        let brojevi = await promiseQuery(baza_brojevi);
+        resolve(brojevi);
+    });
+}
+
+
+//Daj prefix iz baze
+exports.daj_prefix = (broj) => {
+    return new Promise(async (resolve) => {
+        let baza_daj_prefix = `SELECT prefix FROM wap_kontakti WHERE broj = ${broj}`;
+        let novi_prefix = await promiseQuery(baza_daj_prefix);
+        resolve(novi_prefix);
     });
 }

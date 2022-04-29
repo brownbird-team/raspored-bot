@@ -42,6 +42,7 @@ process.on("SIGINT", async () => {
     process.exit(0);
 });
 
+
 //Odgovaranje na naredbe
 client.on('message', async msg => {
     const result = await msg.getContact();
@@ -53,14 +54,36 @@ client.on('message', async msg => {
         await f_baza.dodaj_broj(broj);
     }
     console.log(kontakt);
+
+    let prefix = await f_baza.daj_prefix(broj);
+    console.log(`Trenutni prefix: ${prefix[0].prefix}`);
+    prefix = prefix[0].prefix;
     
 
     //Pomoć korisniku
-    if (msg.body == '.help') {
+    if (msg.body == `${prefix}help`) {
         console.log("Korisnik traži pomoć");
-        client.sendMessage(msg.from, '```.r <ime svojeg razreda> = ```\nispis rasporeda za vaš razred.'+'\n```.subscribe = ```\nza odabir ako želite da vam bot šalje izmjene'+'\n```.unsubscribe = ```\nza odabir ako ne želite da vam bot šalje izmjene'+'\n```.saljisve = ```\nza odabir ako želite da vam bot šalje izmjene, čak i ako ih nema za taj dan'+'\n```.nesaljisve = ```\nza odabir ako ne želite da vam bot šalje izmjene, čak i ako ih nema za taj dan');
-    }    
+        client.sendMessage(msg.from, `
+        ${prefix + '*r⎵<ime svojeg razreda>*'} = ispis rasporeda za vaš razred\n
+        ${prefix + '*subscribe*'} = za odabir ako želite da vam bot šalje izmjene\n
+        ${prefix + '*unsubscribe*'} = za odabir ako ne želite da vam bot šalje izmjene\n
+        ${prefix + '*saljisve*'} = za odabir ako želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
+        ${prefix + '*nesaljisve*'} = za odabir ako ne želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
+        ${prefix + '*prefix⎵<prefix>*'} = za promjenu svojega prefixa.(prefix ne smije sadržavati razmake)`);
+    }   
 
+    
+    //Odgovor na .prefix naredbu
+    if (msg.body.startsWith(`${prefix}prefix`, 0)) {
+        prefix = msg.body;
+        prefix = prefix.split(" ");
+        prefix = prefix[1];
+        console.log(prefix);
+        client.sendMessage(msg.from, `Vaš novi prefix je "${prefix}"`);
+        await f_baza.dodaj_prefix(prefix, broj);
+    }   
+    
+    
     
     //Dobivanje razreda iz naredbe .r
     let razred = msg.body;
@@ -68,7 +91,7 @@ client.on('message', async msg => {
     console.log(razred);
     
     //Odgovor na .r <ime razreda> naredbu.
-    if (msg.body == `.r ${razred}`) {
+    if (msg.body == `${prefix}r ${razred}`) {
         //Dobivanje podataka o klijentovom razredu
         const razred_data = await baza.dajRazredByName(razred);
         let izmjena = await baza.dajZadnju(razred_data.id);
@@ -103,14 +126,14 @@ client.on('message', async msg => {
     //Da li korisnik želi ili ne želi primati izmjene
     //Odgovor na .subscribe
     let sub;
-    if (msg.body == '.subscribe') {
+    if (msg.body == `${prefix}subscribe`) {
         client.sendMessage(msg.from, '```Raspored bot će vam od sada slati dnevne izmjene automatski.```');
         console.log("Subscribe");
         sub = 1;
         await f_baza.dodaj_salji_izmjene(sub, broj);
     }
     //Odgovor na .unsubscribe
-    if (msg.body == '.unsubscribe') {
+    if (msg.body == `${prefix}unsubscribe`) {
         client.sendMessage(msg.from, '```Raspored bot vam neće od sada slati dnevne izmjene automatski.```');
         console.log("Unubscribe");
         sub = 0;
@@ -120,19 +143,44 @@ client.on('message', async msg => {
 
     //Odgovor na .saljisve
     let sve;
-    if (msg.body == '.saljisve') {
+    if (msg.body == `${prefix}saljisve`) {
         client.sendMessage(msg.from, '```Raspored bot će vam od sada slati dnevne izmjene automatski, čak i ako nema izmjena za taj dan.```');
         console.log("Salji sve");
         sve = 1;
         await f_baza.dodaj_salji_izmjene_ako_ih_nema(sve, broj);
     }
     //Odgovor na .nesaljisve
-    if (msg.body == '.nesaljisve') {
+    if (msg.body == `${prefix}nesaljisve`) {
         client.sendMessage(msg.from, '```Raspored bot će vam od sada neće slati dnevne izmjene automatski, čak i ako nema izmjena za taj dan.```');
         console.log("Ne salji sve");
         sve = 0;
         await f_baza.dodaj_ne_salji_izmjene_ako_ih_nema(sve, broj);
     }
 
+    
+    let brojevi = await f_baza.daj_brojeve();
+    console.log(brojevi);
+    /*
+    setTimeout(async () => {
+        for (let i = 0; i < brojevi.length; i++) {
+            const id = await client.getNumberId(brojevi[i].broj);
+            await client.sendMessage(
+                id,
+                "Test"
+            );    
+        }        
+    }, 10000);
+    */
+
+    /*
+    function interval() {
+        for (let i = 0; i < brojevi.length; i++) {
+            const id = client.getNumberId(brojevi[i].broj); 
+        }
+        client.sendMessage(id, 'Test');
+    }
+    setInterval(interval, 5000);
+    */
+   
 });
 client.initialize();
