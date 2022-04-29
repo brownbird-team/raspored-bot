@@ -1,0 +1,34 @@
+    <script>
+
+        let url = window.location.href.split('/');
+        let token = url[url.length - 1];
+        const data = {token}
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        };
+        fetch('/unsubscribe/' + data.token, options);
+        
+    </script>
+    <div class="card">
+        {{#if before}}
+        <form action={{tokenURL}} method="POST">
+            <div class="form-part">
+                <input type="submit" value="Unsubscribe" id="click" name="click">
+            </div>
+        </form>
+        {{/if}}
+
+        {{#if after}}
+        <h1>Uspješno si poništio pretplatu s Raspored botom</h1>
+        {{/if}}
+
+        {{#if invalid}}
+        <p>Vaš token je nevažeći, pokušajte ponovno ispuniti obrazac za prekid pretplate.</p>
+        <p>Kliknite <a href="./webUnsubscribe.handlebars">ovdje</a> kako bi ispunili obrazac.</p>
+        {{/if}}
+    </div>
+
