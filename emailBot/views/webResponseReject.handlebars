@@ -1,0 +1,20 @@
+
+<div class="card">
+    {{#if rej1}}
+    <p>E-mail <b>{{email}}</b> ne postoji u našoj bazi.</p>
+    {{/if}}
+
+    {{#if res1}}
+    <p>E-mail je uspješno posalan na adresu <b>{{email}}</b>.</p>
+    <p>Kako bi poništili pretplatu, potrebno je otvoriti link koji je naveden u e-mailu.</p>
+    {{/if}}
+
+    {{#if rej2}}
+    <p>E-mail <b>{{email}} već postoji u našoj bazi.</b></p>
+    {{/if}}
+
+    {{#if res2}}
+    <p>Uspješno ste registrirani. Izmjene u rasporedu sati će<br>
+    Vam dolaziti na adresu <b>{{email}}</b></p>
+    {{/if}}
+</div>

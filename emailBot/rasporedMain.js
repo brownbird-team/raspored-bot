@@ -6,8 +6,7 @@ const database = require('./rasporedEmailFunkcije');
 const emailToken = require('./createToken');
 
 async function sql_mail() {
-    mailUsers = await promiseQuery(`SELECT * 
-                                    FROM mail_korisnici`);
+    mailUsers = await promiseQuery(`SELECT * FROM mail_korisnici`);
     for (i in mailUsers) {
         let j, cT, first = 0;
         let tableData = {}, classSchedule = {}, lenOfNewChanges, tokenDate, newTokenDate;

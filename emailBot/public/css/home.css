@@ -1,0 +1,39 @@
+.section-container
+{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    top: 20rem; 
+}
+
+a
+{
+    text-decoration: none;
+    color:#36393F;
+}
+
+.section
+{
+    width: 15rem;   
+    margin: 2rem;
+    padding: 1rem 0.5rem;
+    color: #36393F;
+    background-color: #ffdf2b;
+    border: 2px solid #ffdf2b;
+    border-radius: 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: 0.08s background-color, 0.08s color;
+}
+
+.section:hover
+{
+    background-color: #36393F;
+}
+
+.section:hover a
+{
+    color: #ffdf2b;
+}

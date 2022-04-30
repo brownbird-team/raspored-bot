@@ -9,12 +9,13 @@ html
     font-size: 18px;
     font-family: LatoBold, sans-serif, Helvetica, Arial;
     color: whitesmoke;
-    background-color: white;
+    background-color: #272626;
 }
 
 .heading
 {
-    color:#5865F2;
+    /*color:#5865F2;*/
+    color: #ffdf2b;
     font-weight: bold;
     margin-left: auto;
     margin-right: auto;
@@ -65,7 +66,8 @@ html
 
 .card .form-part input[type="email"]:valid
 {
-    border-bottom-color: #5865F2;
+    /*border-bottom-color: #5865F2;*/
+    border-bottom-color: #ffdf2b;
 }
 
 .card .form-part select
@@ -74,9 +76,11 @@ html
     background: none;
     outline: none;
     width: 100px;
-    color:aliceblue;
+    /*color:aliceblue;*/
+    color: #36393F;
     font-weight: bold;
-    background-color: #5865F2;
+    /*background-color: #5865F2;*/
+    background-color: #ffdf2b;
     margin-top: 5px;
     padding: 2px 5px;
     border-radius: 5px;
@@ -94,15 +98,18 @@ label
 
 .card input[type="submit"]
 {
-    border: 2px solid #5865F2;
+    /*border: 2px solid #5865F2;*/
+    border: 2px solid #ffdf2b;
     background: none;
     outline: none;
     width: 100px;
-    background-color: #5865F2;
+    /*background-color: #5865F2;*/
+    background-color: #ffdf2b;
     margin-top: 1rem;
     padding: 5px 2px;
     border-radius: 5px;
-    color: aliceblue;
+    /*color: aliceblue;*/
+    color: #36393F;
     font-family: LatoBold;
     font-weight: bolder;
     font-size: 16px;
@@ -111,7 +118,10 @@ label
 
 .card input[type="submit"]:hover
 {
-    background-color: aliceblue;
-    color: #5865F2;
-    border: 2px solid #5865F2;
+    /*background-color: aliceblue;*/
+    background-color: #36393F;
+    /*color: #5865F2;*/
+    color: #ffdf2b;
+    /*border: 2px solid #5865F2;*/
+    border: 2px solid #ffdf2b;
 }

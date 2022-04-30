@@ -6,7 +6,7 @@ let hbs = require('nodemailer-express-handlebars');
 function send_email(tableData, j, cT){
     let isEmpty = {}, selectedTemplate, selectedContext, selectedSubject;
 
-    if (cT != 2) {
+    if (cT != 2 && cT != 3) {
         for (let i = 1; i < 10; i++) {
             if (tableData.scheduleChanges[`sat${i}`] != "") {
                 isEmpty[`sat${i}`] = true;
@@ -40,7 +40,6 @@ function send_email(tableData, j, cT){
             tableHeading        : tableData.tableHeading,
             shiftHeading        : tableData.shiftHeading,
             email               : tableData.receiverEmail,
-            token               : tableData.token,
             scheduleChangesSat1 : tableData.scheduleChanges.sat1,
             scheduleChangesSat2 : tableData.scheduleChanges.sat2,
             scheduleChangesSat3 : tableData.scheduleChanges.sat3,
@@ -55,7 +54,7 @@ function send_email(tableData, j, cT){
             selectedTemplate = 'raspored_dark_theme';
         else
             selectedTemplate = 'raspored_light_theme';
-    } else {
+    } else if (cT == 2) {
         // dobrodoslica
         let sendAllMessage, darkThemeMessage;
         selectedTemplate = 'raspored_welcome';
@@ -68,11 +67,16 @@ function send_email(tableData, j, cT){
         else
             darkThemeMessage = 'Isključeno';
         selectedContext = {email        : tableData.receiverEmail,
-                           token        : tableData.token,
                            class        : tableData.className, 
                            sendAll      : sendAllMessage,
                            darkTheme    : darkThemeMessage}; 
         selectedSubject = `Raspored bot ti želi dobrodošlicu!`;
+    } else if (cT == 3) {
+        // unsubscribe email
+        selectedTemplate = 'raspored_unsubscribe';
+        selectedContext = {email        : tableData.receiverEmail,
+                           emailToken   : tableData.tokenEmail};
+        selectedSubject = `Potvrda o prekidu praćenja izmjena`;
     }
     // povezivanje s posiljateljom
     let transporter = nodemailer.createTransport({
