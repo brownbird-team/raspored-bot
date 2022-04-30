@@ -1,12 +1,12 @@
 // Dodaj potrebne funkcije iz ostalih datoteka
 const { promiseQuery } = require("./../databaseConnect.js");
-const { dajRazred } = require("./../databaseQueries.js");
+const { dajRazred, dajRazredById } = require("./../databaseQueries.js");
 
 // Daj podatke za traženi server po ID-u
 exports.getServer = (server_id) => {
     return new Promise(async (resolve, reject) => {
         // Zatraži podatke za server
-        let result = await promiseQuery(`SELECT * FROM disc_serveri WHERE server_id = ${server_id}`);
+        let result = await promiseQuery(`SELECT * FROM disc_serveri WHERE server_id = '${server_id}'`);
         // Ako server postoji u bazi nastavi
         if (result.length === 0) {
             resolve(null);
@@ -22,10 +22,10 @@ exports.getServer = (server_id) => {
         if (server.razred_id === null) {
             objekt.razred = null;
         } else {
-            server.razred = await dajRazred(server.razred_id);
+            objekt.razred = await dajRazredById(server.razred_id);
         }
         // Zatraži podatke za kanale u tom serveru
-        let kanali = await promiseQuery(`SELECT * FROM disc_kanali WHERE server_id = ${server_id}`);
+        let kanali = await promiseQuery(`SELECT * FROM disc_kanali WHERE server_id = '${server_id}'`);
         // Ako je barem jedan kanal dodan za server
         if (kanali.length === 0) {
             objekt.kanali = null;
@@ -56,7 +56,7 @@ exports.getServer = (server_id) => {
 exports.getKanal = (kanal_id) => {
     return new Promise(async (resolve, reject) => {
         // Zatraži podatke za kanal
-        let result = await promiseQuery(`SELECT * FROM disc_kanali WHERE kanal_id = ${kanal_id}`);
+        let result = await promiseQuery(`SELECT * FROM disc_kanali WHERE kanal_id = '${kanal_id}'`);
         // Ako kanal postoji u bazi nastavi
         if (result.length === 0) {
             resolve(null);
@@ -76,7 +76,7 @@ exports.getKanal = (kanal_id) => {
         if (kanal.razred_id === null) {
             objekt.razred = null;
         } else {
-            objekt.razred = await dajRazred(kanal.razred_id);
+            objekt.razred = await dajRazredById(kanal.razred_id);
         }
 
         resolve(objekt);
@@ -112,7 +112,7 @@ exports.updateServer = (objekt) => {
         // Ako je barem jedno svojstvo izmjenjeno
         // Izvrši Query
         if (query !== "UPDATE disc_serveri SET") {
-            query += ` WHERE server_id = ${objekt.id}`;
+            query += ` WHERE server_id = '${objekt.id}'`;
             await promiseQuery(query);
             resolve("done");
         } else {
@@ -154,7 +154,7 @@ exports.updateKanal = (objekt) => {
         }
         if ("mute" in objekt) {
             if (zarez) query += ",";
-            query += ` salji_izmjene = ${objekt.mute}`;
+            query += ` salji_izmjene = ${!objekt.mute}`;
             zarez = true;
         }
         if ("salji_sve" in objekt) {
@@ -165,7 +165,7 @@ exports.updateKanal = (objekt) => {
         // Ako je barem jedno svojstvo izmjenjeno
         // Izvrši Query
         if (query !== "UPDATE disc_kanali SET") {
-            query += ` WHERE kanal_id = ${objekt.id}`;
+            query += ` WHERE kanal_id = '${objekt.id}'`;
             await promiseQuery(query);
             resolve("done");
         } else {
@@ -177,7 +177,7 @@ exports.updateKanal = (objekt) => {
 // Dodaj server u bazu
 exports.addServer = (server_id) => {
     return new Promise(async (resolve, reject) => {
-        const query = `INSERT INTO disc_serveri (server_id) VALUES (${server_id})`;
+        const query = `INSERT INTO disc_serveri (server_id) VALUES ('${server_id}')`;
         await promiseQuery(query);
         resolve("done");
     });
@@ -186,7 +186,11 @@ exports.addServer = (server_id) => {
 // Dodaj kanal u bazu
 exports.addKanal = (server_id, kanal_id) => {
     return new Promise(async (resolve, reject) => {
-        const query = `INSERT INTO disc_kanali (kanal_id, server_id) VALUES (${kanal_id}, ${server_id})`;
+        let query;
+        if (server_id)
+            query = `INSERT INTO disc_kanali (kanal_id, server_id) VALUES ('${kanal_id}', '${server_id}')`;
+        else
+            query = `INSERT INTO disc_kanali (kanal_id) VALUES ('${kanal_id}')`;
         await promiseQuery(query);
         resolve("done");
     });
@@ -196,9 +200,9 @@ exports.addKanal = (server_id, kanal_id) => {
 exports.removeServer = (server_id) => {
     return new Promise(async (resolve, reject) => {
         // Ukloni sve kanale u tom serveru iz baze
-        const kanalQuery = `DELETE FROM disc_kanali WHERE server_id = ${server_id}`;
+        const kanalQuery = `DELETE FROM disc_kanali WHERE server_id = '${server_id}`;
         // Ukloni server iz baze
-        const serverQuery = `DELETE FROM disc_serveri WHERE server_id = ${server_id}`;
+        const serverQuery = `DELETE FROM disc_serveri WHERE server_id = '${server_id}'`;
         // Izvrši Query
         await promiseQuery(kanalQuery + '; ' + serverQuery);
         resolve("done");
@@ -208,7 +212,7 @@ exports.removeServer = (server_id) => {
 // Ukloni kanal iz baze
 exports.removeKanal = (kanal_id) => {
     return new Promise(async (resolve, reject) => {
-        const query = `DELETE FROM disc_kanali WHERE kanal_id = ${kanal_id}`;
+        const query = `DELETE FROM disc_kanali WHERE kanal_id = '${kanal_id}'`;
         await promiseQuery(query);
         resolve("done");
     });
@@ -270,5 +274,28 @@ exports.setOption = (option, value) => {
         }
         await promiseQuery(query);
         resolve("done");
+    });
+}
+
+exports.getPrefix = (server_id, kanal_id) => {
+    return new Promise(async (resolve, reject) => {
+        let result;
+
+        result = await promiseQuery(`SELECT prefix FROM disc_kanali WHERE kanal_id = '${kanal_id}'`);
+        if (result.length !== 0)
+            if (result[0].prefix) {
+                resolve(result[0].prefix);
+                return;
+            }
+            
+        result = await promiseQuery(`SELECT prefix FROM disc_serveri WHERE server_id = '${server_id}'`);
+        if (result.length !== 0)
+            if (result[0].prefix) {
+                resolve(result[0].prefix);
+                return;
+            }
+        
+        const defaultPrefix = await exports.getOption("prefix");
+        resolve(defaultPrefix.value);
     });
 }
