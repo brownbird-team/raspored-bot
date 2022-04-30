@@ -136,3 +136,21 @@ exports.reset_prefix = (broj) => {
         resolve("done");
     });
 }
+
+//Daj salji izmjene iz baze
+exports.daj_salji_izmjene = (broj) => {
+    return new Promise(async (resolve) => {
+        let baza_daj_salji_izmjene = `SELECT salji_izmjene FROM wap_kontakti WHERE broj = ${broj}`;
+        let daj_salji_izmjene = await promiseQuery(baza_daj_salji_izmjene);
+        resolve(daj_salji_izmjene);
+    });
+}
+
+//Daj salji sve iz baze
+exports.daj_salji_sve = (broj) => {
+    return new Promise(async (resolve) => {
+        let baza_daj_salji_sve = `SELECT salji_sve FROM wap_kontakti WHERE broj = ${broj}`;
+        let daj_salji_sve = await promiseQuery(baza_daj_salji_sve);
+        resolve(daj_salji_sve);
+    });
+}

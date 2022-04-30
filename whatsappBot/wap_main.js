@@ -88,30 +88,29 @@ client.on('message', async msg => {
     //Dobivanje razreda iz naredbe .r
     let razred = msg.body;
     razred = razred.slice(-3);
+
+    //Dobivanje podataka o klijentovom razredu
+    const razred_data = await baza.dajRazredByName(razred);
+    let izmjena = await baza.dajZadnju(razred_data.id);
+    console.log(izmjena);
+    //Ispis izmjena korisniku
+    let izmjena_test = `${izmjena.naslov}`;
+    if (izmjena.ujutro) {
+        izmjena_test += '\n*Prijepodne*';
+        for (let i = 1; i < 10; i++) {
+            izmjena_test += '\n```'+`${i}. sat = ${izmjena[`sat${i}`]}`+'```';
+        }
+    }else {
+        izmjena_test += '\n*Poslijepodne*';
+        for (let i = 1; i < 10; i++) {
+            izmjena_test += '\n```'+`${ (i===-1) ? ` ` : ``}${i-2}. sat = ${izmjena[`sat${i}`]}`+'```';
+        }
+    }
     
     //Odgovor na .r <ime razreda> naredbu.
     if (msg.body == `${prefix}r ${razred}`) {
-        //Dobivanje podataka o klijentovom razredu
-        const razred_data = await baza.dajRazredByName(razred);
-        let izmjena = await baza.dajZadnju(razred_data.id);
-        console.log(izmjena);
-        //Ispis izmjena korisniku
-        let izmjena_test = `${izmjena.naslov}`;
-        if (izmjena.ujutro) {
-            izmjena_test += '\n*Prijepodne*';
-            for (let i = 1; i < 10; i++) {
-                izmjena_test += '\n```'+`${i}. sat = ${izmjena[`sat${i}`]}`+'```';
-            }
-        }else {
-            izmjena_test += '\n*Poslijepodne*';
-            for (let i = 1; i < 10; i++) {
-                izmjena_test += '\n```'+`${ (i===-1) ? ` ` : ``}${i-2}. sat = ${izmjena[`sat${i}`]}`+'```';
-            }
-        }
         client.sendMessage(msg.from, izmjena_test);
         await f_baza.dodaj_zadnju_poslanu(izmjena.id, broj);
-
-
 
         //Uzimanje razred id
         const razred_id = razred_data.id;
@@ -155,7 +154,6 @@ client.on('message', async msg => {
 
     
     let brojevi = await f_baza.daj_brojeve();
-    console.log(brojevi);
 
     //Odgovor na .resetpre
     if (msg.body == `.resetpre`) {
@@ -177,12 +175,22 @@ client.on('message', async msg => {
     }, 5000);
     */
 
-    /*
-    function interval() {
-        client.sendMessage(broj, `${izmjena_test}`);
+    //Uzimanje podataka za izmjene iz baze
+    let salji_izmjene = await f_baza.daj_salji_izmjene(broj);
+    salji_izmjene = salji_izmjene[0].salji_izmjene;
+    console.log(salji_izmjene);
+    let salji_sve = await f_baza.daj_salji_sve(broj);
+    salji_sve = salji_sve[0].salji_sve;
+    console.log(salji_sve);
+
+    if (salji_izmjene === 1) {
+        function interval() {
+            client.sendMessage(msg.from, `${izmjena_test}`);
+        }
+        setInterval(interval, 5000);
     }
-    setInterval(interval, 5000);
-    */
+    
+    
    
 });
 client.initialize();
