@@ -40,6 +40,17 @@ html
     box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
 }
 
+.card a
+{
+    text-decoration: none;
+    color:#ffdf2b;
+}
+
+.card a:hover
+{
+    text-decoration:underline;
+}
+
 .card .form-part
 {
     text-align: center;
@@ -98,30 +109,73 @@ label
 
 .card input[type="submit"]
 {
-    /*border: 2px solid #5865F2;*/
     border: 2px solid #ffdf2b;
     background: none;
     outline: none;
     width: 100px;
-    /*background-color: #5865F2;*/
     background-color: #ffdf2b;
-    margin-top: 1rem;
-    padding: 5px 2px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-top: 2rem;
+    padding: 0.4rem 0.2rem;
     border-radius: 5px;
-    /*color: aliceblue;*/
     color: #36393F;
     font-family: LatoBold;
     font-weight: bolder;
     font-size: 16px;
-    transition: background-color 0.5s;
+    transition: background-color 0.08s;
 }
 
 .card input[type="submit"]:hover
 {
-    /*background-color: aliceblue;*/
     background-color: #36393F;
-    /*color: #5865F2;*/
     color: #ffdf2b;
-    /*border: 2px solid #5865F2;*/
     border: 2px solid #ffdf2b;
+}
+
+.card input[type="button"]
+{
+    border: 2px solid #ffdf2b;
+    background: none;
+    outline: none;
+    width:100px;
+    background-color: #ffdf2b;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-top: 2rem;
+    padding: 0.4rem 0.2rem;
+    border-radius: 5px;
+    color: #36393F;
+    font-family: LatoBold;
+    font-weight: bolder;
+    font-size: 16px;
+    transition: background-color 0.08s;
+}
+
+.card input[type="button"]:hover
+{
+    background-color: #36393F;
+    color: #ffdf2b;
+    border: 2px solid #ffdf2b;
+}
+
+#click
+{
+    width: fit-content;
+    padding: 0.5rem 0.3rem;
+}
+
+.card h2, p
+{
+    text-align: center;
+}
+
+b
+{
+    color:#ffdf2b;
+}
+
+#end-button
+{
+    width: fit-content;
 }
