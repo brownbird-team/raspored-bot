@@ -1,4 +1,4 @@
-const { promiseQuery } = require('./../databaseConnect.js');
+const { promiseQuery, query } = require('./../databaseConnect.js');
 const token = require('./createToken');
 
 exports.Client = class {
@@ -83,16 +83,26 @@ exports.removeToken = (token) => {
 
 exports.setTokenDate = (email) => {
     return new Promise(async (resolve, reject) => {
-        const date = this.getDateNow();
+        let newDate = new Date();
+        const leftTime = 1;
+        newDate.setTime(newDate.getTime() + (leftTime * 60 * 1000));
+        date = newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate() + " " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds();
         let setClientTokenDate = await promiseQuery(`UPDATE mail_korisnici SET zadnji_token = '${date}' WHERE adresa = '${email}'`);
         resolve(setClientTokenDate);
+    });
+}
+
+exports.getTokenDate = (token) => {
+    return new Promise(async (resolve, reject) => {
+        let tokenDate = await promiseQuery(`SELECT zadnji_token FROM mail_korisnici WHERE token = '${token}'`);
+        resolve(tokenDate);
     });
 }
 
 exports.checkToken = (token) => {
     return new Promise(async (resolve, reject) => {
         let nowDate = new Date();
-        let dbTokenDate = await promiseQuery(`SELECT zadnji_token FROM mail_korisnici WHERE token = '${token}' AND zadnji_token IS NOT NULL`);
+        let dbTokenDate = await promiseQuery(`SELECT zadnji_token FROM mail_korisnici WHERE token = '${token}'`);
         const timeToLeave = 1;
         const diffInMiliseconds = nowDate.valueOf() - dbTokenDate[0].zadnji_token.valueOf();
         const diffInHours = diffInMiliseconds / 1000 / 60;
@@ -107,10 +117,22 @@ exports.checkToken = (token) => {
 }
 
 exports.getTokens = () => {
-    return new Promise(async (resolve, reject) => {
-        let tokens = `SELECT token FROM mail_korisnici`;
-        result = await promiseQuery(tokens);
-        resolve(result);
+    return new Promise((resolve, reject) => {
+        query(`SELECT token FROM mail_korisnici WHERE token IS NOT NULL`, (err, result) => {
+            if (err) throw err;
+            let listOfTokens = [];
+            for (t in result) {
+                listOfTokens[t] = result[t].token;
+            }
+            resolve(listOfTokens);
+        });
+    });
+}
+
+exports.getEmail = (token) => {
+    return new Promise(async(resolve, reject) => {
+        let email = await promiseQuery(`SELECT adresa FROM mail_korisnici WHERE token = '${token}'`);
+        resolve(email[0].adresa);
     });
 }
 
