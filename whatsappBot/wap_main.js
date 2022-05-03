@@ -79,8 +79,14 @@ client.on('message', async msg => {
         prefix = msg.body;
         prefix = prefix.split(" ");
         prefix = prefix[1];
-        client.sendMessage(msg.from, `Vaš novi prefix je "${prefix}"`);
-        await f_baza.dodaj_prefix(prefix, broj);
+        //Provjera da li je prefix samo ACSII kodovi
+        if (baza.onlyASCII(prefix)) {
+            novi_prefix = baza.prepareForSQL(prefix);
+            client.sendMessage(msg.from, `Vaš novi prefix je "${prefix}"`);
+            await f_baza.dodaj_prefix(novi_prefix, broj);
+        }else {
+            client.sendMessage(msg.from, `Vaš novi prefix nije validan.`);
+        }
     }   
     
     
@@ -88,27 +94,29 @@ client.on('message', async msg => {
     //Dobivanje razreda iz naredbe .r
     let razred = msg.body;
     razred = razred.slice(-3);
-
-    //Dobivanje podataka o klijentovom razredu
-    const razred_data = await baza.dajRazredByName(razred);
-    let izmjena = await baza.dajZadnju(razred_data.id);
-    console.log(izmjena);
-    //Ispis izmjena korisniku
-    let izmjena_test = `${izmjena.naslov}`;
-    if (izmjena.ujutro) {
-        izmjena_test += '\n*Prijepodne*';
-        for (let i = 1; i < 10; i++) {
-            izmjena_test += '\n```'+`${i}. sat = ${izmjena[`sat${i}`]}`+'```';
-        }
-    }else {
-        izmjena_test += '\n*Poslijepodne*';
-        for (let i = 1; i < 10; i++) {
-            izmjena_test += '\n```'+`${ (i===-1) ? ` ` : ``}${i-2}. sat = ${izmjena[`sat${i}`]}`+'```';
-        }
-    }
+    console.log(razred);
+    
     
     //Odgovor na .r <ime razreda> naredbu.
     if (msg.body == `${prefix}r ${razred}`) {
+        //Dobivanje podataka o klijentovom razredu
+        const razred_data = await baza.dajRazredByName(razred);
+        let izmjena = await baza.dajZadnju(razred_data.id);
+        console.log(izmjena);
+        //Ispis izmjena korisniku
+        let izmjena_test = `${izmjena.naslov}`;
+        if (izmjena.ujutro) {
+            izmjena_test += '\n*Prijepodne*';
+            for (let i = 1; i < 10; i++) {
+                izmjena_test += '\n```'+`${i}. sat = ${izmjena[`sat${i}`]}`+'```';
+            }
+        }else {
+            izmjena_test += '\n*Poslijepodne*';
+            for (let i = 1; i < 10; i++) {
+                izmjena_test += '\n```'+`${ (i===-1) ? ` ` : ``}${i-2}. sat = ${izmjena[`sat${i}`]}`+'```';
+            }
+        }
+
         client.sendMessage(msg.from, izmjena_test);
         await f_baza.dodaj_zadnju_poslanu(izmjena.id, broj);
 
@@ -183,13 +191,14 @@ client.on('message', async msg => {
     salji_sve = salji_sve[0].salji_sve;
     console.log(salji_sve);
 
+    /*
     if (salji_izmjene === 1) {
         function interval() {
             client.sendMessage(msg.from, `${izmjena_test}`);
         }
         setInterval(interval, 5000);
     }
-    
+    */   
     
    
 });
