@@ -236,3 +236,17 @@ exports.dajRazredByName = (razred_ime) => {
 }
 
 exports.dajRazred = this.dajRazredById;
+
+exports.prepareForSQL = (input) => {
+    let output = '';
+    for (character of input) {
+        if (character === "'" || character === "\\") {
+            output += "\\" + character;
+        } else {
+            output += character;
+        }
+    }
+    return output;
+}
+
+exports.onlyASCII = str => /^[\x00-\x7F]+$/.test(str);
