@@ -2,6 +2,20 @@
 
 const { query } = require('./databaseConnect.js');
 
+exports.prepareForSQL = (input) => {
+    let output = '';
+    for (character of input) {
+        if (character === "'" || character === "\\") {
+            output += "\\" + character;
+        } else {
+            output += character;
+        }
+    }
+    return output;
+}
+
+exports.onlyASCII = str => /^[\x00-\x7F]+$/.test(str);
+
 // Kreiraj funkciju koja vraća listu izmjena koje su
 // se dogodile od tražene izmjene za traženi razred
 exports.dajIzmjene = (razred_id, zadnja_poslana) => {
@@ -212,10 +226,18 @@ exports.dajRazredById = (razred_id) => {
 // Kreiraj funkciju koja vraća podatke za traženi razred po imenu
 exports.dajRazredByName = (razred_ime) => {
     return new Promise((resolve, reject) => {
+        if (razred_ime === undefined || razred_ime === null) {
+            resolve(null);
+            return;
+        }
+        if (!exports.onlyASCII(razred_ime)) {
+            resolve(null);
+            return;
+        }
         query(`
             SELECT *
             FROM general_razred
-            WHERE ime = '${razred_ime.toUpperCase()}'
+            WHERE ime = '${exports.prepareForSQL(razred_ime.toUpperCase())}'
         `, (err, result) => {
             if (err) throw err;
 
@@ -236,17 +258,3 @@ exports.dajRazredByName = (razred_ime) => {
 }
 
 exports.dajRazred = this.dajRazredById;
-
-exports.prepareForSQL = (input) => {
-    let output = '';
-    for (character of input) {
-        if (character === "'" || character === "\\") {
-            output += "\\" + character;
-        } else {
-            output += character;
-        }
-    }
-    return output;
-}
-
-exports.onlyASCII = str => /^[\x00-\x7F]+$/.test(str);
