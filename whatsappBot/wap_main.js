@@ -51,7 +51,7 @@ client.on('message', async msg => {
     const result = await msg.getContact();
     const broj = result.number;
 
-    if (broj != '385998711641' && broj != '385976158686' && broj != '385976644526') {
+    //if (broj != '385998711641' && broj != '385976158686' && broj != '385976644526') {
         const kontakt = await daj_f_baza.dajKontakt(broj);
 
         if (!kontakt) {
@@ -81,10 +81,10 @@ client.on('message', async msg => {
         
         //Odgovor na .prefix naredbu
         if (msg.body.startsWith(`${prefix}prefix`, 0)) {
-            //if (msg.body != `${prefix}prefix `) {      
-                prefix = msg.body;
-                prefix = prefix.split(" ");
-                prefix = prefix[1];
+            let prefix = msg.body;
+            prefix = prefix.split(" ");
+            prefix = prefix[1];
+            if (prefix) {
                 //Provjera da li je prefix samo ACSII kodovi
                 if (baza.onlyASCII(prefix)) {
                     novi_prefix = baza.prepareForSQL(prefix);
@@ -93,8 +93,11 @@ client.on('message', async msg => {
                 }else {
                     client.sendMessage(msg.from, `Vaš novi prefix nije validan.`);
                 }
-            //}
-        }   
+            }else if (!prefix) {
+                client.sendMessage(msg.from, `Vaš novi prefix ne može biti prazan.`);
+            }
+        }
+      
         
         //Dobivanje razreda iz naredbe .r
         let razred = msg.body;
@@ -209,7 +212,7 @@ client.on('message', async msg => {
 
         //Odgovor na .resetpre
         if (msg.body == `.resetpre`) {
-            let resetirani_prefix = await f_baza.reset_prefix(broj);
+            await f_baza.reset_prefix(broj);
             client.sendMessage(msg.from, `Resetirali ste prefix na "."`);
         }
 
@@ -221,11 +224,12 @@ client.on('message', async msg => {
         let salji_sve = await daj_f_baza.daj_salji_sve(broj);
         salji_sve = salji_sve[0].salji_sve;
         console.log(salji_sve);
-    }
-
+    //}
+    /*
     if (broj == '385998711641' || broj == '385976158686' || broj == '385976644526') {
         client.sendMessage(msg.from, `Za tebe nema.`);
     }
+    */
     
     /*
     setTimeout(async () => {
