@@ -1,8 +1,9 @@
-const baza = require("./databaseQueries.js");
+const database = require("./databaseConnect.js");
+const discord = require("./discordBot/main.js");
 
-async function retardFunction () {
-    result = await baza.dajPovijest(28, 2);
-    console.log(result);
+const start = async () => {
+    await database.databaseInit();
+    await discord.startDiscordBot();
 }
 
-retardFunction();
+start();

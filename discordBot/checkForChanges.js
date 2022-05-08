@@ -3,6 +3,8 @@ const baza = require('./databaseQueriesDisc.js');
 const izmjene = require('./../databaseQueries.js');
 
 exports.check = async (client) => {
+    if (client !== undefined && !client.isReady()) return;
+
     channels = await baza.listKanal();
     
     for (each of channels) {

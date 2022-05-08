@@ -1,7 +1,10 @@
 const { Client, Intents, Collection } = require("discord.js");
 const baza = require("./databaseQueriesDisc.js");
 const func = require("./helperFunctionsDisc.js");
+const izmjeneCheck = require("./checkForChanges.js").check;
 const fs = require("fs");
+
+exports.check = izmjeneCheck;
 
 exports.isRunning = false;
 let client;
@@ -97,5 +100,3 @@ exports.stopDiscordBot = async () => {
     func.discordLog("Gasim discord bota");
     exports.isRunning = false;
 }
-
-exports.startDiscordBot();
