@@ -1,7 +1,53 @@
-baza = require("./databaseQueriesDisc.js");
+const { MessageEmbed } = require("discord.js");
+const baza = require("./databaseQueriesDisc.js");
 
 exports.discordLog = async (logThis) => {
     console.log('[\u001b[34mDiscord\033[00m] ' + logThis);
+}
+
+exports.errorEmbed = async (error) => {
+    const errorColor = await baza.getOption('errorColor');
+    const footer = await baza.getOption('embedFooter');
+
+    const embed = new MessageEmbed()
+        .setTitle('Pogreška')
+        .setColor(errorColor.value)
+        .setTimestamp()
+        .setFooter({ text: footer.value })
+        .addFields({
+            name: 'Opis pogreške:',
+            value: error
+        });
+
+    return embed;
+}
+
+exports.normalEmbed = async (title, desc) => {
+    const color = await baza.getOption('color');
+    const footer = await baza.getOption('embedFooter');
+
+    const embed = new MessageEmbed()
+        .setTitle(title)
+        .setColor(color.value)
+        .setTimestamp()
+        .setFooter({ text: footer.value })
+
+    if (desc) {
+        embed.setDescription(desc);
+    }
+
+    return embed;
+}
+
+exports.formatDateString = (dateString) => {
+    const dateObject = new Date(dateString);
+    const day = String(dateObject.getDate()).padStart(2, '0');
+    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+    const year = String(dateObject.getFullYear()).padStart(4, '0');
+    const hours = String(dateObject.getHours()).padStart(2, '0');
+    const minutes = String(dateObject.getMinutes()).padStart(2, '0');
+    result = `${day}-${month}-${year} ${hours}:${minutes}`
+    return result;
 }
 
 // Pregledaj sve postavke u tablici disc_settings i kreiraj ih ako ne postoje
@@ -37,6 +83,26 @@ exports.checkOptions = async () => {
     if (!embedWaitingTime) {
         baza.setOption("embedWaitingTime", '20000');
         exports.discordLog("embedWaitingTime record nije pronađen, kreiram ga i postavljam na 20000");
+    }
+    const helpWaitingTime = await baza.getOption("helpWaitingTime");
+    if (!helpWaitingTime) {
+        baza.setOption("helpWaitingTime", '120000');
+        exports.discordLog("helpWaitingTime record nije pronađen, kreiram ga i postavljam na 120000");
+    }
+    const embedFooter = await baza.getOption("embedFooter");
+    if (!embedFooter) {
+        baza.setOption("embedFooter", 'RasporedBot by BrownBird Team');
+        exports.discordLog("embedFooter record nije pronađen, kreiram ga i postavljam na 'RasporedBot by BrownBird Team'");
+    }
+    const activityType = await baza.getOption("activityType");
+    if (!activityType) {
+        baza.setOption("activityType", 'WATCHING');
+        exports.discordLog("activityType record nije pronađen, kreiram ga i postavljam na WATCHING");
+    }
+    const activityText = await baza.getOption("activityText");
+    if (!activityText) {
+        baza.setOption("activityText", 'for schedule changes');
+        exports.discordLog("activityText record nije pronađen, kreiram ga i postavljam na 'for schedule changes'");
     }
 
     // Vrati allGood pozivatelju da obustavi pokretanje bota ako vrati false

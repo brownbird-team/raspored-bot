@@ -69,7 +69,7 @@ exports.getKanal = (kanal_id) => {
             server: kanal.server_id,
             prefix: kanal.prefix,
             zadnja_poslana: kanal.zadnja_poslana,
-            mute: (kanal.salji_izmjene === 1) ? true : false,
+            mute: (kanal.salji_izmjene === 1) ? false : true,
             salji_sve: (kanal.salji_sve === 1) ? true : false
         }
         // Ako je zadan razred za kanal zatraži podatke o razredu
@@ -281,19 +281,23 @@ exports.getPrefix = (server_id, kanal_id) => {
     return new Promise(async (resolve, reject) => {
         let result;
 
-        result = await promiseQuery(`SELECT prefix FROM disc_kanali WHERE kanal_id = '${kanal_id}'`);
-        if (result.length !== 0)
-            if (result[0].prefix) {
-                resolve(result[0].prefix);
-                return;
-            }
-            
-        result = await promiseQuery(`SELECT prefix FROM disc_serveri WHERE server_id = '${server_id}'`);
-        if (result.length !== 0)
-            if (result[0].prefix) {
-                resolve(result[0].prefix);
-                return;
-            }
+        if (kanal_id != null) {
+            result = await promiseQuery(`SELECT prefix FROM disc_kanali WHERE kanal_id = '${kanal_id}'`);
+            if (result.length !== 0)
+                if (result[0].prefix) {
+                    resolve(result[0].prefix);
+                    return;
+                }
+        }
+        
+        if (server_id != null) {
+            result = await promiseQuery(`SELECT prefix FROM disc_serveri WHERE server_id = '${server_id}'`);
+            if (result.length !== 0)
+                if (result[0].prefix) {
+                    resolve(result[0].prefix);
+                    return;
+                }
+        }
         
         const defaultPrefix = await exports.getOption("prefix");
         resolve(defaultPrefix.value);
