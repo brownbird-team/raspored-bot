@@ -1,0 +1,145 @@
+{
+    "home": {
+        "name": "Home",
+        "type": "all",
+        "title": "Kako koristiti Raspored Bota",
+        "sdesc": "Vraća vas na početnu stranicu",
+        "desc": "Raspored Bot je jednostavan discord bot čija je jedina namjena obavjestiti vas o dnevnim izmjenama u rasporedu sati za odabrani razred.",
+        "fields": [
+            {
+                "name": "Prefix bota",
+                "value": "U ovom kanalu prefix je postavljen na ` %prefix% `"
+            },{
+                "name": "Help naredba",
+                "value": "U izborniku ispod možete pronaći pomoć za svaku naredbu"
+            },{
+                "name": "Dodatna pomoć",
+                "value": "Ako ste naišli na problem ili grešku koju ne uspjevate rješiti možete nas pronaći u našem discord serveru, pronaći ćemo rješenje za svaki problem vezan uz bota"
+            },{
+                "name": "Naš discord server",
+                "value": "https://brownbird.eu/discord"
+            }
+        ]
+    },
+
+    "raspored": {
+        "name": "Raspored",
+        "type": "all",
+        "title": "Naredba raspored",
+        "sdesc": "Ispisivanje i pretraga izmjena u rasporedu",
+        "desc": "Pomoću naredbe raspored možete pregledati izmjene koje se nalaze u bazi Raspored Bota za traženi razred",
+        "fields": [
+            {
+                "name": "`%prefix%raspored`",
+                "value": "Ispisati će posljednju izmjenu za razred koji je postavljen za kanal ili server, ispisati će grešku ako razred nije odabran"
+            },{
+                "name": "`%prefix%raspored [razred]`",
+                "value": "Kao argument naredbe možete upisati za koji razred želite pregledati izmjene, razred morate napisati u sintaksi `slovo.broj` bez razmaka"
+            },{
+                "name": "`%prefix%raspored [razred] [stranica]`",
+                "value": "Osim razreda kao argument možete upisati i na kojoj stranici želite biti na početku, ovo možete iskoristiti ako želite pogledati neku stariju izmjenu, stranicu navedite kao pozitivan broj, ukoliko ste definirali i razred i stranicu stranica mora biti drugi argument"
+            }
+        ]
+    },
+    
+    "server": {
+        "name": "Server",
+        "type": "server",
+        "title": "Naredba server",
+        "sdesc": "Upravljanje postavkama cijelog servera",
+        "desc": "Pomoću naredbe server možete promjeniti postavke koje tada vrijede za cijeli server",
+        "fields": [
+            {
+                "name": "`%prefix%server`",
+                "value": "Ispisuje trenutne postavke servera"
+            },{
+                "name": "`%prefix%server prefix [prefix]`",
+                "value": "Mijenja prefix za cijeli server, s tim da prefix postavljen za kanal ima veću težinu od prefixa servera te će u tom slučaju prefix servera biti zanemaren"
+            },{
+                "name": "`%prefix%server razred [razred]`",
+                "value": "Postavlja glavni razred servera, koji će se koristiti za naredbu raspored u kanalima gdje razred nije definiran, razred je potrebno definirati u sintaksi `slovo.broj`"
+            },{
+                "name": "`%prefix%server kanali`",
+                "value": "Ispisuje listu svih kanala koje ste dodali u bazu Raspored Bota te njihove postavke"
+            }
+        ]
+    },
+
+    "kanal": {
+        "name": "Kanal",
+        "type": "server",
+        "title": "Naredba kanal",
+        "sdesc": "Upravljanje postavkama zasebnog kanala",
+        "desc": "Pomoću naredbe kanal možete mijenjati postavke za svaki kanal",
+        "fields": [
+            {
+                "name": "`%prefix%kanal`",
+                "value": "Ispisuje trenutne postavke kanala"
+            },{
+                "name": "`%prefix%kanal dodaj`",
+                "value": "Dodaje trenutni kanal u bazu Raspored Bota, kako bi mijenjali postavke za kanal, morate ga prvo dodati u bazu"
+            },{
+                "name": "`%prefix%kanal ukloni`",
+                "value": "Uklanja trenutni kanal iz baze Raspored Bota i time briše sve njegove postavke"
+            },{
+                "name": "`%prefix%kanal razred [razred]`",
+                "value": "Postavlja razred za kanal, razred je potrebno definirati u sintaksi `slovo.broj`"
+            },{
+                "name": "`%prefix%kanal sve [da/ne]`",
+                "value": "Ukoliko želite primati prazne tablice odnosno kada se promjenio naslov ali sva polja za vaš razred su prazna, postavite sve na `da`. Ako je sve postavljen na `ne` bot će slati izmjene samo ako se nešto mijenja za odabrani razred"
+            },{
+                "name": "`%prefix%kanal mute [da/ne]`",
+                "value": "Prekida slanje izmjena za trenutni kanal, ali ne briše postavke iz baze"
+            },{
+                "name": "`%prefix%kanal prefix [prefix]`",
+                "value": "Mijenja prefix za kanal u kojem je izvršena"
+            }
+        ]
+    },
+
+    "edit": {
+        "name": "Edit",
+        "type": "all",
+        "title": "Naredba edit",
+        "sdesc": "Mijenjanje postavki pomoću Web sučelja",
+        "desc": "Naredba `%prefix%edit` ispisuje link za Web sučelje Raspored Bota",
+        "fields": [
+            {
+                "name": "Napomena !",
+                "value": "Web sučelje je eksperimentalna funkcija koja još nije dostupna u ovoj verziji bota"
+            }
+        ]
+    },
+
+    "dm": {
+        "name": "DM naredbe",
+        "type": "dm",
+        "title": "Naredbe u Privatnim porukama",
+        "sdesc": "Upravljanje vašim privatnim postavkama",
+        "desc": "Pomoću sljedećih naredbi možete konfigurirati bota da vam šalje izmjene za vaš razred u DM",
+        "fields": [
+            {
+                "name": "`%prefix%dodaj`",
+                "value": "Dodaje vašeg korisnika u bazu Raspored Bota, nužno je dodati korisnika ako želite mijenjati postavke za slanje izmjena i primati izmjene"
+            },{
+                "name": "`%prefix%ukloni`",
+                "value": "Uklanja vašeg korisnika iz baze Raspored Bota i briše sve postavke"
+            },{
+                "name": "`%prefix%razred [razred]`",
+                "value": "Postavlja razred za korisnika, razred je potrebno definirati u sintaksi `slovo.broj`"
+            },{
+                "name": "`%prefix%sve [da/ne]`",
+                "value": "Ukoliko želite primati prazne tablice odnosno kada se promjenio naslov ali sva polja za vaš razred su prazna, postavite sve na `da`. Ako je sve postavljen na `ne` bot će slati izmjene samo ako se nešto mijenja za odabrani razred"
+            },{
+                "name": "`%prefix%mute [da/ne]`",
+                "value": "Prekida slanje izmjena u vaš DM, ali ne briše postavke iz baze"
+            },{
+                "name": "`%prefix%prefix [prefix]`",
+                "value": "Mijenja prefix bota u vašem DM-u"
+            },{
+                "name": "`%prefix%postavke`",
+                "value": "Ispisuje vaše postavke iz baze"
+            }
+        ]
+    }
+}
