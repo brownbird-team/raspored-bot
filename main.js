@@ -1,7 +1,7 @@
-const baza = require('./databaseConnect.js');
+const baza = require("./databaseQueries.js");
 
 async function retardFunction () {
-    result = await baza.promiseQuery("SELECT * FROM general_razred");
+    result = await baza.dajPovijest(28, 2);
     console.log(result);
 }
 

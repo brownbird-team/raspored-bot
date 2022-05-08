@@ -1,4 +1,5 @@
 const { getPrefix } = require('./../databaseQueriesDisc.js');
+const help = require('./../commands/help.js');
 
 module.exports = {
     name: "messageCreate",
@@ -12,7 +13,7 @@ module.exports = {
             prefix = await getPrefix(message.guildId, message.channelId);
         }
         if (message.content.includes(`<@${message.client.user.id}>`)) {
-            message.channel.send(`ola ja bot\ntvoj prefix je** ${prefix} **`);
+            help.execute(message);
         }
     }
 }
