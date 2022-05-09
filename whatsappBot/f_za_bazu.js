@@ -1,6 +1,6 @@
 // Dodaj potrebne funkcije iz ostalih datoteka
 const { dajRazred } = require("../databaseQueries.js");
-const { promiseQuery } = require("./../databaseConnect.js");
+const { promiseQuery } = require("../databaseConnect.js");
 
 //Dodaj resetirani prefix u bazu
 exports.reset_prefix = (broj) => {

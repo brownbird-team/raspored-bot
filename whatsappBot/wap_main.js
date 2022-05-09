@@ -5,18 +5,15 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 //liberary za spremanje sesije
 const fs = require('fs');
 
-//liberary za spajanje na bazu
+//liberary za bazu
 var mysql = require('mysql');
 const {promiseQuery, query} = require('../databaseConnect.js');
 const { get } = require('http');
 const { getCharsetNumber } = require('mysql/lib/ConnectionConfig');
-const dodaj_f_baza = require('./dodaj_f_4_bazu');
-const daj_f_baza = require('./daj_f_4_bazu');
-const f_baza = require('./f_4_bazu');
-
-//funkcija za dobivanja podataka iz baze
+const dodaj_f_baza = require('./dodaj_f_za_bazu');
+const daj_f_baza = require('./daj_f_za_bazu');
+const f_baza = require('./f_za_bazu');
 const baza = require('../databaseQueries.js');
-const cli = require('nodemon/lib/cli');
 
 
 //Novi klijent
@@ -61,29 +58,42 @@ client.on('message', async msg => {
 
         let prefix = await daj_f_baza.daj_prefix(broj);
         prefix = prefix[0].prefix;
-        
 
-        //Pomoć korisniku
-        if (msg.body == `${prefix}help`) {
-            console.log("Korisnik traži pomoć");
-            client.sendMessage(msg.from, `
-            ${'*' + prefix + 'razred⎵<razred> (npr. 1.a)*'} = upis razreda u bazu\n
-            ${'*' + prefix + 'r*'} = ispis rasporeda za vaš razred\n
-            ${'*' + prefix + 'r⎵<ime svojeg razreda> (npr. 1.a)*'} = ispis rasporeda za željeni razred\n
-            ${'*' + prefix + 'subscribe*'} = za odabir ako želite da vam bot šalje izmjene\n
-            ${'*' + prefix + 'unsubscribe*'} = za odabir ako ne želite da vam bot šalje izmjene\n
-            ${'*' + prefix + 'saljisve*'} = za odabir ako želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
-            ${'*' + prefix + 'nesaljisve*'} = za odabir ako ne želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
-            ${'*' + prefix + 'prefix⎵<prefix>*'} = za promjenu svojega prefixa. (prefix ne smije sadržavati razmake)\n
-            *.resetpre* = za promjenu svojega prefixa nazad na točku.\n`);
+
+        let komanda = msg.body.slice(prefix.length).split(" ")[0];
+        let opcija = msg.body.slice(prefix.length + komanda.length + 1).split(" ")[0];
+        console.log(`Opcija: ${opcija}`);
+
+        //Ako je komanda prazna
+        if (komanda === undefined || komanda === "") {
+            komanda = null;
         }
 
-        
+        //Ako je opcija prazna
+        if (opcija === undefined || opcija === "") {
+            opcija = null;
+        }
+        console.log(`Komanda opcija: ${komanda} (${opcija}) ${typeof(opcija)}`);
+
+        //Pomoć korisniku
+        if (komanda == `help`) {
+            client.sendMessage(msg.from, `
+${'*' + prefix + 'razred⎵<razred> (npr. 1.a)*'} = upis razreda u bazu\n
+${'*' + prefix + 'r*'} = ispis rasporeda za vaš razred\n
+${'*' + prefix + 'r⎵<ime svojeg razreda> (npr. 1.a)*'} = ispis rasporeda za željeni razred\n
+${'*' + prefix + 'subscribe*'} = za odabir ako želite da vam bot šalje izmjene\n
+${'*' + prefix + 'unsubscribe*'} = za odabir ako ne želite da vam bot šalje izmjene\n
+${'*' + prefix + 'saljisve*'} = za odabir ako želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
+${'*' + prefix + 'nesaljisve*'} = za odabir ako ne želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
+${'*' + prefix + 'prefix⎵<prefix>*'} = za promjenu svojega prefixa. (prefix ne smije sadržavati razmake)\n
+*status* = ispis vaših podataka\n
+*resetpre* = za promjenu svojega prefixa nazad na točku.\n`);
+        }
+
+
         //Odgovor na .prefix naredbu
-        if (msg.body.startsWith(`${prefix}prefix`, 0)) {
-            let prefix = msg.body;
-            prefix = prefix.split(" ");
-            prefix = prefix[1];
+        if (komanda == `prefix`) {
+            let prefix = opcija;
             if (prefix) {
                 //Provjera da li je prefix samo ACSII kodovi
                 if (baza.onlyASCII(prefix)) {
@@ -96,32 +106,28 @@ client.on('message', async msg => {
             }else if (!prefix) {
                 client.sendMessage(msg.from, `Vaš novi prefix ne može biti prazan.`);
             }
-        }
-      
+        }    
         
-        //Dobivanje razreda iz naredbe .r
-        let razred = msg.body;
-        razred = razred.slice(-3);
-        console.log(razred);
 
-        const razred_data = await baza.dajRazredByName(razred);
+        const razred_data = await baza.dajRazredByName(opcija);
+        console.log(razred_data);
 
         //Odgovor na .razred
-        if (msg.body == `${prefix}razred ${razred}`) {
+        if (komanda == `razred` && razred_data) {
             //Dodavanje razred id
             const razred_id = razred_data.id;
             await dodaj_f_baza.dodaj_razred_id(razred_id, broj);
-            client.sendMessage(msg.from, `Vaš razred je: ${razred}`);
+            client.sendMessage(msg.from, `Vaš razred je: ${razred_data.ime}`);
+        }else if (komanda == `razred` && !razred_data) {
+            client.sendMessage(msg.from, '```Razred nije validan.```');
         }
 
         //Daj razred id
-        let user_razred_id = await dodaj_f_baza.daj_razred_id(broj);
-        console.log(user_razred_id);
-
+        let user_razred_id = await daj_f_baza.daj_razred_id(broj);
         let cijeli_razred = await baza.dajRazredById(user_razred_id);
 
         //Odgovor na .r naredbu
-        if (msg.body == `${prefix}r` && user_razred_id) {
+        if (komanda == `r` && user_razred_id && !opcija) {
             //Dobivanje podataka o klijentovom razredu
             let izmjena = await baza.dajZadnju(cijeli_razred.id);
             console.log(izmjena);
@@ -142,18 +148,18 @@ client.on('message', async msg => {
 
             client.sendMessage(msg.from, izmjena_test);
             await dodaj_f_baza.dodaj_zadnju_poslanu(izmjena.id, broj);
-        }else if (msg.body == `${prefix}r` && !user_razred_id) {
-            client.sendMessage(msg.from, `Niste postavili razred`);
+        }else if (komanda == `r` && !user_razred_id && !opcija) {
+            client.sendMessage(msg.from, '```Niste postavili razred.```');
         }
         
         
         //Odgovor na .r <ime razreda> naredbu.
-        if (msg.body == `${prefix}r ${razred}` && razred_data) {
+        if (komanda == `r` && razred_data && opcija) {
             //Dobivanje podataka o klijentovom razredu
             let izmjena = await baza.dajZadnju(razred_data.id);
             console.log(izmjena);
             //Ispis izmjena korisniku
-            let izmjena_test = `Za razred: ${razred}`;
+            let izmjena_test = `Za razred: ${razred_data.ime}`;
             izmjena_test += `\n${izmjena.naslov}`;
             if (izmjena.ujutro) {
                 izmjena_test += '\n*Prijepodne*';
@@ -169,6 +175,9 @@ client.on('message', async msg => {
 
             client.sendMessage(msg.from, izmjena_test);
             await dodaj_f_baza.dodaj_zadnju_poslanu(izmjena.id, broj);
+
+        }else if (komanda == `r` && !razred_data && opcija) {
+            client.sendMessage(msg.from, '```Taj razred ne postoji.```');
         }
         
 
@@ -176,16 +185,14 @@ client.on('message', async msg => {
         //Da li korisnik želi ili ne želi primati izmjene
         //Odgovor na .subscribe
         let sub;
-        if (msg.body == `${prefix}subscribe`) {
+        if (komanda == `subscribe`) {
             client.sendMessage(msg.from, '```Raspored bot će vam od sada slati dnevne izmjene automatski.```');
-            console.log("Subscribe");
             sub = 1;
             await dodaj_f_baza.dodaj_salji_izmjene(sub, broj);
         }
         //Odgovor na .unsubscribe
-        if (msg.body == `${prefix}unsubscribe`) {
+        if (komanda == `unsubscribe`) {
             client.sendMessage(msg.from, '```Raspored bot vam neće od sada slati dnevne izmjene automatski.```');
-            console.log("Unubscribe");
             sub = 0;
             await dodaj_f_baza.dodaj_ne_salji_izmjene(sub, broj);
         }
@@ -193,14 +200,14 @@ client.on('message', async msg => {
 
         //Odgovor na .saljisve
         let sve;
-        if (msg.body == `${prefix}saljisve`) {
+        if (komanda == `saljisve`) {
             client.sendMessage(msg.from, '```Raspored bot će vam od sada slati dnevne izmjene automatski, čak i ako nema izmjena za taj dan.```');
             console.log("Salji sve");
             sve = 1;
             await dodaj_f_baza.dodaj_salji_izmjene_ako_ih_nema(sve, broj);
         }
         //Odgovor na .nesaljisve
-        if (msg.body == `${prefix}nesaljisve`) {
+        if (komanda == `nesaljisve`) {
             client.sendMessage(msg.from, '```Raspored bot će vam od sada neće slati dnevne izmjene automatski, čak i ako nema izmjena za taj dan.```');
             console.log("Ne salji sve");
             sve = 0;
@@ -211,19 +218,26 @@ client.on('message', async msg => {
         let brojevi = await daj_f_baza.daj_brojeve();
 
         //Odgovor na .resetpre
-        if (msg.body == `.resetpre`) {
+        if (msg.body.startsWith(`resetpre`)) {
             await f_baza.reset_prefix(broj);
-            client.sendMessage(msg.from, `Resetirali ste prefix na "."`);
+            client.sendMessage(msg.from, '```Resetirali ste prefix na "."```');
         }
 
 
         //Uzimanje podataka za izmjene iz baze
         let salji_izmjene = await daj_f_baza.daj_salji_izmjene(broj);
         salji_izmjene = salji_izmjene[0].salji_izmjene;
-        console.log(salji_izmjene);
         let salji_sve = await daj_f_baza.daj_salji_sve(broj);
         salji_sve = salji_sve[0].salji_sve;
-        console.log(salji_sve);
+
+        //Ispis prefixa komandom rasporedbot
+        if (msg.body == `status`) {
+            client.sendMessage(msg.from, `
+Vaš razred je: ${cijeli_razred.ime}\n
+Vaš prefix je: ${prefix}\n
+Vaš subscribe je: ${salji_izmjene}\n
+Vaš saljisve je: ${salji_sve}\n`);
+        }
     //}
     /*
     if (broj == '385998711641' || broj == '385976158686' || broj == '385976644526') {

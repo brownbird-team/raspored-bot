@@ -1,6 +1,6 @@
 // Dodaj potrebne funkcije iz ostalih datoteka
 const { dajRazred } = require("../databaseQueries.js");
-const { promiseQuery } = require("./../databaseConnect.js");
+const { promiseQuery } = require("../databaseConnect.js");
 
 
 // Dodaj broj mobitela u bazu
@@ -18,15 +18,6 @@ exports.dodaj_razred_id = (razred_id, broj) => {
         let raz_id = `UPDATE wap_kontakti SET razred_id = ${razred_id} WHERE broj = ${broj}`;
         await promiseQuery(raz_id);
         resolve("done");
-    });
-}
-
-//Daj razred_id u bazu
-exports.daj_razred_id = (broj) => {
-    return new Promise(async (resolve) => {
-        let daj_raz_id = `SELECT razred_id FROM wap_kontakti WHERE broj = ${broj}`;
-        raz_id = await promiseQuery(daj_raz_id);
-        resolve(raz_id[0].razred_id);
     });
 }
 

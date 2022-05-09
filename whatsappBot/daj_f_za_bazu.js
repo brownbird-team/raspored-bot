@@ -41,6 +41,14 @@ exports.daj_brojeve = () => {
     });
 }
 
+//Daj razred_id u bazu
+exports.daj_razred_id = (broj) => {
+    return new Promise(async (resolve) => {
+        let daj_raz_id = `SELECT razred_id FROM wap_kontakti WHERE broj = ${broj}`;
+        raz_id = await promiseQuery(daj_raz_id);
+        resolve(raz_id[0].razred_id);
+    });
+}
 
 //Daj prefix iz baze
 exports.daj_prefix = (broj) => {
