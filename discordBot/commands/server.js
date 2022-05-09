@@ -7,6 +7,7 @@ module.exports = {
     name: 'server',
     admin: true,
     dmOnly: false,
+    aliases: [],
 
     async execute(message) {
 

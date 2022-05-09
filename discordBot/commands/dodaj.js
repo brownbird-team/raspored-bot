@@ -5,6 +5,7 @@ module.exports = {
     name: 'dodaj',
     admin: false,
     dmOnly: true,
+    aliases: [],
 
     async execute(message) {
         const kanal = await baza.getKanal(message.author.id);

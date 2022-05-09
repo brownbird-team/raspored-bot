@@ -10,6 +10,7 @@ module.exports = {
     name: 'help',
     admin: false,
     dmOnly: false,
+    aliases: [],
 
     async execute(message) {
         let prefix, dm;

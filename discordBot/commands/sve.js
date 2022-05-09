@@ -5,6 +5,7 @@ module.exports = {
     name: 'sve',
     admin: false,
     dmOnly: true,
+    aliases: [],
 
     async execute(message) {
 

@@ -63,7 +63,8 @@ exports.startDiscordBot = async () => {
 
         if (!primaryCommand.startsWith(prefix)) return;
 
-        const command = client.commands.get(primaryCommand.slice(prefix.length));
+        const cmdName = primaryCommand.slice(prefix.length);
+        const command = client.commands.get(cmdName) || client.commands.find(cmd => cmd.aliases.includes(cmdName));
         if (!command) return;
 
         if (!message.channel.type.startsWith('DM') && command.dmOnly) {

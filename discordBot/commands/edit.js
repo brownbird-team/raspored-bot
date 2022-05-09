@@ -4,6 +4,7 @@ module.exports = {
     name: "edit",
     admin: false,
     dmOnly: false,
+    aliases: [],
 
     async execute(message) {
         let embed = await normalEmbed(

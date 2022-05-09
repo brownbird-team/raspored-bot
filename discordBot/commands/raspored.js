@@ -9,6 +9,7 @@ module.exports = {
     name: 'raspored',
     admin: false,
     dmOnly: false,
+    aliases: ['r', 'ras'],
 
     async execute(message) {
 

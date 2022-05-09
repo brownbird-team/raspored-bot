@@ -8,6 +8,7 @@ module.exports = {
     name: 'kanal',
     admin: true,
     dmOnly: false,
+    aliases: [],
 
     // Kreiraj funkciju za izvršavanje naredbe
     async execute(message) {
