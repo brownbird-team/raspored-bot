@@ -45,6 +45,7 @@ process.on("SIGINT", async () => {
 
 //Odgovaranje na naredbe
 client.on('message', async msg => {
+    console.log('Upis korisnikove komande: ' +  msg.body);
     const result = await msg.getContact();
     const broj = result.number;
 
@@ -62,7 +63,6 @@ client.on('message', async msg => {
 
         let komanda = msg.body.slice(prefix.length).split(" ")[0];
         let opcija = msg.body.slice(prefix.length + komanda.length + 1).split(" ")[0];
-        console.log(`Opcija: ${opcija}`);
 
         //Ako je komanda prazna
         if (komanda === undefined || komanda === "") {
@@ -86,8 +86,8 @@ ${'*' + prefix + 'unsubscribe*'} = za odabir ako ne želite da vam bot šalje iz
 ${'*' + prefix + 'saljisve*'} = za odabir ako želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
 ${'*' + prefix + 'nesaljisve*'} = za odabir ako ne želite da vam bot šalje izmjene, čak i ako ih nema za taj dan\n
 ${'*' + prefix + 'prefix⎵<prefix>*'} = za promjenu svojega prefixa. (prefix ne smije sadržavati razmake)\n
-*status* = ispis vaših podataka\n
-*resetpre* = za promjenu svojega prefixa nazad na točku.\n`);
+*resetpre* = za promjenu svojega prefixa nazad na točku.\n
+*status* = ispis vaših podataka\n`);
         }
 
 
@@ -230,12 +230,12 @@ ${'*' + prefix + 'prefix⎵<prefix>*'} = za promjenu svojega prefixa. (prefix ne
         let salji_sve = await daj_f_baza.daj_salji_sve(broj);
         salji_sve = salji_sve[0].salji_sve;
 
-        //Ispis prefixa komandom rasporedbot
+        //Ispis statusa komandom status
         if (msg.body == `status`) {
             client.sendMessage(msg.from, `
 Vaš razred je: ${cijeli_razred.ime}\n
-Vaš prefix je: ${prefix}\n
-Vaš subscribe je: ${salji_izmjene}\n
+Vaš prefix je: "${prefix}"\n
+Vaša subskripcija je: ${salji_izmjene}\n
 Vaš saljisve je: ${salji_sve}\n`);
         }
     //}
