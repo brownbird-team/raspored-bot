@@ -238,10 +238,20 @@ exports.databaseInit = () => {
                         zadnja_poslana INT,
                         salji_sve BOOL NOT NULL DEFAULT false,
                         tamna_tema BOOL NOT NULL DEFAULT false,
-                        dobrodoslica BOOL NOT NULL DEFAULT true,
                         INDEX (adresa),
                         FOREIGN KEY(razred_id) REFERENCES general_razred(id),
                         FOREIGN KEY(zadnja_poslana) REFERENCES izmjene_razred(id)
+                    )
+                `);
+            }
+            if (!tables.includes("mail_privremeni_korisnici")) {
+                databaseLog("Kreiram tablicu mail_privremeni_korisnici");
+                await query(con, `
+                    CREATE TABLE mail_privremeni_korisnici (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        adresa char(100) NOT NULL,
+                        token TEXT DEFAULT NULL,
+                        zadnji_token DATETIME DEFAULT NULL,
                     )
                 `);
             }
