@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const {promiseQuery}=require('./../databaseConnect.js');
 const baza =require('./funkcije_za_bazu');
-const prefix='[\u001b[31mSCRAPER\033[00m]'
+const prefix='[\u001b[31mSTRUGAC\033[00m] '
 async function scraper(raz){
     //url
     let url='https://www.tsrb.hr/'+raz[0].smjena.toLowerCase()+'-smjena/';
@@ -133,8 +133,9 @@ async function scraper(raz){
     return result;
 }
     
-    
-async function sql(){
+exports.sql=async() =>{
+
+    console.log("Funkcija");
     let razredi_A;
     let razredi_B;
     let izmjena;
@@ -148,6 +149,7 @@ async function sql(){
     izmjena=await scraper(razredi_B);
     sql_upis(izmjena,razredi_B);
     console.log(prefix+'Gotov')
+
 }
 async function sql_upis(izmjena,razredi){
     let datum = "";
@@ -207,4 +209,4 @@ async function sql_upis(izmjena,razredi){
     }
     
 }
-sql();
+//sql();
