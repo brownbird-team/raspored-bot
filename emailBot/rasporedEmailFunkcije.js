@@ -2,8 +2,8 @@ const { promiseQuery, query } = require('./../databaseConnect.js');
 const token = require('./createToken');
 
 exports.Client = class {
-    constructor(email, classID, sendAll, darkTheme) {
-        this.email = email;
+    constructor(receiverEmail, classID, sendAll, darkTheme) {
+        this.receiverEmail = receiverEmail;
         this.classID = classID;
         if (sendAll == undefined)
             this.sendAll = 0;
@@ -44,25 +44,30 @@ exports.getDateNow = () => {
 
 exports.setUnsubscribe = (token) => {
     return new Promise(async (resolve, reject) => {
-        let updateState = `UPDATE mail_korisnici SET unsubscribed = 1 WHERE token = '${token}'`;
-        await promiseQuery(updateState);
-        resolve("Success");
+        let updateState = await promiseQuery(`UPDATE mail_korisnici SET unsubscribed = 1 WHERE token = '${token}'`);
+        resolve(updateState);
     });
 }
 
-exports.updateWelcome = (clientID) => {
+exports.updateLastSend = (classChangesID, email) => {
     return new Promise(async (resolve, reject) => {
-        let updateWelcomeState = `UPDATE mail_korisnici SET dobrodoslica = 0 WHERE id = ${clientID}`;
-        await promiseQuery(updateWelcomeState);
-        resolve("Success");
+        let updateLast = await promiseQuery(`UPDATE mail_korisnici SET zadnja_poslana = '${classChangesID}' WHERE adresa = '${email}'`);
+        resolve(updateLast);
     });
 }
 
-exports.updateLastSend = (classChangesID, clientID) => {
+exports.getLastChange = (classID) => {
     return new Promise(async (resolve, reject) => {
-        let updateLast = `UPDATE mail_korisnici SET zadnja_poslana = '${classChangesID}' WHERE id = ${clientID}`;
-        await promiseQuery(updateLast);
-        resolve("Success");
+        let change = await promiseQuery(`SELECT id FROM izmjene_razred WHERE razred_id = ${classID} ORDER BY id DESC LIMIT 1`);
+        resolve(change[0].id);
+    });
+}
+
+exports.setLastChange = (email, classID) => {
+    return new Promise(async (resolve, reject) => {
+        let lastChange = await this.getLastChange(classID);
+        let update = await this.updateLastSend(lastChange, email);
+        resolve(update);
     });
 }
 
@@ -77,17 +82,17 @@ exports.updateToken = (email, token) => {
 exports.removeToken = (token) => {
     return new Promise(async (resolve, reject) => {
         let rmToken = await promiseQuery(`UPDATE mail_korisnici SET token = "", zadnji_token = "" WHERE token = '${token}'`);
-        resolve("Success");
+        resolve(rmToken);
     });
 }
 
-exports.setTokenDate = (email) => {
+exports.setTokenDate = (email, table) => {
     return new Promise(async (resolve, reject) => {
         let newDate = new Date();
-        const leftTime = 1;
-        newDate.setTime(newDate.getTime() + (leftTime * 60 * 1000));
+        const leftTime = 2;
+        newDate.setTime(newDate.getTime() + (leftTime * 60 * 60 * 1000));
         date = newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate() + " " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds();
-        let setClientTokenDate = await promiseQuery(`UPDATE mail_korisnici SET zadnji_token = '${date}' WHERE adresa = '${email}'`);
+        let setClientTokenDate = await promiseQuery(`UPDATE ${table} SET zadnji_token = '${date}' WHERE adresa = '${email}'`);
         resolve(setClientTokenDate);
     });
 }
@@ -99,26 +104,35 @@ exports.getTokenDate = (token) => {
     });
 }
 
-exports.checkToken = (token) => {
+exports.removeTokenDate = (token) => {
+    return new Promise(async (resolve, reject) => {
+        let removeDate = await promiseQuery(`UPDATE mail_korisnici SET zadnji_token = NULL WHERE token = '${token}'`);
+        resolve(removeDate);
+    });
+}
+
+exports.checkToken = (token, table) => {
     return new Promise(async (resolve, reject) => {
         let nowDate = new Date();
-        let dbTokenDate = await promiseQuery(`SELECT zadnji_token FROM mail_korisnici WHERE token = '${token}'`);
-        const timeToLeave = 1;
-        const diffInMiliseconds = nowDate.valueOf() - dbTokenDate[0].zadnji_token.valueOf();
+        let dbTokenDate = await promiseQuery(`SELECT zadnji_token FROM ${table} WHERE token = '${token}'`);
+        const diffInMiliseconds = dbTokenDate[0].zadnji_token.valueOf() - nowDate.valueOf();
         const diffInHours = diffInMiliseconds / 1000 / 60;
-        if (diffInHours >= timeToLeave) {
-            console.log("Token je istekao.");
+        //console.log("razlika u sekundama: ", diffInHours);
+        if (diffInHours <= 0) {
+            //console.log("Token je istekao.");
+            await this.removeTokenDate(token);
+            await this.removeToken(token);
             resolve(true);
         } else {
-            console.log("Token nije istekao.");
+            //console.log("Token nije istekao.");
             reject(false);
         }
     });
 }
 
-exports.getTokens = () => {
+exports.getTokens = (table) => {
     return new Promise((resolve, reject) => {
-        query(`SELECT token FROM mail_korisnici WHERE token IS NOT NULL`, (err, result) => {
+        query(`SELECT token FROM ${table} WHERE token IS NOT NULL`, (err, result) => {
             if (err) throw err;
             let listOfTokens = [];
             for (t in result) {
@@ -129,9 +143,9 @@ exports.getTokens = () => {
     });
 }
 
-exports.getEmail = (token) => {
+exports.getEmail = (token, table) => {
     return new Promise(async(resolve, reject) => {
-        let email = await promiseQuery(`SELECT adresa FROM mail_korisnici WHERE token = '${token}'`);
+        let email = await promiseQuery(`SELECT adresa FROM ${table} WHERE token = '${token}'`);
         resolve(email[0].adresa);
     });
 }
@@ -144,12 +158,126 @@ exports.insertData = (email, classID, sendAll, darkTheme) => {
     });
 }
 
-exports.checkEmail = (email) => {
+exports.insertTempData = (email, token) => {
     return new Promise(async (resolve, reject) => {
-        let check = await promiseQuery(`SELECT * FROM mail_korisnici WHERE adresa = '${email}'`);
+        let tempData = await promiseQuery(`INSERT INTO mail_privremeni_korisnici (adresa, token) VALUES ('${email}', '${token}')`);
+        resolve(tempData);
+    });
+}
+
+exports.deleteTempData = (token) => {
+    return new Promise(async (resolve, reject) => {
+        let deleteData = await promiseQuery(`DELETE FROM mail_privremeni_korisnici WHERE token = '${token}'`);
+        resolve(deleteData);
+    });
+}
+
+exports.checkEmail = (email, table) => {
+    return new Promise(async (resolve, reject) => {
+        let check = await promiseQuery(`SELECT * FROM ${table} WHERE adresa = '${email}'`);
         if (check.length > 0)
             resolve(true);
         else 
             reject(false);
+    });
+}
+
+exports.checkAllEmailTables = (email) => {
+    return new Promise(async (resolve, reject) => {
+        let checkFirst = await promiseQuery(`SELECT * FROM mail_korisnici WHERE adresa = '${email}'`);
+        let checkSecond = await promiseQuery(`SELECT * FROM mail_privremeni_korisnici WHERE adresa = '${email}'`);
+        if (checkFirst.length == 0 && checkSecond.length == 0)
+            reject(false);
+        else
+            resolve(true);
+    });
+}
+
+exports.getClassById = (classID) => {
+    return new Promise(async (resolve, reject) => {
+        let CLASS = await promiseQuery(`SELECT ime FROM general_razred WHERE id = ${classID}`);
+        resolve(CLASS[0].ime);
+    });
+}
+
+exports.getClassName = (token) => {
+    return new Promise(async (resolve, reject) => {
+        let classID = await promiseQuery(`SELECT razred_id FROM mail_korisnici WHERE token = '${token}'`);
+        let className = await promiseQuery(`SELECT ime FROM general_razred WHERE id = ${classID[0].razred_id}`);
+        resolve(className[0].ime);
+    });
+}
+
+exports.getSendAllState = (token) => {
+    return new Promise(async (resolve, reject) => {
+        let sendAll = await promiseQuery(`SELECT salji_sve FROM mail_korisnici WHERE token = '${token}'`);
+        if (sendAll[0].salji_sve)
+            resolve(true);
+        else 
+            resolve(false);
+    });
+}
+
+exports.getDarkThemeState = (token) => {
+    return new Promise(async (resolve, reject) => {
+        let darkTheme = await promiseQuery(`SELECT tamna_tema FROM mail_korisnici WHERE token = '${token}'`);
+        if (darkTheme[0].tamna_tema)
+            resolve(true);
+        else 
+            resolve(false);
+    });
+}
+
+exports.getUnsubscribedState = (email) => {
+    return new Promise(async (resolve, reject) => {
+        let unsubscribedState = await promiseQuery(`SELECT unsubscribed FROM mail_korisnici WHERE adresa = '${email}'`);
+        if (unsubscribedState[0].unsubscribed)
+            resolve(false);
+        else 
+            resolve(true);
+    });
+}
+
+exports.setNewClass = (email, classID) => {
+    return new Promise(async (resolve, reject) => {
+        if (classID != undefined) {
+            let newClass = await promiseQuery(`UPDATE mail_korisnici SET razred_id = ${classID} WHERE adresa = '${email}'`);
+            await this.setLastChange(email, classID);
+            resolve(true);
+        }
+    });
+}
+
+exports.updateSendAll = (email, sendAll) => {
+    return new Promise(async (resolve, reject) => {
+        let state = 0;
+        if (sendAll == 'on') state = 1;
+        let updateState = await promiseQuery(`UPDATE mail_korisnici SET salji_sve = ${state} WHERE adresa = '${email}'`);
+        resolve(updateState);
+    });
+}
+
+exports.updateTheme = (email, darkTheme) => {
+    return new Promise(async (resolve, reject) => {
+        let theme = 0;
+        if (darkTheme == 'on') theme = 1;
+        let themeUpdate = await promiseQuery(`UPDATE mail_korisnici SET tamna_tema = ${theme} WHERE adresa = '${email}'`);
+        resolve(themeUpdate);
+    });
+}
+
+exports.updateUnsubscribe = (email, unsubscribed) => {
+    return new Promise(async (resolve, reject) => {
+        let unsubscribe = 1;
+        if (unsubscribed == 'on') unsubscribe = 0;
+        let updateState = await promiseQuery(`UPDATE mail_korisnici SET unsubscribed = ${unsubscribe} WHERE adresa = '${email}'`);
+        resolve(updateState);
+    });
+}
+
+exports.getClassID = (className) => {
+    return new Promise(async (resolve, reject) => {
+        let classID = await promiseQuery(`SELECT id FROM general_razred WHERE ime = '${className}'`);
+        resolve(classID[0].id);
     });
 }
