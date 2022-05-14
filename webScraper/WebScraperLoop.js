@@ -2,20 +2,25 @@ const strugac=require('./webScraperMain');
 const schedule=require('node-schedule');
 const { ReactionUserManager } = require('discord.js');
 const prefix='[\u001b[31mSTRUGAC\033[00m] ';
-let provjera=0;
-async function strugacRun(run){
-    stat = await strugacStatus()
-    console.log(stat);
-    if(stat==1){
-        console.log(prefix+'Job je vec pokrenut');
+
+
+exports.strugacRun=async(run) =>{
+    stat = await exports.strugacStatus()
+    
+    if(stat==1 && run==true){
+        console.log(prefix+'Strugac je vec pokrenut');
+        return 0;
+    }
+    else if(stat==null && run==false){
+        console.log(prefix+'Strugac je vec zaustavljen ili nije ni pokrenut');
         return 0;
     }
     else if(run==true ){
         schedule.scheduleJob('strugac','*/1 * * * *', async ()=>{
-            strugacRun(true);
-           // await strugac.sql();
-           console.log("radi");
-            provjera++;
+            
+            await strugac.sql();
+           //console.log("radi");
+            
         });
         console.log(prefix+'Srugac je pokrenut');
     }
@@ -28,7 +33,8 @@ async function strugacRun(run){
     }
     
 }
-async function strugacStatus (){
+
+exports.strugacStatus=async() =>{   
     obj=schedule.scheduledJobs['strugac'];
     if(obj===undefined){
         return 0;
@@ -37,4 +43,4 @@ async function strugacStatus (){
         return 1;
     }
 }
-strugacRun(true);
+

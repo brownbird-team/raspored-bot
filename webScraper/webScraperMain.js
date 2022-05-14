@@ -135,7 +135,7 @@ async function scraper(raz){
     
 exports.sql=async() =>{
 
-    console.log("Funkcija");
+    
     let razredi_A;
     let razredi_B;
     let izmjena;
