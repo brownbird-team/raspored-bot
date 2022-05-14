@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const schedule = require("node-schedule");
 const database = require('./../rasporedEmailFunkcije');
-
+let rasporedEmail = require('./../rasporedEmail');
 let token = require('./../createToken');
 
 let isTokenExist = async(id) => {
-    let tokenExist = (await database.getTokens()).includes(id);
+    let tokenExist = (await database.getTokens('mail_korisnici')).includes(id);
     return tokenExist;
 }
 
@@ -17,12 +16,12 @@ router.get('/', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        await database.checkEmail(req.body.unsubEmail);
+        await database.checkEmail(req.body.unsubEmail, 'mail_korisnici');
         let emailToken = token.token();
         const emailData = {receiverEmail: req.body.unsubEmail, tokenEmail: emailToken};
         await database.updateToken(emailData.receiverEmail, emailData.tokenEmail);
-        await database.setTokenDate(emailData.receiverEmail);
-        //rasporedEmail.send_email(emailData, null, 3);
+        await database.setTokenDate(emailData.receiverEmail, 'mail_korisnici');
+        rasporedEmail.sender(emailData, null, 3);
         res.render('webResponseReject', {
             layout: 'index', 
             email: req.body.unsubEmail,
@@ -41,16 +40,23 @@ router.post('/', async(req, res) => {
 router.get('/:id', async(req, res) => {
     let result = await isTokenExist(req.params.id);
     if (result) {
-        res.render('webEmailUnsubscribe', {
-           layout: 'index',
-           tokenURL: req.params.id,
-           before: true 
-        });
+        try {
+            await database.checkToken(req.params.id, 'mail_korisnici');
+            res.render('webEmailUnsubscribe', {
+                layout: 'index',
+                invalid: true
+            });
+        } catch {
+            res.render('webEmailUnsubscribe', {
+                layout: 'index',
+                tokenURL: req.params.id,
+                before: true 
+             });
+        }
     } else {
         res.render('webEmailUnsubscribe', {
            layout: 'index',
            invalid: true,
-           invalidToken: req.params.id
         });
     }
 });
@@ -58,15 +64,28 @@ router.get('/:id', async(req, res) => {
 router.post('/:id', async(req, res) => {
     let result = await isTokenExist(req.params.id);
     if (result) {
-        let userEmail;
-        if (req.body.click)
-            userEmail = await database.getEmail(req.params.id);
-            await database.setUnsubscribe(req.params.id);
+        try {
+            await database.checkToken(req.params.id, 'mail_korisnici');
             res.render('webEmailUnsubscribe', {
                 layout: 'index',
-                after: true, 
-                email: userEmail
-            });
+                invalid: true,
+                invalidToken: req.params.id
+             });
+        } catch {
+            let userEmail;
+            if (req.body.click) {
+                userEmail = await database.getEmail(req.params.id, 'mail_korisnici');
+                await database.setUnsubscribe(req.params.id);
+                
+                await database.removeTokenDate(req.params.id);
+                await database.removeToken(req.params.id);
+                res.render('webEmailUnsubscribe', {
+                    layout: 'index',
+                    after: true, 
+                    email: userEmail
+                });
+            }
+        }
     } else {
         res.render('webEmailUnsubscribe', {
             layout: 'index',
