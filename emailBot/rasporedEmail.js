@@ -2,11 +2,13 @@
 const path = require('path');
 let nodemailer = require('nodemailer');
 let hbs = require('nodemailer-express-handlebars');
+const database = require('./rasporedEmailFunkcije');
+const prefix = '[\u001b[33mEmail\033[00m]';
 
-function send_email(tableData, j, cT){
+exports.sender = (tableData, j, chooseTemplate) => {
     let isEmpty = {}, selectedTemplate, selectedContext, selectedSubject;
 
-    if (cT != 2 && cT != 3) {
+    if (chooseTemplate != 2 && chooseTemplate != 3) {
         for (let i = 1; i < 10; i++) {
             if (tableData.scheduleChanges[`sat${i}`] != "") {
                 isEmpty[`sat${i}`] = true;
@@ -15,7 +17,7 @@ function send_email(tableData, j, cT){
             }
         }
     }
-    if (cT == 1 || cT == 0) {
+    if (chooseTemplate == 1 || chooseTemplate == 0) {
         // tamna ili svijetla tema 
         selectedContext = {
             j                   : j,
@@ -50,28 +52,21 @@ function send_email(tableData, j, cT){
             scheduleChangesSat8 : tableData.scheduleChanges.sat8,
             scheduleChangesSat9 : tableData.scheduleChanges.sat9};
         selectedSubject = `Izmjene u rasporedu sati za ${tableData.className}`;
-        if (cT)
-            selectedTemplate = 'raspored_dark_theme';
-        else
-            selectedTemplate = 'raspored_light_theme';
-    } else if (cT == 2) {
+        selectedTemplate = 'raspored_dark_theme';
+        if (!chooseTemplate) selectedTemplate = 'raspored_light_theme';
+    } else if (chooseTemplate == 2) {
         // dobrodoslica
-        let sendAllMessage, darkThemeMessage;
+        let sendAllMessage = 'Uključeno'; 
+        let darkThemeMessage = 'Uključeno';
         selectedTemplate = 'raspored_welcome';
-        if (tableData.sendAll)
-            sendAllMessage = 'Uključeno';
-        else
-            sendAllMessage = 'Isključeno';
-        if (tableData.darkTheme)
-            darkThemeMessage = 'Uključeno';
-        else
-            darkThemeMessage = 'Isključeno';
+        if (!tableData.sendAll) sendAllMessage = 'Isključeno';
+        if (!tableData.darkTheme) darkThemeMessage = 'Isključeno';
         selectedContext = {email        : tableData.receiverEmail,
                            class        : tableData.className, 
                            sendAll      : sendAllMessage,
                            darkTheme    : darkThemeMessage}; 
         selectedSubject = `Raspored bot ti želi dobrodošlicu!`;
-    } else if (cT == 3) {
+    } else if (chooseTemplate == 3) {
         // unsubscribe email
         selectedTemplate = 'raspored_unsubscribe';
         selectedContext = {email        : tableData.receiverEmail,
@@ -101,8 +96,8 @@ function send_email(tableData, j, cT){
 
     // kreiranje e-mail poruke
     let mailOptions = {
-        from: 'bot.raspored@gmail.com', // posiljatelj
-        to: tableData.receiverEmail, // primatelj
+        from: 'bot.raspored@gmail.com',
+        to: tableData.receiverEmail,
         subject: selectedSubject,
         template: selectedTemplate,
         context: selectedContext
@@ -110,12 +105,16 @@ function send_email(tableData, j, cT){
     // slanje e-maila
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-            console.log(error); // neuspjesno poslan
+            console.log(prefix + ' ' + error);
         } else {
-            console.log('[\u001b[33mEmail\033[00m] Email sent: ' + info.response);  // uspjesno poslan
+            console.log(prefix + ' E-mail poslan: ' + info.response);
         }
     });
 }
 
-// Eksportanje funkcije
-module.exports = { send_email }
+exports.send_changes = async(tableData, j, chooseTemplate, change) => {
+    console.log(prefix + ' Nova izmjena za korisnika: ' + tableData.receiverEmail + ' Razred: ' + tableData.className + '.');
+    await database.updateLastSend(tableData.classChanges[change].id, tableData.receiverEmail);
+    this.sender(tableData, j, chooseTemplate);
+    console.log(prefix + ' Zadnja poslana: ' + tableData.classChanges[change].id);
+}
