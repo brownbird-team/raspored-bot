@@ -3,10 +3,10 @@
     </div>
     <div class="card">
         {{#if before}}
-        <form action="/subscribe/auth" method="POST">
+        <form action="/settings" method="POST">
             <div class="form-part">
-                <label for="subEmail">Upiši e-mail adresu na koju želiš početi primati izmjene u rasporedu sati</label><br>
-                <input type="email" id="subEmail" name="subEmail" required>
+                <label for="sEmail">Upiši e-mail adresu na kojoj želiš izvršiti promjene postavki</label><br>
+                <input type="email" id="sEmail" name="sEmail" required>
             </div>
             <div class="form-part">
                 <input type="button" value="Natrag" onclick="window.location.assign('../home')">
@@ -15,15 +15,24 @@
         </form>
         {{/if}}
 
-        {{#if after}}
-        <form action={{tokenURL}} method="POST">
+        {{#if expired}}
+        <p>Link ne postoji ili je istekao, pokušajte ponovno ispuniti obrazac za promjenu postavki računa.</p><br>
+        <p>Kliknite <a href="../">ovdje</a> kako bi ispunili obrazac.</p>
+        <div class="form-part">
+            <input type="button" value="Natrag" onclick="window.location.assign('/settings')">
+        </div>
+        {{/if}}
+
+        {{#if notExpired}}
+        <div class="settingsHeading">
+            <p>Postavke računa: <b><i>{{email}}</i></b></p>
+        </div>
+        
+        <form action="/settings/edit/{{tokenURL}}" method="POST">
             <div class="form-part">
-                <label for="email">E-mail adresa</label><br>
-                <input type="email" id="email" name="email" value={{dbEmail}} readonly><br><br>
-            </div>
-            <div class="form-part">
-                <label for="razred">Odaberi razred</label><br>
+                <br><br><label for="razred">Razred:&nbsp;</label>
                 <select id="razred" name="razred">
+                    <option value="{{classID}}" selected>{{className}}</option>
                     <option value="1">1. A</option>
                     <option value="2">1. B</option>
                     <option value="3">1. C</option>
@@ -70,18 +79,28 @@
                 </select><br><br>
             </div>
             <div class="form-checkbox">
-                <input type="checkbox" id="saljiSve" name="saljiSve">
-                <label for="saljiSve">&nbsp;Želim primati sve izmjene za odabrani razred</label>
-                <label for="saljiSve">(Raspored bot  će ti slati obavijesti i kada nemaš izmjena)</label><br>
+                <br><input type="checkbox" id="saljiSve" name="saljiSve" {{#if sendAll}}checked{{/if}}>
+                <label for="saljiSve">Želim primati obavijesti o svim izmjenama</label>
             </div>
             <div class="form-checkbox">
-                <input type="checkbox" id="tamnaTema" name="tamnaTema">
-                <label for="tamnaTema">&nbsp;Želim primati izmjene u tamnoj temi</label>
+                <br><input type="checkbox" id="tamnaTema" name="tamnaTema" {{#if darkTheme}}checked{{/if}}>
+                <label for="tamnaTema">Želim izmjene u tamnoj temi</label>
+            </div>
+            <div class="form-checkbox">	
+                <br><input type="checkbox" id="pretplata" name="pretplata" {{#if unsubscribe}}checked{{/if}}>
+                <label for="pretplata">Želim pratiti izmjene u rasporedu sati</label>
             </div>
             <div class="form-part">
-                <input type="button" value="Natrag" onclick="window.location.assign('./home')">
-                <input type="submit" value="Pošalji" id="click" name="click">
+                <input type="button" value="Natrag" onclick="window.location.assign('../')">
+                <input type="submit" value="Promijeni" id="click" name="click">
             </div>
         </form>
+        {{/if}}
+
+        {{#if complete}}
+        <p>Uspješno ste promijenili postavke za račun <b>{{email}}</b>.</p>
+        <div class="form-part">
+                <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../../home')">
+            </div>
         {{/if}}
     </div>
