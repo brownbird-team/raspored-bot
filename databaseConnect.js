@@ -251,7 +251,7 @@ exports.databaseInit = () => {
                         id INT AUTO_INCREMENT PRIMARY KEY,
                         adresa char(100) NOT NULL,
                         token TEXT DEFAULT NULL,
-                        zadnji_token DATETIME DEFAULT NULL,
+                        zadnji_token DATETIME DEFAULT NULL
                     )
                 `);
             }
