@@ -1,0 +1,19 @@
+*%prefix%razred⎵<razred> (npr. 1.a)* = upis razreda u bazu
+
+*%prefix%r* = ispis rasporeda za vaš razred
+
+*%prefix%r⎵<ime svojeg razreda> (npr. 1.a)* = ispis rasporeda za željeni razred
+
+*%prefix%subscribe* = za odabir ako želite da vam bot šalje izmjene
+
+*%prefix%unsubscribe* = za odabir ako ne želite da vam bot šalje izmjene
+
+*%prefix%saljisve* = za odabir ako želite da vam bot šalje izmjene, čak i ako ih nema za taj dan
+
+*%prefix%nesaljisve* = za odabir ako ne želite da vam bot šalje izmjene, čak i ako ih nema za taj dan
+
+*%prefix%prefix⎵<prefix>* = za promjenu svojega prefixa. (prefix ne smije sadržavati razmake)
+
+*resetpre* = za promjenu svojega prefixa nazad na točku.
+
+*status* = ispis vaših podataka
