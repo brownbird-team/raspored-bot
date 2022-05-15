@@ -249,6 +249,7 @@ exports.getOption = (option) => {
     return new Promise(async (resolve, reject) => {
         const query = `SELECT * FROM disc_settings WHERE option = '${option}'`;
         let result = await promiseQuery(query);
+        let objekt;
         if(result.length === 0) {
             objekt = null;
         } else {
@@ -277,10 +278,12 @@ exports.setOption = (option, value) => {
     });
 }
 
+// Provjeri koji je prefix za traženi kanal
 exports.getPrefix = (server_id, kanal_id) => {
     return new Promise(async (resolve, reject) => {
         let result;
-
+        // Ako je argument kanal definiran, i ako kanal postoji u bazi, te ako je za
+        // njega postavljen prefix vrati taj prefix
         if (kanal_id != null) {
             result = await promiseQuery(`SELECT prefix FROM disc_kanali WHERE kanal_id = '${kanal_id}'`);
             if (result.length !== 0)
@@ -289,7 +292,8 @@ exports.getPrefix = (server_id, kanal_id) => {
                     return;
                 }
         }
-        
+        // Ako je argument server definiran, i ako server postoji u bazi, te ako je za
+        // njega postavljen prefix vrati taj prefix
         if (server_id != null) {
             result = await promiseQuery(`SELECT prefix FROM disc_serveri WHERE server_id = '${server_id}'`);
             if (result.length !== 0)
@@ -298,7 +302,7 @@ exports.getPrefix = (server_id, kanal_id) => {
                     return;
                 }
         }
-        
+        // Ako niš nije postavljeno vrati default prefix
         const defaultPrefix = await exports.getOption("prefix");
         resolve(defaultPrefix.value);
     });

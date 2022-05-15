@@ -2,35 +2,62 @@ const { normalEmbed, formatDateString } = require('./helperFunctionsDisc.js');
 const baza = require('./databaseQueriesDisc.js');
 const izmjene = require('./../databaseQueries.js');
 
+// Provjeri ima li izmjena za sve korisnike u bazi i pošalji im
 exports.check = async (client) => {
-    if (client !== undefined && !client.isReady()) return;
+    // Prekini ako bot nije spreman
+    if (client !== undefined && !client.isReady()) return false;
 
+    // Povuci sve registrirane kanale iz baze
     channels = await baza.listKanal();
     
+    // Za svaki kanal
     for (each of channels) {
-        
+        // Povuci podatke o kanalu
         const channelData = await baza.getKanal(each);
         let embeds = [];
-
+        // Ako kanalu nije definiran razred ili je mutean preskoči ga
         if (channelData.mute || !channelData.razred) { continue; }
 
-        const noveIzmjene = await izmjene.dajIzmjene(channelData.razred.id, channelData.zadnja_poslana);
+        // Povuci array novih izmjena za odabrani razred od zadnje poslane
+        let noveIzmjene = await izmjene.dajIzmjene(channelData.razred.id, channelData.zadnja_poslana);
+        const zadanjaIzmjena = noveIzmjene[0];
+
+        // Filtriraj nove izmjene tako da ako je korisnik odabrao da ne želi primati sve
+        // ne dobije prazne izmjene
+        noveIzmjene = noveIzmjene.filter(async izmjena => {
+            // Ako je korisnik odabrao sve preskoći filtriranje
+            if (!izmjena.sve_null || channelData.salji_sve) {
+                return true;
+            }
+            // Povuci iz baze izmjenu prije ove
+            const izmjenaPrijeOve = await izmjene.dajPovijest(channelData.razred.id, 2, izmjena.id);
+            // Ako je izmjena prije ove u istoj tablici i nije prazna, znači da je izmjena uklonjena
+            // stoga ju pošalji kako bi obavjestio da ipak nema izmjene
+            if (izmjena.naslov === izmjenaPrijeOve.izmjena.naslov && !izmjenaPrijeOve.izmjena.sve_null) {
+                return true;
+            }
+            // U suprotnom izbaci izmjenu iz arraya
+            return false;
+        });
+
+        // Preokreni array tako da prvo šalje najstarije izmjene
         const reverseIzmjene = [...noveIzmjene].reverse();
 
+        // Kreiraj embed za svaku izmjenu u arrayu
         for (const izmjena of reverseIzmjene) {
-            if (izmjena.sve_null && !channelData.salji_sve) { continue; }
-
+            // Inicijaliziraj normal embed
             let embed = await normalEmbed(
                 `Nove izmjene u rasporedu za ${channelData.razred.ime} razred`,
                 'Naš sustav pronašao je nove izmjene za vaš razred'
                 );
-
+            // Dodaj svaki sad kao novi red
             let izmjeneString = '```\n';
             let j = (izmjena.ujutro) ? 1 : -1;
             for(let i = 1; i < 10; i++, j++) {
                 izmjeneString += `${(j === -1) ? '' : ' '}${j}. sat = ${izmjena[`sat${i}`]}\n`
             }
             izmjeneString += '```'
+            // Dodaj polja za smjenu, prije/poslje podne, te status i datum
             embed.addFields({
                 name: izmjena.naslov,
                 value: izmjeneString
@@ -41,25 +68,28 @@ exports.check = async (client) => {
                 name: 'Status i Datum primanja izmjene',
                 value: '```' + ((noveIzmjene.indexOf(izmjena) === 0) ? '[Zadnja]' : '[Prošla]') + ' ' + formatDateString(izmjena.datum) + '```'
             });
-
+            // Dodaj embed u embeds array
             embeds.push(embed);
         }
-
+        // Ako je kanal u serveru i ima bar jednu izmjenu pošalji embeds array
         if (channelData.server && embeds.length !== 0) {
             const channel = await client.channels.fetch(channelData.id);
             await channel.send({
                 embeds: embeds
             });
+        // Ako je kanal DM i ima bar jednu izmjenu pošalji embeds array
         } else if (embeds.length !== 0) {
             client.users.send(channelData.id, {
                 embeds: embeds
             });
         }
-        
-        if (noveIzmjene.length !== 0)
+        // Ako je došlo do bar jedne izmjene osvježi zadnju poslanu za kanal
+        if (zadanjaIzmjena !== undefined)
             await baza.updateKanal({
                 id: channelData.id,
-                zadnja_poslana: noveIzmjene[0].id
+                zadnja_poslana: zadanjaIzmjena.id
             });
     }
+    // Vrati da je sve prošlo OK
+    return true;
 }

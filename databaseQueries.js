@@ -96,7 +96,8 @@ exports.dajIzmjene = (razred_id, zadnja_poslana) => {
 // Kreiraj funkciju koja omogućuje pregled povijesti izmjena
 // za određeni razred, kao drugi argument funkciji dajemo broj tablica
 // koliko želimo ići u prošlost
-exports.dajPovijest = (razred_id, kolikoURikverc) => {
+// Također možemo odabrati od koje izmjene želimo ići u rikverc
+exports.dajPovijest = (razred_id, kolikoURikverc, idIzmjene) => {
     return new Promise((resolve, reject) => {
         // Provjeri je li kolikoURikverc 0
         if (kolikoURikverc < 1) throw new Error("Argument kolikoURikverc ne može biti manji od 1");
@@ -109,18 +110,18 @@ exports.dajPovijest = (razred_id, kolikoURikverc) => {
 
             SELECT id, razred_id, tablica_id, datum, sat1, sat2, sat3, sat4, sat5, sat6, sat7, sat8, sat9
             FROM izmjene_razred
-            WHERE razred_id = ${razred_id}
+            WHERE razred_id = ${razred_id}${(idIzmjene === undefined) ? '' : ` AND id <= ${idIzmjene}`}
             ORDER BY id DESC
             LIMIT ${kolikoURikverc} OFFSET ${kolikoURikverc - 1};
         `, (errp, result) => {
             if (errp) throw errp;
 
             // Izvuci tražene podatke iz rezultata Queryja
-            ukupanBroj = result[0][0];
-            trazenaIzmjena = result[1][0];
+            let ukupanBroj = result[0][0];
+            let trazenaIzmjena = result[1][0];
             
             // Kreiraj objekt koji je krajnji rezultat
-            objekt = {
+            let objekt = {
                 broj: ukupanBroj.ukupan_broj,
                 izmjena: {
                     id: trazenaIzmjena.id,
@@ -129,7 +130,7 @@ exports.dajPovijest = (razred_id, kolikoURikverc) => {
             }
 
             // Dodaj svojstva za sate u objekt i provjeri jesu li svi null
-            sve_null = true
+            let sve_null = true
             for(let j = 1; j < 10; j++) {
                 
                 objekt.izmjena[`sat${j}`] = trazenaIzmjena[`sat${j}`];
