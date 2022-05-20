@@ -8,7 +8,7 @@ module.exports = {
     listIdPrefix: '',             // Početak ID-a kojeg lista vraća
 
     // Funkcija izvršena na poziv naredbe
-    async execute(msg) {
+    async execute(msg, kontakt, client) {
         // Pošalji Pong korisniku
         await msg.reply('Pong !');
     }

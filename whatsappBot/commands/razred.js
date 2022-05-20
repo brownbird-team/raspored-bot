@@ -12,7 +12,7 @@ module.exports = {
     listIdPrefix: 'razred_',      // Početak ID-a kojeg lista vraća
 
     // Ako je chat grupa spremi ga u bazu koristeći group id kao primarni ključ
-    async execute(msg, client) {
+    async execute(msg, kontakt, client) {
         // Povuci sve razrede iz baze
         const razredi = (await baza.dajRazrede()).filter(raz => raz.aktivan);
 
@@ -37,7 +37,7 @@ module.exports = {
     },
 
     // Funkcija izvršena na pritisak elementa iz izbornika
-    async executeListResponse(msg, client) {
+    async executeListResponse(msg, kontakt, client) {
         // Izvuci odabrani razred iz stringa
         const razredId = msg.selectedRowId.slice(this.listIdPrefix.length);
         // Povuci podatke za taj razred iz baze
@@ -51,22 +51,11 @@ module.exports = {
             return;
         }
 
-        // Nabavi objekt za ovaj chat
-        const chat = await msg.getChat();
-        // Ako je chat grupa spremi ga u bazu koristeći group id kao primarni ključ
-        if (chat.isGroup) {
-            baza.izmjeniKontakt({
-                id: chat.id.user,
-                razred: razred.id
-            });
-        // Ako je chat private spremi ga u bazu koristeći broj kao primarni ključ
-        } else {
-            const contact = await chat.getContact();
-            baza.izmjeniKontakt({
-                broj: contact.number,
-                razred: razred.id
-            });
-        }
+        // Izmjeni razred_id record u bazi za ovaj kontakt/grupu
+        baza.izmjeniKontakt({
+            broj: kontakt.broj,
+            razred: razred.id
+        });
 
         // Pošalji poruku
         client.sendMessage(msg.from, `Vaš razred je postavljen na ${razred.ime}`);

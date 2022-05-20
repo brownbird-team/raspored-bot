@@ -81,7 +81,7 @@ client.on('message', async (msg) => {
                 return;
             } else {
                 // Pokreni obradu naredbe
-                listCommand.executeListResponse(msg, client);
+                listCommand.executeListResponse(msg, bazaVal, client);
             }
         }
         // Inače samo ignoriraj
@@ -120,7 +120,7 @@ client.on('message', async (msg) => {
     }
 
     // Ako je sve prošlo OK izvrši naredbu
-    command.execute(msg, client);
+    command.execute(msg, bazaVal, client);
 });
 
 // Pokreni klijenta

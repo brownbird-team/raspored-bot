@@ -16,17 +16,7 @@ module.exports = {
     listIdPrefix: '',             // Početak ID-a kojeg lista vraća
 
     // Funkcija izvršena na poziv naredbe
-    async execute(msg, client) {
-        // Povuci chat objekt
-        const chat = await msg.getChat();
-        let kontakt;
-        // Ako je chat grupa povuci prefix za id
-        if (chat.isGroup) {
-            kontakt = await baza.dajKontakt(chat.id.user);
-        // Inače povuci prefix za broj
-        } else {
-            kontakt = await baza.dajKontakt((await msg.getContact()).number);
-        }
+    async execute(msg, kontakt, client) {
         // Formatiraj i pošalji help
         client.sendMessage(msg.from, prepareHelp(kontakt.prefix));
     }
