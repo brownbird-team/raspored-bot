@@ -37,14 +37,37 @@ exports.dobi_id_tablice=(izmjena,index) =>{
 }
 exports.select_baza_izmjene=(izmjena,index,index2) =>{
     return new Promise(async (resolve) =>{
-        let query=`SELECT * FROM izmjene_razred WHERE razred_id=${razred_id} AND tablica_id=${tablica_id} 
-        AND sat1='${izmjena[index].izmjene_razred[index2].sat1}' AND sat2='${izmjena[index].izmjene_razred[index2].sat2}' AND 
-        sat3='${izmjena[index].izmjene_razred[index2].sat3}' AND sat4='${izmjena[index].izmjene_razred[index2].sat4}' AND 
-        sat5='${izmjena[index].izmjene_razred[index2].sat5}' AND sat6='${izmjena[index].izmjene_razred[index2].sat6}' AND 
-        sat7='${izmjena[index].izmjene_razred[index2].sat7}' AND sat8='${izmjena[index].izmjene_razred[index2].sat8}' AND 
-        sat9='${izmjena[index].izmjene_razred[index2].sat9}' GROUP BY id DESC LIMIT 1`;
+        let query=`SELECT *
+        FROM izmjene_razred WHERE razred_id = ${razred_id} AND tablica_id = ${tablica_id} ORDER BY id DESC LIMIT 1`;
         result=await promiseQuery(query);
-        resolve(result);
+        let isti=true;
+        let j,i;
+        if(result==null){
+            resolve(0);
+        }
+        if(result[0]==null){
+            resolve(0);
+        }
+        for (i=1;i<=9;i++){
+          console.log(izmjena[index].izmjene_razred[index2][`sat${i}`],result[0][`sat${i}`]);
+         // console.log(izmjena[index].izmjene_razred[index2][`sat${i}`]===result[0][`sat${i}`]);
+            j=izmjena[index].izmjene_razred[index2][`sat${i}`]===result[0][`sat${i}`];
+        //    console.log(j);
+            if(j==false){
+                isti=false;
+                break;
+            }
+    }
+        if(isti==true){
+          //  console.log("Isti")
+            resolve(1);
+        }
+        if(isti==false){
+           // console.log("Razlika");
+            resolve(0);
+        }
+
+        
     });
 }
 exports.upis_izmjena_u_bazu=(izmjena,index,index2,datum) =>{

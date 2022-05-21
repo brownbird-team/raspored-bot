@@ -186,21 +186,14 @@ async function sql_upis(izmjena,razredi){
 
                
                 razred_upis=await baza.select_baza_izmjene(izmjena,index,index2);
-               
+               console.log(razred_upis);
                 
-                upis=false;
+             
                 
-                if(razred_upis==null){
-                    upis=true;
-                    
-                }
-                else if(razred_upis[0]==null || upis){
-                    upis=false;
-                   
+                if(razred_upis==false){
                     razred_upis_sad=await baza.upis_izmjena_u_bazu(izmjena,index,index2,datum);
-                                                                                      
-                    
-        }
+                }
+
             else{
                
             }
