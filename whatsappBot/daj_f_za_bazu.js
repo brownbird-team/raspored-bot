@@ -20,7 +20,6 @@ exports.dajKontakt = (broj) => {
             salji_izmjene: kontakt.salji_izmjene,
             salji_sve: kontakt.salji_sve
         }
-        console.log(kontakt);
         if (kontakt === null) {
             objekt.razred = null;
         }else if (kontakt[0] == null) {

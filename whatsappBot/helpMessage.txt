@@ -1,8 +1,6 @@
-*%prefix%razred⎵<razred> (npr. 1.a)* = upis razreda u bazu
+*%prefix%razred* = upis razreda u bazu
 
 *%prefix%r* = ispis rasporeda za vaš razred
-
-*%prefix%r⎵<ime svojeg razreda> (npr. 1.a)* = ispis rasporeda za željeni razred
 
 *%prefix%subscribe* = za odabir ako želite da vam bot šalje izmjene
 
