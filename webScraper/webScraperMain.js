@@ -130,6 +130,7 @@ async function scraper(raz){
   /*  for(i in result){
     console.log(result[i].izmjene_tablica);
     }*/
+    browser.close();
     return result;
 }
     
