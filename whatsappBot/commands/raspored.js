@@ -1,7 +1,6 @@
 const { ChatTypes } = require('whatsapp-web.js');
 const baza = require('../../databaseQueries.js');
 const dodaj_f_baza = require('../dodaj_f_za_bazu');
-const daj_f_baza = require('../daj_f_za_bazu');
 module.exports = {
     name: "raspored",
     aliases: ["r"],
