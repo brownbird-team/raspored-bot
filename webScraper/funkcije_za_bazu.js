@@ -45,11 +45,14 @@ exports.select_baza_izmjene=(izmjena,index,index2) =>{
         if(result==null){
             resolve(0);
         }
-        if(result[0]==null){
+        else if(result[0]==null){
+            console.log("a");
             resolve(0);
         }
+        else{
+           // console.log("B");
         for (i=1;i<=9;i++){
-          console.log(izmjena[index].izmjene_razred[index2][`sat${i}`],result[0][`sat${i}`]);
+          //console.log(izmjena[index].izmjene_razred[index2][`sat${i}`],result);
          // console.log(izmjena[index].izmjene_razred[index2][`sat${i}`]===result[0][`sat${i}`]);
             j=izmjena[index].izmjene_razred[index2][`sat${i}`]===result[0][`sat${i}`];
         //    console.log(j);
@@ -67,7 +70,7 @@ exports.select_baza_izmjene=(izmjena,index,index2) =>{
             resolve(0);
         }
 
-        
+        }    
     });
 }
 exports.upis_izmjena_u_bazu=(izmjena,index,index2,datum) =>{

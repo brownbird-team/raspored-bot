@@ -187,7 +187,7 @@ async function sql_upis(izmjena,razredi){
 
                
                 razred_upis=await baza.select_baza_izmjene(izmjena,index,index2);
-               console.log(razred_upis);
+               //console.log(razred_upis);
                 
              
                 
