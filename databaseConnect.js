@@ -146,28 +146,13 @@ exports.databaseInit = () => {
                 await query(con, `
                     CREATE TABLE wap_kontakti (
                         broj CHAR(50) PRIMARY KEY,
+                        grupa BOOL NOT NULL DEFAULT false,
                         razred_id INT,
                         prefix TEXT NOT NULL DEFAULT '.',
                         zadnja_poslana INT,
                         salji_izmjene BOOL NOT NULL DEFAULT false,
                         salji_sve BOOL NOT NULL DEFAULT false,
                         INDEX (broj),
-                        FOREIGN KEY(razred_id) REFERENCES general_razred(id),
-                        FOREIGN KEY(zadnja_poslana) REFERENCES izmjene_razred(id)
-                    )
-                `);
-            }
-            if (!tables.includes("wap_grupe")) {
-                databaseLog("Kreiram tablicu wap_grupe");
-                await query(con, `
-                    CREATE TABLE wap_grupe (
-                        id INT PRIMARY KEY,
-                        razred_id INT,
-                        prefix TEXT NOT NULL DEFAULT '.',
-                        zadnja_poslana INT,
-                        salji_izmjene BOOL NOT NULL DEFAULT false,
-                        salji_sve BOOL NOT NULL DEFAULT false,
-                        INDEX (id),
                         FOREIGN KEY(razred_id) REFERENCES general_razred(id),
                         FOREIGN KEY(zadnja_poslana) REFERENCES izmjene_razred(id)
                     )
@@ -261,6 +246,19 @@ exports.databaseInit = () => {
                 await query(con, `
                     CREATE TABLE panel_admins (
                         discord_user_id INT PRIMARY KEY
+                    )
+                `);
+            }
+            if (!tables.includes("panel_disc")) {
+                databaseLog("Kreiram tablicu panel_disc");
+                await query(con, `
+                    CREATE TABLE panel_disc (
+                        cookie CHAR(50) PRIMARY KEY,
+                        cookie_expire DATETIME,
+                        token_expire DATETIME,
+                        user_id CHAR(50),
+                        access_token CHAR(50),
+                        refresh_token CHAR(50)
                     )
                 `);
             }
