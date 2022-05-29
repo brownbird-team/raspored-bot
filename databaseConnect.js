@@ -109,7 +109,7 @@ exports.databaseInit = () => {
             }
             if(!tables.includes("izmjene_razred")) {
                 databaseLog("Kreiram tablicu izmjene_razred");
-                await query(con `
+                await query(con, `
                     CREATE TABLE izmjene_razred (
                         id INT AUTO_INCREMENT PRIMARY KEY,
                         razred_id INT NOT NULL,
