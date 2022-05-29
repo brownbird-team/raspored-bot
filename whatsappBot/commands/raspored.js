@@ -34,7 +34,7 @@ module.exports = {
             client.sendMessage(msg.from, izmjena_test);
             await dodaj_f_baza.dodaj_zadnju_poslanu(izmjena.id, kontakt.broj);
         }else if (!razred_data.id) {
-            client.sendMessage(msg.from, '```Niste postavili razred.```');
+            client.sendMessage(msg.from, 'Niste postavili razred.');
         }
     }
 }

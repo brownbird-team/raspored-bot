@@ -10,7 +10,7 @@ module.exports = {
     listIdPrefix: 'subscribe',
 
     async execute (msg, kontakt, client) {       
-        client.sendMessage(msg.from, '```Raspored bot će vam od sada slati dnevne izmjene automatski.```');
+        client.sendMessage(msg.from, 'Raspored bot će vam od sada slati dnevne izmjene automatski.');
         let sub = 1;
         await dodaj_f_baza.dodaj_salji_izmjene(sub, kontakt.broj);
     }

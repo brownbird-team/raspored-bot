@@ -44,6 +44,7 @@ process.on("SIGINT", async () => {
 });
 
 client.on('message', async (msg) => {
+    console.log(msg.body);
     // Pronađi chat i kontakt gdje je poruka poslana
     const chat = await msg.getChat();
     const kontakt = await msg.getContact();

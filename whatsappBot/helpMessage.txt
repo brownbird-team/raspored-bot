@@ -10,8 +10,8 @@
 
 *%prefix%nesaljisve* = za odabir ako ne želite da vam bot šalje izmjene, čak i ako ih nema za taj dan
 
-*%prefix%prefix⎵<prefix>* = za promjenu svojega prefixa. (prefix ne smije sadržavati razmake)
+*%prefix%prefix⎵<prefix>* = za promjenu svojega prefixa.
 
 *resetpre* = za promjenu svojega prefixa nazad na točku.
 
-*status* = ispis vaših podataka
+*status* = ispis vaših postavljenih podataka

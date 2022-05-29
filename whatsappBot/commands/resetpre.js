@@ -11,6 +11,6 @@ module.exports = {
 
     async execute (msg, kontakt, client) {       
         await f_baza.reset_prefix(kontakt.broj);
-        client.sendMessage(msg.from, '```Resetirali ste prefix na "."```');
+        client.sendMessage(msg.from, 'Resetirali ste prefix na "."');
     }
 }
