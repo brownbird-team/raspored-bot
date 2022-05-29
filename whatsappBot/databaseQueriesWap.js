@@ -14,6 +14,7 @@ exports.dajKontakt = (broj) => {
         
         let objekt = {
             broj: kontakt.broj,
+            grupa: kontakt.grupa,
             prefix: kontakt.prefix,
             zadnja_poslana: kontakt.zadnja_poslana,
             salji_izmjene: kontakt.salji_izmjene,
@@ -30,9 +31,9 @@ exports.dajKontakt = (broj) => {
 }
 
 // Dodaj kontakt (ili grupu)
-exports.dodajKontakt = (broj) => {
+exports.dodajKontakt = (broj, grupa) => {
     return new Promise(async (resolve) => {
-        await promiseQuery(`INSERT INTO wap_kontakti (broj) VALUES ('${broj}')`);
+        await promiseQuery(`INSERT INTO wap_kontakti (broj, grupa) VALUES ('${broj}', ${grupa})`);
         resolve("done");
     });
 }

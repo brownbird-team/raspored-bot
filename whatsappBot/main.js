@@ -63,7 +63,7 @@ client.on('message', async (msg) => {
 
     // Ako ključ ne postoji dodaj ga i zatraži opet
     if (!bazaVal) {
-        await baza.dodajKontakt(bazaId);
+        await baza.dodajKontakt(bazaId, chat.isGroup);
         bazaVal = await baza.dajKontakt(bazaId);
     }
 

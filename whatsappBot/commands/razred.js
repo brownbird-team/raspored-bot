@@ -54,7 +54,8 @@ module.exports = {
         // Izmjeni razred_id record u bazi za ovaj kontakt/grupu
         baza.izmjeniKontakt({
             broj: kontakt.broj,
-            razred: razred.id
+            razred: razred.id,
+            zadnja_poslana: (await gen.dajZadnju(razred.id)).id
         });
 
         // Pošalji poruku
