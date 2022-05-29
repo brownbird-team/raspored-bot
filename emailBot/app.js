@@ -42,10 +42,10 @@ checkTokenState();
 
 /*=============== API ROUTES ===============*/
 
-app.use('/home', require('./routes/home'));
-app.use('/subscribe', require('./routes/subscribe'));
-app.use('/settings', require('./routes/settings'));
-app.use('/unsubscribe', require('./routes/unsubscribe'));
+app.use('/email', require('./routes/home'));
+app.use('/pretplata', require('./routes/subscribe'));
+app.use('/postavke', require('./routes/settings'));
+app.use('/prekid-pretplate', require('./routes/unsubscribe'));
 app.use('/*', require('./routes/page404'));
 
 app.listen(port, () => {

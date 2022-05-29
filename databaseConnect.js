@@ -205,8 +205,8 @@ exports.databaseInit = () => {
                 await query(con, `
                     CREATE TABLE mail_settings (
                         id INT AUTO_INCREMENT PRIMARY KEY,
-                        option CHAR(30) NOT NULL,
-                        value TEXT
+                        adresa CHAR(30) NOT NULL,
+                        lozinka TEXT
                     )
                 `);
             }

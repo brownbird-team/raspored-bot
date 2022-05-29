@@ -10,7 +10,10 @@ let isTokenExist = async(id) => {
 }
 
 router.get('/', async(req, res) => {    
-    res.render('webUnsubscribe', {layout: 'index'});
+    res.render('webUnsubscribe', {
+        layout: 'index',
+        title: 'Raspored bot | Odjava'
+    });
 });
 
 
@@ -21,9 +24,10 @@ router.post('/', async(req, res) => {
         const emailData = {receiverEmail: req.body.unsubEmail, tokenEmail: emailToken};
         await database.updateToken(emailData.receiverEmail, emailData.tokenEmail);
         await database.setTokenDate(emailData.receiverEmail, 'mail_korisnici');
-        rasporedEmail.sender(emailData, null, 3);
+        await rasporedEmail.sender(emailData, null, 3);
         res.render('webResponseReject', {
             layout: 'index', 
+            title: 'Raspored bot | Odjava',
             email: req.body.unsubEmail,
             res1: true
         });
@@ -31,6 +35,7 @@ router.post('/', async(req, res) => {
     } catch {
         res.render('webResponseReject', {
             layout: 'index', 
+            title: 'Raspored bot | Odjava',
             email: req.body.unsubEmail,
             rej1: true
         });
@@ -44,11 +49,13 @@ router.get('/:id', async(req, res) => {
             await database.checkToken(req.params.id, 'mail_korisnici');
             res.render('webEmailUnsubscribe', {
                 layout: 'index',
+                title: 'Raspored bot | Odjava',
                 invalid: true
             });
         } catch {
             res.render('webEmailUnsubscribe', {
                 layout: 'index',
+                title: 'Raspored bot | Odjava',
                 tokenURL: req.params.id,
                 before: true 
              });
@@ -56,6 +63,7 @@ router.get('/:id', async(req, res) => {
     } else {
         res.render('webEmailUnsubscribe', {
            layout: 'index',
+           title: 'Raspored bot | Odjava',
            invalid: true,
         });
     }
@@ -68,6 +76,7 @@ router.post('/:id', async(req, res) => {
             await database.checkToken(req.params.id, 'mail_korisnici');
             res.render('webEmailUnsubscribe', {
                 layout: 'index',
+                title: 'Raspored bot | Odjava',
                 invalid: true,
                 invalidToken: req.params.id
              });
@@ -81,6 +90,7 @@ router.post('/:id', async(req, res) => {
                 await database.removeToken(req.params.id);
                 res.render('webEmailUnsubscribe', {
                     layout: 'index',
+                    title: 'Raspored bot | Odjava',
                     after: true, 
                     email: userEmail
                 });
@@ -89,6 +99,7 @@ router.post('/:id', async(req, res) => {
     } else {
         res.render('webEmailUnsubscribe', {
             layout: 'index',
+            title: 'Raspored bot | Odjava',
             invalid: true,
             invalidToken: req.params.id
          });

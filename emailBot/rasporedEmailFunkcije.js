@@ -42,6 +42,13 @@ exports.getDateNow = () => {
     return formatted;
 };
 
+exports.getSenderEmailData = () => {
+    return new Promise(async (resolve, reject) => {
+        let data = await promiseQuery(`SELECT adresa, lozinka FROM mail_settings`);
+        resolve(data);
+    });
+}
+
 exports.setUnsubscribe = (token) => {
     return new Promise(async (resolve, reject) => {
         let updateState = await promiseQuery(`UPDATE mail_korisnici SET unsubscribed = 1 WHERE token = '${token}'`);
@@ -279,5 +286,12 @@ exports.getClassID = (className) => {
     return new Promise(async (resolve, reject) => {
         let classID = await promiseQuery(`SELECT id FROM general_razred WHERE ime = '${className}'`);
         resolve(classID[0].id);
+    });
+}
+
+exports.getAllClasses = () => {
+    return new Promise(async (resolve, reject) => {
+        let classes = await promiseQuery(`SELECT id, ime FROM general_razred WHERE aktivan = 1`);
+        resolve(classes);
     });
 }

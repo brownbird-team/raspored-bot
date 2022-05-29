@@ -12,6 +12,7 @@ let isTokenExist = async(id) => {
 router.get('/', (req, res) => {
     res.render('webSettings', {
         layout: 'index',
+        title: 'Raspored bot | Postavke',
         before: true
     });
 });
@@ -24,25 +25,28 @@ router.post('/', async(req, res) => {
         // ovdje poslati e-mail poruku
         res.render('webResponseReject', {
             layout: 'index',
+            title: 'Raspored bot | Postavke',
             settingsRes: true,
             email: req.body.sEmail
         });
     } catch {
         res.render('webResponseReject', {
             layout: 'index',
+            title: 'Raspored bot | Postavke',
             settingsRej: true,
             email: req.body.sEmail
         });
     }
 });
 
-router.get('/edit/:id', async(req, res) => {
+router.get('/:id', async(req, res) => {
     let exist = await isTokenExist(req.params.id);
     if (exist) {
         try {
             await database.checkToken(req.params.id, 'mail_korisnici');
             res.render('webSettings', {
                 layout: 'index',
+                title: 'Raspored bot | Postavke',
                 expired: true
             });
         } catch {
@@ -52,9 +56,10 @@ router.get('/edit/:id', async(req, res) => {
             let sendAllState = await database.getSendAllState(req.params.id);
             let darkThemeState = await database.getDarkThemeState(req.params.id);
             let unsubState = await database.getUnsubscribedState(dbEmail);
-            console.log(unsubState);
+            let classList = await database.getAllClasses();
             res.render('webSettings', {
                 layout: 'index',
+                title: 'Raspored bot | Postavke',
                 tokenURL: req.params.id,
                 notExpired: true,
                 classID: clID,
@@ -62,24 +67,27 @@ router.get('/edit/:id', async(req, res) => {
                 email: dbEmail,
                 sendAll: sendAllState,
                 darkTheme: darkThemeState,
-                unsubscribe: unsubState
+                unsubscribe: unsubState,
+                classL: classList
             });
         }
     } else {
         res.render('webSettings', {
             layout: 'index',
+            title: 'Raspored bot | Postavke',
             expired: true
         });
     }
 });
 
-router.post('/edit/:id', async(req, res) => {
+router.post('/:id', async(req, res) => {
     let exist = await isTokenExist(req.params.id);
     if (exist) {
         try {
             await database.checkToken(req.params.id, 'mail_korisnici');
             res.render('webSettings', {
                 layout: 'index',
+                title: 'Raspored bot | Postavke',
                 expired: true
             });
         } catch {
@@ -94,6 +102,7 @@ router.post('/edit/:id', async(req, res) => {
                 await database.removeToken(req.params.id);
                 res.render('webSettings', {
                     layout: 'index',
+                    title: 'Raspored bot | Postavke',
                     complete: true,
                     email: clientEmail
                 })
@@ -102,6 +111,7 @@ router.post('/edit/:id', async(req, res) => {
     } else {
         res.render('webSettings', {
             layout: 'index',
+            title: 'Raspored bot | Postavke',
             expired: true
         });
     }

@@ -5,9 +5,11 @@ let hbs = require('nodemailer-express-handlebars');
 const database = require('./rasporedEmailFunkcije');
 const prefix = '[\u001b[33mEmail\033[00m]';
 
-exports.sender = (tableData, j, chooseTemplate) => {
+exports.sender = async(tableData, j, chooseTemplate) => {
     let isEmpty = {}, selectedTemplate, selectedContext, selectedSubject;
-
+    const senderData = await database.getSenderEmailData();
+    const username = senderData[0].adresa;
+    const password = senderData[0].lozinka;
     if (chooseTemplate != 2 && chooseTemplate != 3) {
         for (let i = 1; i < 10; i++) {
             if (tableData.scheduleChanges[`sat${i}`] != "") {
@@ -77,8 +79,8 @@ exports.sender = (tableData, j, chooseTemplate) => {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'bot.raspored@gmail.com',
-            pass: 'BOTrasPoreDBrownBIRDteAM'
+            user: username,
+            pass: password
         }
     });
 
@@ -115,6 +117,6 @@ exports.sender = (tableData, j, chooseTemplate) => {
 exports.send_changes = async(tableData, j, chooseTemplate, change) => {
     console.log(prefix + ' Nova izmjena za korisnika: ' + tableData.receiverEmail + ' Razred: ' + tableData.className + '.');
     await database.updateLastSend(tableData.classChanges[change].id, tableData.receiverEmail);
-    this.sender(tableData, j, chooseTemplate);
+    await this.sender(tableData, j, chooseTemplate);
     console.log(prefix + ' Zadnja poslana: ' + tableData.classChanges[change].id);
 }

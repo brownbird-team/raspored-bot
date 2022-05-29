@@ -1,25 +1,10 @@
-    <script>
-
-        let url = window.location.href.split('/');
-        let token = url[url.length - 1];
-        const data = {token}
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        };
-        fetch('/unsubscribe/' + data.token, options);
-        
-    </script>
     <div class="heading">
         <h1>Raspored bot</h1>
     </div>
     <div class="card">
         {{#if before}}
-        <p>Želiš li poništiti pretplatu s Raspored botom?</p>
-        <form action={{tokenURL}} method="POST">
+        <p>Želite li poništiti pretplatu s Raspored botom?</p>
+        <form action='/prekid-pretplate/{{tokenURL}}' method="POST">
             <div class="form-part">
                 <input type="submit" value="Poništi pretplatu" id="click" name="click">
             </div>
@@ -27,9 +12,9 @@
         {{/if}}
 
         {{#if after}}
-        <p>Uspješno si poništio pretplatu s adresom <b>{{email}}</b>.</p>
+        <p>Uspješno ste poništili pretplatu s adresom <b>{{email}}</b>.</p>
         <div class="form-part">
-            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../home')">
+            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../email')">
         </div>
         {{/if}}
 

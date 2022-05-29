@@ -6,7 +6,7 @@
         {{#if rej1}}
         <p>E-mail <b>{{email}}</b> ne postoji u našoj bazi.</p>
         <div class="form-part">
-            <input type="button" value="Natrag" onclick="window.location.assign('/unsubscribe')">
+            <input type="button" value="Natrag" onclick="window.location.assign('/prekid-pretplate')">
         </div>
         {{/if}}
 
@@ -14,14 +14,14 @@
         <p>E-mail je uspješno posalan na adresu <b>{{email}}</b>.</p>
         <p>Kako bi poništili pretplatu, potrebno je otvoriti link koji je naveden u e-mailu.</p>
         <div class="form-part">
-            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/home')">
+            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/email')">
         </div>
         {{/if}}
 
         {{#if rej2}}
         <p>E-mail <b>{{email}}</b> već postoji u našoj bazi.</p>
         <div class="form-part">
-            <input type="button" value="Natrag" onclick="window.location.assign('/subscribe')">
+            <input type="button" value="Natrag" onclick="window.location.assign('/pretplata')">
         </div>
         {{/if}}
 
@@ -29,7 +29,7 @@
         <p>Uspješno ste registrirani. Izmjene u rasporedu sati će<br>
         Vam dolaziti na adresu <b>{{email}}</b></p>
         <div class="form-part">
-            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/home')">
+            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/email')">
         </div>
         {{/if}}
 
@@ -37,7 +37,7 @@
         <p>Uspješno ste podnijeli zahtjev za pretplatu na Raspored bot.</p>
         <p>Kako bi dovršili zahtjev, potrebno je otvoriti link koji je poslan na adresu <b>{{email}}</b></p>
         <div class="form-part">
-            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/home')">
+            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/email')">
         </div>
         {{/if}}
 
@@ -49,7 +49,7 @@
         {{#if settingsRej}}
         <p>E-mail <b>{{email}}</b> ne postoji u našoj bazi.</p>
         <div class="form-part">
-            <input type="button" value="Natrag" onclick="window.location.assign('/settings')">
+            <input type="button" value="Natrag" onclick="window.location.assign('/postavke')">
         </div>
         {{/if}}
 
@@ -57,7 +57,7 @@
         <p>Uspješno ste podnijeli zahtjev za promjenu postavki za račun <b>{{email}}</b>.</p><br>
         <p>Kako bi dovršili zahtjev, potrebno je otvoriti link koji je poslan na navedenu adresu.</p>
         <div class="form-part">
-            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/home')">
+            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/email')">
         </div>
         {{/if}}
     </div>
