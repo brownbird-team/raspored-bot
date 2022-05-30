@@ -1,0 +1,7 @@
+{
+    "home": "email",
+    "subscribe": "pretplata",
+    "settings": "postavke",
+    "unsubscribe": "prekid-pretplate",
+    "url": "http://localhost:5000"
+}
