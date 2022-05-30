@@ -3,20 +3,20 @@
     </div>
     <div class="card">
         {{#if before}}
-        <form action="/pretplata" method="POST">
+        <form action="/{{subscribeRoute}}" method="POST">
             <div class="form-part">
                 <label for="subEmail">Upiši e-mail adresu na koju želiš početi primati izmjene u rasporedu sati</label><br>
                 <input type="email" id="subEmail" name="subEmail" required>
             </div>
             <div class="form-part">
-                <input type="button" value="Natrag" onclick="window.location.assign('./email')">
+                <input type="button" value="Natrag" onclick="window.location.assign('./{{homeRoute}}')">
                 <input type="submit" value="Pošalji">
             </div>
         </form>
         {{/if}}
 
         {{#if after}}
-        <form action='/pretplata/{{tokenURL}}' method="POST">
+        <form action='/{{subscribeRoute}}/{{tokenURL}}' method="POST">
             <div class="form-part">
                 <label for="email">E-mail adresa</label><br>
                 <input type="email" id="email" name="email" value={{dbEmail}} readonly><br><br>
@@ -39,7 +39,7 @@
                 <label for="tamnaTema">&nbsp;Želim primati izmjene u tamnoj temi</label>
             </div>
             <div class="form-part">
-                <input type="button" value="Natrag" onclick="window.location.assign('./email')">
+                <input type="button" value="Natrag" onclick="window.location.assign('./')">
                 <input type="submit" value="Pošalji" id="click" name="click">
             </div>
         </form>

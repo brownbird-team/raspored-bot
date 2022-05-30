@@ -4,7 +4,7 @@
     <div class="card">
         {{#if before}}
         <p>Želite li poništiti pretplatu s Raspored botom?</p>
-        <form action='/prekid-pretplate/{{tokenURL}}' method="POST">
+        <form action='/{{unsubscribeRoute}}/{{tokenURL}}' method="POST">
             <div class="form-part">
                 <input type="submit" value="Poništi pretplatu" id="click" name="click">
             </div>
@@ -14,7 +14,7 @@
         {{#if after}}
         <p>Uspješno ste poništili pretplatu s adresom <b>{{email}}</b>.</p>
         <div class="form-part">
-            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../email')">
+            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../{{homeRoute}}')">
         </div>
         {{/if}}
 

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const database = require('./../rasporedEmailFunkcije');
+const routeNames = require('../getRouteName');
 let rasporedEmail = require('./../rasporedEmail');
 let token = require('./../createToken');
 
@@ -13,7 +14,9 @@ router.get('/', async(req, res) => {
     res.render('webForm', {
         layout: 'index',
         title: 'Raspored bot | Pretplata',
-        before: true
+        before: true,
+        subscribeRoute: await routeNames.giveRouteName('subscribe'),
+        homeRoute: await routeNames.giveRouteName('home')
     });
 });
 
@@ -24,7 +27,8 @@ router.post('/', async(req, res) => {
             layout: 'index',
             title: 'Raspored bot | Pretplata',
             email: req.body.subEmail,
-            rej2: true
+            rej2: true,
+            subscribeRoute: await routeNames.giveRouteName('subscribe')
         });
     } catch {
         await database.insertTempData(req.body.subEmail, token.token());
@@ -33,7 +37,8 @@ router.post('/', async(req, res) => {
             layout: 'index',
             title: 'Raspored bot | Pretplata',
             email: req.body.subEmail,
-            auth: true
+            auth: true,
+            homeRoute: await routeNames.giveRouteName('home')
         });
     }
 });
@@ -58,7 +63,8 @@ router.get('/:id', async(req, res) => {
                 after: true,
                 dbEmail: tempEmail,
                 tokenURL: req.params.id,
-                classL: classList
+                classL: classList,
+                subscribeRoute: await routeNames.giveRouteName('subscribe'),
             });
         }
     } else {
@@ -92,7 +98,8 @@ router.post('/:id', async(req, res) => {
                     layout: 'index',
                     title: 'Raspored bot | Pretplata',
                     email: client.receiverEmail,
-                    res2: true
+                    res2: true,
+                    homeRoute: await routeNames.giveRouteName('home')
                 });
             }
         }

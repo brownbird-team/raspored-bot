@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const database = require('./../rasporedEmailFunkcije');
+const routeNames = require('../getRouteName');
 let rasporedEmail = require('./../rasporedEmail');
 let token = require('./../createToken');
 
@@ -12,7 +13,9 @@ let isTokenExist = async(id) => {
 router.get('/', async(req, res) => {    
     res.render('webUnsubscribe', {
         layout: 'index',
-        title: 'Raspored bot | Odjava'
+        title: 'Raspored bot | Odjava',
+        unsubscribeRoute: await routeNames.giveRouteName('unsubscribe'),
+        homeRoute: await routeNames.giveRouteName('home')
     });
 });
 
@@ -29,7 +32,8 @@ router.post('/', async(req, res) => {
             layout: 'index', 
             title: 'Raspored bot | Odjava',
             email: req.body.unsubEmail,
-            res1: true
+            res1: true,
+            homeRoute: await routeNames.giveRouteName('home')
         });
 
     } catch {
@@ -37,7 +41,8 @@ router.post('/', async(req, res) => {
             layout: 'index', 
             title: 'Raspored bot | Odjava',
             email: req.body.unsubEmail,
-            rej1: true
+            rej1: true,
+            unsubscribeRoute: await routeNames.giveRouteName('unsubscribe')
         });
     }
 });
@@ -57,7 +62,8 @@ router.get('/:id', async(req, res) => {
                 layout: 'index',
                 title: 'Raspored bot | Odjava',
                 tokenURL: req.params.id,
-                before: true 
+                before: true,
+                unsubscribeRoute: await routeNames.giveRouteName('unsubscribe')
              });
         }
     } else {
@@ -92,7 +98,8 @@ router.post('/:id', async(req, res) => {
                     layout: 'index',
                     title: 'Raspored bot | Odjava',
                     after: true, 
-                    email: userEmail
+                    email: userEmail,
+                    homeRoute: await routeNames.giveRouteName('home')
                 });
             }
         }

@@ -3,13 +3,13 @@
     </div>
     <div class="card">
         {{#if before}}
-        <form action="/postavke" method="POST">
+        <form action="/{{settingsRoute}}" method="POST">
             <div class="form-part">
                 <label for="sEmail">Upiši e-mail adresu na kojoj želiš izvršiti promjene postavki</label><br>
                 <input type="email" id="sEmail" name="sEmail" required>
             </div>
             <div class="form-part">
-                <input type="button" value="Natrag" onclick="window.location.assign('../email')">
+                <input type="button" value="Natrag" onclick="window.location.assign('../{{homeRoute}}')">
                 <input type="submit" value="Pošalji">
             </div>
         </form>
@@ -17,9 +17,9 @@
 
         {{#if expired}}
         <p>Link ne postoji ili je istekao, pokušajte ponovno ispuniti obrazac za promjenu postavki računa.</p><br>
-        <p>Kliknite <a href="../">ovdje</a> kako bi ispunili obrazac.</p>
+        <p>Kliknite <a href="./">ovdje</a> kako bi ispunili obrazac.</p>
         <div class="form-part">
-            <input type="button" value="Natrag" onclick="window.location.assign('/postavke')">
+            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/{{homeRoute}}')">
         </div>
         {{/if}}
 
@@ -28,7 +28,7 @@
             <p>Postavke računa: <b><i>{{email}}</i></b></p>
         </div>
         
-        <form action="/postavke/{{tokenURL}}" method="POST">
+        <form action="/{{settingsRoute}}/{{tokenURL}}" method="POST">
             <div class="form-part">
                 <br><br><label for="razred">Razred:&nbsp;</label>
                 <select id="razred" name="razred">
@@ -60,7 +60,7 @@
         {{#if complete}}
         <p>Uspješno ste promijenili postavke za račun <b>{{email}}</b>.</p>
         <div class="form-part">
-                <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../../email')">
+                <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../../{{homeRoute}}')">
             </div>
         {{/if}}
     </div>

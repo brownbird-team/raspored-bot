@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const database = require('./../rasporedEmailFunkcije');
+const routeNames = require('../getRouteName');
 let rasporedEmail = require('./../rasporedEmail');
 let token = require('./../createToken');
 
@@ -9,11 +10,13 @@ let isTokenExist = async(id) => {
     return tokenExist;
 }
 
-router.get('/', (req, res) => {
+router.get('/', async(req, res) => {
     res.render('webSettings', {
         layout: 'index',
         title: 'Raspored bot | Postavke',
-        before: true
+        before: true,
+        settingsRoute: await routeNames.giveRouteName('settings'),
+        homeRoute: await routeNames.giveRouteName('home')
     });
 });
 
@@ -27,14 +30,16 @@ router.post('/', async(req, res) => {
             layout: 'index',
             title: 'Raspored bot | Postavke',
             settingsRes: true,
-            email: req.body.sEmail
+            email: req.body.sEmail,
+            homeRoute: await routeNames.giveRouteName('home')
         });
     } catch {
         res.render('webResponseReject', {
             layout: 'index',
             title: 'Raspored bot | Postavke',
             settingsRej: true,
-            email: req.body.sEmail
+            email: req.body.sEmail,
+            settingsRoute: await routeNames.giveRouteName('settings')
         });
     }
 });
@@ -47,7 +52,8 @@ router.get('/:id', async(req, res) => {
             res.render('webSettings', {
                 layout: 'index',
                 title: 'Raspored bot | Postavke',
-                expired: true
+                expired: true,
+                homeRoute: await routeNames.giveRouteName('home')
             });
         } catch {
             let clName = await database.getClassName(req.params.id);
@@ -68,14 +74,16 @@ router.get('/:id', async(req, res) => {
                 sendAll: sendAllState,
                 darkTheme: darkThemeState,
                 unsubscribe: unsubState,
-                classL: classList
+                classL: classList,
+                settingsRoute: await routeNames.giveRouteName('settings')
             });
         }
     } else {
         res.render('webSettings', {
             layout: 'index',
             title: 'Raspored bot | Postavke',
-            expired: true
+            expired: true,
+            homeRoute: await routeNames.giveRouteName('home')
         });
     }
 });
@@ -88,7 +96,8 @@ router.post('/:id', async(req, res) => {
             res.render('webSettings', {
                 layout: 'index',
                 title: 'Raspored bot | Postavke',
-                expired: true
+                expired: true,
+                homeRoute: await routeNames.giveRouteName('home')
             });
         } catch {
             if (req.body.click) {
@@ -104,7 +113,8 @@ router.post('/:id', async(req, res) => {
                     layout: 'index',
                     title: 'Raspored bot | Postavke',
                     complete: true,
-                    email: clientEmail
+                    email: clientEmail,
+                    homeRoute: await routeNames.giveRouteName('home')
                 })
             }
         }
@@ -112,7 +122,8 @@ router.post('/:id', async(req, res) => {
         res.render('webSettings', {
             layout: 'index',
             title: 'Raspored bot | Postavke',
-            expired: true
+            expired: true,
+            homeRoute: await routeNames.giveRouteName('home')
         });
     }
 });

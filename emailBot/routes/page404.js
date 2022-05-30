@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const routeNames = require('../getRouteName');
 
-router.get('/', (req, res) => {
+router.get('/', async(req, res) => {
     res.render('404Page', {
         layout: 'index',
-        title: 'Raspored bot'
+        title: 'Raspored bot',
+        homeRoute: await routeNames.giveRouteName('home')
     });
 });
 
