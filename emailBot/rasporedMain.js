@@ -63,4 +63,4 @@ exports.main = async() => {
     }
 }
 
-this.main();
+exports.main();
