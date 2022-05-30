@@ -109,7 +109,7 @@ exports.databaseInit = () => {
             }
             if(!tables.includes("izmjene_razred")) {
                 databaseLog("Kreiram tablicu izmjene_razred");
-                await query(con `
+                await query(con, `
                     CREATE TABLE izmjene_razred (
                         id INT AUTO_INCREMENT PRIMARY KEY,
                         razred_id INT NOT NULL,
@@ -205,8 +205,8 @@ exports.databaseInit = () => {
                 await query(con, `
                     CREATE TABLE mail_settings (
                         id INT AUTO_INCREMENT PRIMARY KEY,
-                        option CHAR(30) NOT NULL,
-                        value TEXT
+                        adresa CHAR(30) NOT NULL,
+                        lozinka TEXT
                     )
                 `);
             }

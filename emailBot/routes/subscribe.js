@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const database = require('./../rasporedEmailFunkcije');
+const routeNames = require('../getRouteName');
 let rasporedEmail = require('./../rasporedEmail');
 let token = require('./../createToken');
 
@@ -12,30 +13,37 @@ let isTokenExist = async(id) => {
 router.get('/', async(req, res) => {
     res.render('webForm', {
         layout: 'index',
-        before: true
+        title: 'Raspored bot | Pretplata',
+        before: true,
+        subscribeRoute: await routeNames.giveRouteName('subscribe'),
+        homeRoute: await routeNames.giveRouteName('home')
     });
 });
 
-router.post('/auth', async(req, res) => {
+router.post('/', async(req, res) => {
     try {
         await database.checkAllEmailTables(req.body.subEmail);
         res.render('webResponseReject', {
             layout: 'index',
+            title: 'Raspored bot | Pretplata',
             email: req.body.subEmail,
-            rej2: true
+            rej2: true,
+            subscribeRoute: await routeNames.giveRouteName('subscribe')
         });
     } catch {
         await database.insertTempData(req.body.subEmail, token.token());
         await database.setTokenDate(req.body.subEmail, 'mail_privremeni_korisnici');
         res.render('webResponseReject', {
             layout: 'index',
+            title: 'Raspored bot | Pretplata',
             email: req.body.subEmail,
-            auth: true
+            auth: true,
+            homeRoute: await routeNames.giveRouteName('home')
         });
     }
 });
 
-router.get('/verification/:id', async(req, res) => {
+router.get('/:id', async(req, res) => {
     let exist = await isTokenExist(req.params.id);
     if (exist) {
         try {
@@ -43,26 +51,32 @@ router.get('/verification/:id', async(req, res) => {
             await database.deleteTempData(req.params.id);
             res.render('webResponseReject', {
                 layout: 'index',
+                title: 'Raspored bot | Pretplata',
                 invalid: true
             });
         } catch {
             let tempEmail = await database.getEmail(req.params.id, 'mail_privremeni_korisnici');
+            let classList = await database.getAllClasses();
             res.render('webForm', {
                 layout: 'index',
+                title: 'Raspored bot | Pretplata',
                 after: true,
                 dbEmail: tempEmail,
-                tokenURL: '/subscribe/verification/' + req.params.id
+                tokenURL: req.params.id,
+                classL: classList,
+                subscribeRoute: await routeNames.giveRouteName('subscribe'),
             });
         }
     } else {
         res.render('webResponseReject', {
             layout: 'index',
+            title: 'Raspored bot | Pretplata',
             invalid: true
         });
     }
 });
 
-router.post('/verification/:id', async(req, res) => {
+router.post('/:id', async(req, res) => {
     let result = await isTokenExist(req.params.id);
     if (result) {
         try {
@@ -70,6 +84,7 @@ router.post('/verification/:id', async(req, res) => {
             await database.deleteTempData(req.params.id);
             res.render('webResponseReject', {
                 layout: 'index',
+                title: 'Raspored bot | Pretplata',
                 invalid: true
             });
         } catch {
@@ -78,17 +93,20 @@ router.post('/verification/:id', async(req, res) => {
                 await database.insertData(client.receiverEmail, client.classID, client.sendAll, client.darkTheme);
                 await database.deleteTempData(req.params.id);
                 client.className = await database.getClassById(client.classID);
-                rasporedEmail.sender(client, null, 2);
+                await rasporedEmail.sender(client, null, 2);
                 res.render('webResponseReject', {
                     layout: 'index',
+                    title: 'Raspored bot | Pretplata',
                     email: client.receiverEmail,
-                    res2: true
+                    res2: true,
+                    homeRoute: await routeNames.giveRouteName('home')
                 });
             }
         }
     } else {
         res.render('webResponseReject', {
             layout: 'index',
+            title: 'Raspored bot | Pretplata',
             invalid: true
         });
     }

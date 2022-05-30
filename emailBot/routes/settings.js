@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const database = require('./../rasporedEmailFunkcije');
+const routeNames = require('../getRouteName');
 let rasporedEmail = require('./../rasporedEmail');
 let token = require('./../createToken');
 
@@ -9,10 +10,13 @@ let isTokenExist = async(id) => {
     return tokenExist;
 }
 
-router.get('/', (req, res) => {
+router.get('/', async(req, res) => {
     res.render('webSettings', {
         layout: 'index',
-        before: true
+        title: 'Raspored bot | Postavke',
+        before: true,
+        settingsRoute: await routeNames.giveRouteName('settings'),
+        homeRoute: await routeNames.giveRouteName('home')
     });
 });
 
@@ -24,26 +28,32 @@ router.post('/', async(req, res) => {
         // ovdje poslati e-mail poruku
         res.render('webResponseReject', {
             layout: 'index',
+            title: 'Raspored bot | Postavke',
             settingsRes: true,
-            email: req.body.sEmail
+            email: req.body.sEmail,
+            homeRoute: await routeNames.giveRouteName('home')
         });
     } catch {
         res.render('webResponseReject', {
             layout: 'index',
+            title: 'Raspored bot | Postavke',
             settingsRej: true,
-            email: req.body.sEmail
+            email: req.body.sEmail,
+            settingsRoute: await routeNames.giveRouteName('settings')
         });
     }
 });
 
-router.get('/edit/:id', async(req, res) => {
+router.get('/:id', async(req, res) => {
     let exist = await isTokenExist(req.params.id);
     if (exist) {
         try {
             await database.checkToken(req.params.id, 'mail_korisnici');
             res.render('webSettings', {
                 layout: 'index',
-                expired: true
+                title: 'Raspored bot | Postavke',
+                expired: true,
+                homeRoute: await routeNames.giveRouteName('home')
             });
         } catch {
             let clName = await database.getClassName(req.params.id);
@@ -52,9 +62,10 @@ router.get('/edit/:id', async(req, res) => {
             let sendAllState = await database.getSendAllState(req.params.id);
             let darkThemeState = await database.getDarkThemeState(req.params.id);
             let unsubState = await database.getUnsubscribedState(dbEmail);
-            console.log(unsubState);
+            let classList = await database.getAllClasses();
             res.render('webSettings', {
                 layout: 'index',
+                title: 'Raspored bot | Postavke',
                 tokenURL: req.params.id,
                 notExpired: true,
                 classID: clID,
@@ -62,25 +73,31 @@ router.get('/edit/:id', async(req, res) => {
                 email: dbEmail,
                 sendAll: sendAllState,
                 darkTheme: darkThemeState,
-                unsubscribe: unsubState
+                unsubscribe: unsubState,
+                classL: classList,
+                settingsRoute: await routeNames.giveRouteName('settings')
             });
         }
     } else {
         res.render('webSettings', {
             layout: 'index',
-            expired: true
+            title: 'Raspored bot | Postavke',
+            expired: true,
+            homeRoute: await routeNames.giveRouteName('home')
         });
     }
 });
 
-router.post('/edit/:id', async(req, res) => {
+router.post('/:id', async(req, res) => {
     let exist = await isTokenExist(req.params.id);
     if (exist) {
         try {
             await database.checkToken(req.params.id, 'mail_korisnici');
             res.render('webSettings', {
                 layout: 'index',
-                expired: true
+                title: 'Raspored bot | Postavke',
+                expired: true,
+                homeRoute: await routeNames.giveRouteName('home')
             });
         } catch {
             if (req.body.click) {
@@ -94,15 +111,19 @@ router.post('/edit/:id', async(req, res) => {
                 await database.removeToken(req.params.id);
                 res.render('webSettings', {
                     layout: 'index',
+                    title: 'Raspored bot | Postavke',
                     complete: true,
-                    email: clientEmail
+                    email: clientEmail,
+                    homeRoute: await routeNames.giveRouteName('home')
                 })
             }
         }
     } else {
         res.render('webSettings', {
             layout: 'index',
-            expired: true
+            title: 'Raspored bot | Postavke',
+            expired: true,
+            homeRoute: await routeNames.giveRouteName('home')
         });
     }
 });
