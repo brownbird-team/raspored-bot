@@ -13,7 +13,7 @@ exports.sender = async(tableData, j, chooseTemplate) => {
     const password = senderData[0].lozinka;
     if (chooseTemplate != 2 && chooseTemplate != 3) {
         for (let i = 1; i < 10; i++) {
-            if (tableData.scheduleChanges[`sat${i}`] != "") {
+            if (tableData[`sat${i}`] != "") {
                 isEmpty[`sat${i}`] = true;
             } else {
                 isEmpty[`sat${i}`] = false;
@@ -45,15 +45,15 @@ exports.sender = async(tableData, j, chooseTemplate) => {
             tableHeading        : tableData.tableHeading,
             shiftHeading        : tableData.shiftHeading,
             email               : tableData.receiverEmail,
-            scheduleChangesSat1 : tableData.scheduleChanges.sat1,
-            scheduleChangesSat2 : tableData.scheduleChanges.sat2,
-            scheduleChangesSat3 : tableData.scheduleChanges.sat3,
-            scheduleChangesSat4 : tableData.scheduleChanges.sat4,
-            scheduleChangesSat5 : tableData.scheduleChanges.sat5,
-            scheduleChangesSat6 : tableData.scheduleChanges.sat6, 
-            scheduleChangesSat7 : tableData.scheduleChanges.sat7,
-            scheduleChangesSat8 : tableData.scheduleChanges.sat8,
-            scheduleChangesSat9 : tableData.scheduleChanges.sat9,
+            scheduleChangesSat1 : tableData.sat1,
+            scheduleChangesSat2 : tableData.sat2,
+            scheduleChangesSat3 : tableData.sat3,
+            scheduleChangesSat4 : tableData.sat4,
+            scheduleChangesSat5 : tableData.sat5,
+            scheduleChangesSat6 : tableData.sat6, 
+            scheduleChangesSat7 : tableData.sat7,
+            scheduleChangesSat8 : tableData.sat8,
+            scheduleChangesSat9 : tableData.sat9,
             unsubscribeRoute    : await routeNames.giveRouteName('unsubscribe'),
             urlRoute            : await routeNames.giveRouteName('url'),
             settingsRoute       : await routeNames.giveRouteName('settings')
@@ -126,9 +126,9 @@ exports.sender = async(tableData, j, chooseTemplate) => {
     });
 }
 
-exports.send_changes = async(tableData, j, chooseTemplate, change) => {
+exports.send_changes = async(tableData, j, chooseTemplate) => {
     console.log(prefix + ' Nova izmjena za korisnika: ' + tableData.receiverEmail + ' Razred: ' + tableData.className + '.');
-    await database.updateLastSend(tableData.classChanges[change].id, tableData.receiverEmail);
+    await database.updateLastSend(tableData.changeID, tableData.receiverEmail);
     await this.sender(tableData, j, chooseTemplate);
-    console.log(prefix + ' Zadnja poslana: ' + tableData.classChanges[change].id);
+    console.log(prefix + ' Zadnja poslana: ' + tableData.changeID);
 }

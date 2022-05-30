@@ -7,7 +7,7 @@ exports.main = async() => {
     const mailUsers = await promiseQuery(`SELECT * FROM mail_korisnici`);
     for (let user in mailUsers) {
         let j, chooseTemplate;
-        let tableData = {}, classSchedule = {}, lenOfNewChanges;
+        let tableData = {}, lenOfNewChanges;
 
         if (mailUsers[user].unsubscribed) 
             continue;
@@ -31,32 +31,34 @@ exports.main = async() => {
         chooseTemplate = 1;
         if (!tableData.darkTheme) chooseTemplate = 0;
 
-        tableData.classChanges = await dajIzmjene(tableData.classID, tableData.lastSend);
-        lenOfNewChanges = tableData.classChanges.length;
+        await database.checkChanges(tableData.classID, tableData.receiverEmail, chooseTemplate);
 
+        classChanges = await dajIzmjene(tableData.classID, tableData.lastSend);
+        lenOfNewChanges = classChanges.length;
+        
         if (lenOfNewChanges != 0) {
             for (let change = lenOfNewChanges - 1; change >= 0; change--) {
                 for (let j = 1; j < 10; j++) {
-                    classSchedule[`sat${j}`] = tableData.classChanges[change][`sat${j}`];
+                    tableData[`sat${j}`] = classChanges[change][`sat${j}`];
                 }
-                tableData.scheduleChanges = classSchedule;
-                tableData.tableHeading = tableData.classChanges[change].naslov;
 
+                tableData.tableHeading = classChanges[change].naslov;
+                tableData.changeID = classChanges[change].id;
                 j = 1;
                 tableData.shiftHeading = "PRIJEPODNE";
-                if (!tableData.classChanges[change].ujutro) {
+                if (!classChanges[change].ujutro) {
                     j = -1;
                     tableData.shiftHeading = "POSLIJEPODNE";
                 }
-
-                if (tableData.classChanges[change].sve_null) {
+                console.log(tableData);
+                if (classChanges[change].sve_null) {
                     if (tableData.sendAll) {
                         // korisnik zeli sve izmjene
-                        await rasporedEmail.send_changes(tableData, j, chooseTemplate, change);
+                        await rasporedEmail.send_changes(tableData, j, chooseTemplate);
                     }
                 } else {
                     // korisnik ne zeli sve izmjene
-                    await rasporedEmail.send_changes(tableData, j, chooseTemplate, change);
+                    await rasporedEmail.send_changes(tableData, j, chooseTemplate);
                 }
             }
         }
@@ -64,3 +66,9 @@ exports.main = async() => {
 }
 
 exports.main();
+
+let test = async() => {
+    await database.checkChanges(28);
+}
+
+//test();
