@@ -2,7 +2,8 @@ const express = require('express');
 const port = process.env.PORT || 5000;
 const app = express();
 const handlebars = require('express-handlebars');
-const database = require('./rasporedEmailFunkcije'  );
+const database = require('./rasporedEmailFunkcije');
+const routeNames = require('./getRouteName');
 
 let path = require('path');
 
@@ -42,11 +43,15 @@ checkTokenState();
 
 /*=============== API ROUTES ===============*/
 
-app.use('/email', require('./routes/home'));
-app.use('/pretplata', require('./routes/subscribe'));
-app.use('/postavke', require('./routes/settings'));
-app.use('/prekid-pretplate', require('./routes/unsubscribe'));
-app.use('/*', require('./routes/page404'));
+let initialize = async() => {
+    let rNames = await routeNames.giveAllRouteNames();
+    app.use(`/${rNames[0]}`, require('./routes/home'));
+    app.use(`/${rNames[1]}`, require('./routes/subscribe'));
+    app.use(`/${rNames[2]}`, require('./routes/settings'));
+    app.use(`/${rNames[3]}`, require('./routes/unsubscribe'));
+    app.use('/*', require('./routes/page404'));
+}
+initialize();
 
 app.listen(port, () => {
     console.log(`Server started at http://localhost:${port}`);
