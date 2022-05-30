@@ -3,7 +3,7 @@ const rand = () => {
 };
   
 const token = () => {
-    return rand() + rand();
+    return rand() + rand() + rand();
 };
 
 module.exports = {token}
