@@ -1,28 +1,59 @@
-    <div class="heading">
-        <h1>Raspored bot</h1>
-    </div>
     <div class="card">
         {{#if before}}
-        <form action="/{{subscribeRoute}}" method="POST">
+        <div class="card-heading">
+            <h3><b>Registracija</b></h3>
+        </div>
+        <form action="/{{homeRoute}}/{{subscribeRoute}}" method="POST">
             <div class="form-part">
                 <label for="subEmail">Upiši e-mail adresu na koju želiš početi primati izmjene u rasporedu sati</label><br>
-                <input type="email" id="subEmail" name="subEmail" required>
+                <input type="email" id="subEmail" name="subEmail" placeholder="E-mail" required>
             </div>
             <div class="form-part">
-                <input type="button" value="Natrag" onclick="window.location.assign('./{{homeRoute}}')">
+                <input type="button" value="Natrag" onclick="window.location.assign('../{{homeRoute}}')">
                 <input type="submit" value="Pošalji">
             </div>
         </form>
         {{/if}}
 
         {{#if after}}
-        <form action='/{{subscribeRoute}}/{{tokenURL}}' method="POST">
+        <style>
+            .explain-hidden {
+                display: none;
+                font-size: 14px;
+                width: 20%;
+                background-color: #ffdf2b;
+                color: #36393F;
+                padding: 10px;
+                border-radius: 2px;
+                position:absolute;
+                right: 0;
+            }
+            .explain:hover + .explain-hidden {
+                display:block;
+                position: absolute;
+            }
+
+            .card {min-height: 40vh;}
+            .card .form-part:first-child {
+                position: relative;
+                right: 25%;
+            }
+            .card .form-part:nth-child(2) {
+                position: relative;
+                left: 25%;
+                bottom: 135px;
+            }
+        </style>
+        <div class="card-heading">
+            <h3><b>Registracija</b></h3>
+        </div>
+        <form action='/{{homeRoute}}/{{subscribeRoute}}/{{tokenURL}}' method="POST">
             <div class="form-part">
-                <label for="email">E-mail adresa</label><br>
+                <label for="email"><b>E-mail</b></label><br>
                 <input type="email" id="email" name="email" value={{dbEmail}} readonly><br><br>
             </div>
             <div class="form-part">
-                <label for="razred">Odaberi razred</label><br>
+                <label for="razred"><b>Razred</b></label><br>
                 <select id="razred" name="razred">
                     {{#each classL}}
                     <option value="{{id}}">{{ime}}</option>
@@ -32,15 +63,20 @@
             <div class="form-checkbox">
                 <input type="checkbox" id="saljiSve" name="saljiSve">
                 <label for="saljiSve">&nbsp;Želim primati sve izmjene za odabrani razred</label>
-                <label for="saljiSve">(Raspored bot  će ti slati obavijesti i kada nemaš izmjena)</label><br>
+                <label class="explain">&nbsp;&nbsp;<b>?</b></label>
+                <div class="explain-hidden">Raspored bot  će ti slati obavijesti i kada nemaš izmjena</div>
             </div>
             <div class="form-checkbox">
                 <input type="checkbox" id="tamnaTema" name="tamnaTema">
                 <label for="tamnaTema">&nbsp;Želim primati izmjene u tamnoj temi</label>
             </div>
+            <div class="form-checkbox">
+                <input type="checkbox" id="zastita" name="zastita" required>
+                <label for="zastita">&nbsp;Slažem se s <a href="./../{{secureRoute}}">Pravilima o zaštiti podataka *</a></label>
+            </div>
             <div class="form-part">
                 <input type="button" value="Natrag" onclick="window.location.assign('./')">
-                <input type="submit" value="Pošalji" id="click" name="click">
+                <input type="submit" value="Registriraj" id="click" name="click">
             </div>
         </form>
         {{/if}}

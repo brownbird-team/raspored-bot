@@ -1,12 +1,12 @@
-    <div class="heading">
-        <h1>Raspored bot</h1>
-    </div>
     <div class="card">
+        <div class="card-heading">
+            <h3><b>Prekid pretplate</b></h3>
+        </div>
         <div class="form-card">
-            <form action="/{{unsubscribeRoute}}" method="POST">
+            <form action="/{{homeRoute}}/{{unsubscribeRoute}}" method="POST">
                 <div class="form-part">
-                    <label for="unsubEmail">Upiši e-mail adresu sa koje više ne želiš primati izmjene</label><br>
-                    <input type="email" id="unsubEmail" name="unsubEmail" required>
+                    <label for="unsubEmail">Upišite e-mail adresu s koje više ne želiš primati izmjene</label><br>
+                    <input type="email" id="unsubEmail" name="unsubEmail" placeholder="E-mail" required>
                 </div>
                 <div class="form-part">
                     <input type="button" value="Natrag" onclick="window.location.assign('../{{homeRoute}}')">

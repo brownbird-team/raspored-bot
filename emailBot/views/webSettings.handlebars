@@ -1,12 +1,12 @@
-    <div class="heading">
-        <h1>Raspored bot</h1>
-    </div>
     <div class="card">
         {{#if before}}
-        <form action="/{{settingsRoute}}" method="POST">
+        <div class="card-heading">
+            <h3><b>Postavke</b></h3>
+        </div>
+        <form action="/{{homeRoute}}/{{settingsRoute}}" method="POST">
             <div class="form-part">
-                <label for="sEmail">Upiši e-mail adresu na kojoj želiš izvršiti promjene postavki</label><br>
-                <input type="email" id="sEmail" name="sEmail" required>
+                <label for="sEmail">Upiši e-mail adresu na kojoj želiš izvršiti promjene postavki računa</label><br>
+                <input type="email" id="sEmail" name="sEmail" placeholder="E-mail" required>
             </div>
             <div class="form-part">
                 <input type="button" value="Natrag" onclick="window.location.assign('../{{homeRoute}}')">
@@ -16,6 +16,9 @@
         {{/if}}
 
         {{#if expired}}
+        <div class="card-heading">
+            <h3><b>Postavke</b></h3>
+        </div>
         <p>Link ne postoji ili je istekao, pokušajte ponovno ispuniti obrazac za promjenu postavki računa.</p><br>
         <p>Kliknite <a href="./">ovdje</a> kako bi ispunili obrazac.</p>
         <div class="form-part">
@@ -24,13 +27,20 @@
         {{/if}}
 
         {{#if notExpired}}
-        <div class="settingsHeading">
-            <p>Postavke računa: <b><i>{{email}}</i></b></p>
+        <style>
+            .card {min-height: 40vh;}
+            .card .form-checkbox {
+                position: relative;
+                top: 1px;
+            }
+        </style>
+        <div class="card-heading">
+            <h3><b>Postavke - <i style="font-size:large;">{{email}}</i></b></h3>
         </div>
         
-        <form action="/{{settingsRoute}}/{{tokenURL}}" method="POST">
+        <form action="/{{homeRoute}}/{{settingsRoute}}/{{tokenURL}}" method="POST">
             <div class="form-part">
-                <br><br><label for="razred">Razred:&nbsp;</label>
+                <label for="razred"><b>Razred</b>&nbsp;</label><br>
                 <select id="razred" name="razred">
                     <option value="{{classID}}" selected>{{className}}</option>
                     {{#each classL}}
@@ -39,16 +49,16 @@
                 </select><br><br>
             </div>
             <div class="form-checkbox">
-                <br><input type="checkbox" id="saljiSve" name="saljiSve" {{#if sendAll}}checked{{/if}}>
-                <label for="saljiSve">Želim primati obavijesti o svim izmjenama</label>
+                <input type="checkbox" id="saljiSve" name="saljiSve" {{#if sendAll}}checked{{/if}}>
+                <label for="saljiSve">&nbsp;Želim primati obavijesti o svim izmjenama</label>
             </div>
             <div class="form-checkbox">
-                <br><input type="checkbox" id="tamnaTema" name="tamnaTema" {{#if darkTheme}}checked{{/if}}>
-                <label for="tamnaTema">Želim izmjene u tamnoj temi</label>
+                <input type="checkbox" id="tamnaTema" name="tamnaTema" {{#if darkTheme}}checked{{/if}}>
+                <label for="tamnaTema">&nbsp;Želim izmjene u tamnoj temi</label>
             </div>
             <div class="form-checkbox">	
-                <br><input type="checkbox" id="pretplata" name="pretplata" {{#if unsubscribe}}checked{{/if}}>
-                <label for="pretplata">Želim pratiti izmjene u rasporedu sati</label>
+                <input type="checkbox" id="pretplata" name="pretplata" {{#if unsubscribe}}checked{{/if}}>
+                <label for="pretplata">&nbsp;Želim pratiti izmjene u rasporedu sati</label>
             </div>
             <div class="form-part">
                 <input type="button" value="Natrag" onclick="window.location.assign('./')">
@@ -58,7 +68,10 @@
         {{/if}}
 
         {{#if complete}}
-        <p>Uspješno ste promijenili postavke za račun <b>{{email}}</b>.</p>
+        <div class="card-heading">
+            <h3><b>Postavke</b></h3>
+        </div>
+        <p>Uspješno ste promijenili postavke za račun <b>{{email}}</b></p>
         <div class="form-part">
                 <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../../{{homeRoute}}')">
             </div>
