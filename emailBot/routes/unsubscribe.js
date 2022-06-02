@@ -63,7 +63,8 @@ router.get('/:id', async(req, res) => {
                 title: 'Raspored bot | Odjava',
                 tokenURL: req.params.id,
                 before: true,
-                unsubscribeRoute: await routeNames.giveRouteName('unsubscribe')
+                unsubscribeRoute: await routeNames.giveRouteName('unsubscribe'),
+                homeRoute: await routeNames.giveRouteName('home')
              });
         }
     } else {
@@ -99,7 +100,6 @@ router.post('/:id', async(req, res) => {
                     title: 'Raspored bot | Odjava',
                     after: true, 
                     email: userEmail,
-                    homeRoute: await routeNames.giveRouteName('home')
                 });
             }
         }

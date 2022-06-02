@@ -75,7 +75,8 @@ router.get('/:id', async(req, res) => {
                 darkTheme: darkThemeState,
                 unsubscribe: unsubState,
                 classL: classList,
-                settingsRoute: await routeNames.giveRouteName('settings')
+                settingsRoute: await routeNames.giveRouteName('settings'),
+                homeRoute: await routeNames.giveRouteName('home')
             });
         }
     } else {

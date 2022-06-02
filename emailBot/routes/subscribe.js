@@ -28,7 +28,8 @@ router.post('/', async(req, res) => {
             title: 'Raspored bot | Pretplata',
             email: req.body.subEmail,
             rej2: true,
-            subscribeRoute: await routeNames.giveRouteName('subscribe')
+            subscribeRoute: await routeNames.giveRouteName('subscribe'),
+            homeRoute: await routeNames.giveRouteName('home')
         });
     } catch {
         await database.insertTempData(req.body.subEmail, token.token());
@@ -65,6 +66,8 @@ router.get('/:id', async(req, res) => {
                 tokenURL: req.params.id,
                 classL: classList,
                 subscribeRoute: await routeNames.giveRouteName('subscribe'),
+                homeRoute: await routeNames.giveRouteName('home'),
+                secureRoute: await routeNames.giveRouteName('privacy-policy')
             });
         }
     } else {

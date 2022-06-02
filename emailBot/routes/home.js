@@ -8,7 +8,8 @@ router.get('/', async(req, res) => {
         title: "Raspored bot | Email",
         subscribeRoute: await routeNames.giveRouteName('subscribe'),
         settingsRoute: await routeNames.giveRouteName('settings'),
-        unsubscribeRoute: await routeNames.giveRouteName('unsubscribe')
+        unsubscribeRoute: await routeNames.giveRouteName('unsubscribe'),
+        homeRoute: await routeNames.giveRouteName('home')
     });
 });
 
