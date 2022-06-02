@@ -3,5 +3,6 @@
     "subscribe": "pretplata",
     "settings": "postavke",
     "unsubscribe": "prekid-pretplate",
+    "privacy-policy": "zastita-podataka",
     "url": "http://localhost:5000"
 }
