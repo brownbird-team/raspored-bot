@@ -6,6 +6,8 @@ router.get('/', async(req, res) => {
     res.render('404Page', {
         layout: 'index',
         title: 'Raspored bot',
+        urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+        urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
         homeRoute: await routeNames.giveRouteName('home')
     });
 });
