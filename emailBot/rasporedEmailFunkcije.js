@@ -132,6 +132,13 @@ exports.removeToken = (token) => {
     });
 }
 
+exports.getToken = (email) => {
+    return new Promise(async (resolve, reject) => {
+        let getT = await promiseQuery(`SELECT token FROM mail_privremeni_korisnici WHERE adresa = '${email}'`);
+        resolve(getT[0].token);
+    });
+}
+
 exports.setTokenDate = (email, table) => {
     return new Promise(async (resolve, reject) => {
         let newDate = new Date();
@@ -147,6 +154,13 @@ exports.getTokenDate = (token) => {
     return new Promise(async (resolve, reject) => {
         let tokenDate = await promiseQuery(`SELECT zadnji_token FROM mail_korisnici WHERE token = '${token}'`);
         resolve(tokenDate);
+    });
+}
+
+exports.getTokenDateT2 = (token) => {
+    return new Promise(async (resolve, reject) => {
+        let tokenDate = await promiseQuery(`SELECT zadnji_token FROM mail_privremeni_korisnici WHERE token = '${token}'`);
+        resolve(tokenDate[0].zadnji_token);
     });
 }
 
@@ -332,5 +346,12 @@ exports.getAllClasses = () => {
     return new Promise(async (resolve, reject) => {
         let classes = await promiseQuery(`SELECT id, ime FROM general_razred WHERE aktivan = 1`);
         resolve(classes);
+    });
+}
+
+exports.getSubscribeState = (email) => {
+    return new Promise(async (resolve, reject) => {
+        let state = await promiseQuery(`SELECT unsubscribed FROM mail_korisnici WHERE adresa = '${email}'`);
+        resolve(!state[0].unsubscribed);
     });
 }

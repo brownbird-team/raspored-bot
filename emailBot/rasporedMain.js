@@ -66,9 +66,3 @@ exports.main = async() => {
 }
 
 exports.main();
-
-let test = async() => {
-    await database.checkChanges(28);
-}
-
-//test();
