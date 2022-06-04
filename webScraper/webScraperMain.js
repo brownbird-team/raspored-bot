@@ -8,7 +8,7 @@ async function scraper(raz){
     console.log(prefix+'Provjera:'+raz[0].smjena+' smjena');
     
     //Spajanje na stranicu
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({args: ['--no-sandbox']});
     const page = await browser.newPage();
     try {
         await page.goto(url, {
