@@ -11,7 +11,7 @@ exports.sender = async(tableData, j, chooseTemplate) => {
     const senderData = await database.getSenderEmailData();
     const username = senderData[0].adresa;
     const password = senderData[0].lozinka;
-    if (chooseTemplate != 2 && chooseTemplate != 3) {
+    if (chooseTemplate == 0 || chooseTemplate == 1) {
         for (let i = 1; i < 10; i++) {
             if (tableData[`sat${i}`] != "") {
                 isEmpty[`sat${i}`] = true;
@@ -61,7 +61,7 @@ exports.sender = async(tableData, j, chooseTemplate) => {
         selectedSubject = `Izmjene u rasporedu sati za ${tableData.className}`;
         selectedTemplate = 'raspored_dark_theme';
         if (!chooseTemplate) selectedTemplate = 'raspored_light_theme';
-    } else if (chooseTemplate == 2) {
+    } else if (chooseTemplate == 2 || chooseTemplate == 'postavke') {
         // dobrodoslica
         let sendAllMessage = 'sve'; 
         let messageTheme = 'tamna';
@@ -70,6 +70,7 @@ exports.sender = async(tableData, j, chooseTemplate) => {
         if (!tableData.sendAll) sendAllMessage = 'samo aktivne';
         if (!tableData.darkTheme) messageTheme = 'svijetla';
         if (!(await database.getSubscribeState(tableData.receiverEmail))) subscribed = 'isključena';
+        
         selectedContext = {email            : tableData.receiverEmail,
                            className        : tableData.className,
                            subscribed       : subscribed,
@@ -81,15 +82,31 @@ exports.sender = async(tableData, j, chooseTemplate) => {
                            unsubscribeRoute : await routeNames.giveRouteName('unsubscribe')
         }; 
         selectedSubject = `Raspored bot ti želi dobrodošlicu!`;
-    } else if (chooseTemplate == 3) {
+
+        if (chooseTemplate == 'postavke') {
+            selectedTemplate = 'raspored_settings';
+            selectedContext = {email            : tableData.receiverEmail,
+                               className        : tableData.className,
+                               subscribed       : subscribed,
+                               sendAll          : sendAllMessage,
+                               theme            : messageTheme,
+                               urlRoute         : await routeNames.giveRouteName('url'),
+                               homeRoute        : await routeNames.giveRouteName('home'),
+                               settingsRoute    : await routeNames.giveRouteName('settings'),
+                               unsubscribeRoute : await routeNames.giveRouteName('unsubscribe')
+            };
+            selectedSubject = `Promijena postavki Vašeg računa`;            
+        }
+    } else if (chooseTemplate == 'prekid-pretplate') {
         // prekid-pretplate email
         selectedTemplate = 'raspored_unsubscribe';
         selectedContext = {email                : tableData.receiverEmail,
                            urlRoute             : await routeNames.giveRouteName('url'),
+                           homeRoute            : await routeNames.giveRouteName('home'),
+                           settingsRoute        : await routeNames.giveRouteName('settings'),
                            unsubscribeRoute     : await routeNames.giveRouteName('unsubscribe'),
-                           emailToken           : tableData.tokenEmail
         };
-        selectedSubject = `Validacija o prekidu pretplate`;
+        selectedSubject = `Prekid pretplate za Vaš račun`;
     } else if (chooseTemplate == 4) {
         // pretplata email
         selectedTemplate = 'raspored_pretplata';
@@ -102,7 +119,24 @@ exports.sender = async(tableData, j, chooseTemplate) => {
                            privacyRoute     : tableData.privacyR
         };
         selectedSubject = `Validacija o pretplati`;
-    }
+    } else if (chooseTemplate == 'postavke-potvrda' || chooseTemplate == 'prekid-pretplate-potvrda') {
+        // postavke-potvrda email
+        selectedTemplate = 'raspored_settings_confirm';
+        selectedContext = {email            : tableData.receiverEmail,
+                           timeExpired      : tableData.tExpired,
+                           urlRoute         : await routeNames.giveRouteName('url'),
+                           homeRoute        : await routeNames.giveRouteName('home'),
+                           settingsRoute    : await routeNames.giveRouteName('settings'),
+                           tokenUrl         : tableData.tokenR,
+                           unsubscribeRoute : await routeNames.giveRouteName('unsubscribe')
+        };
+        selectedSubject = `Validacija o promijeni postavki računa`
+
+        if (chooseTemplate == 'prekid-pretplate-potvrda') {
+            selectedTemplate = 'raspored_unsubscribe_confirm';
+            selectedSubject = 'Validacija o prekidu pretplate';
+        }
+    } 
     // povezivanje s posiljateljom
     let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -126,7 +160,7 @@ exports.sender = async(tableData, j, chooseTemplate) => {
 
     // kreiranje e-mail poruke
     let mailOptions = {
-        from: 'Raspored bot',
+        from: `Raspored bot <${username}>`,
         to: tableData.receiverEmail,
         subject: selectedSubject,
         template: selectedTemplate,
