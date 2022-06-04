@@ -10,10 +10,16 @@ async function scraper(raz){
     //Spajanje na stranicu
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(url, {
-        waitUntil: 'networkidle2',
-        timeout: 0,
-     });
+    try {
+        await page.goto(url, {
+            waitUntil: 'networkidle2',
+            timeout: 0,
+         });
+    } catch (error) {
+        console.log(error);
+        return 1;
+    }
+    
 
      //Dobivanje linka od iframea
     const [iframe]= await page.$x('//*[@id="dnevne-izmjene-u-rasporedu-sati-tab"]/iframe')
@@ -22,7 +28,13 @@ async function scraper(raz){
     
 
     //Odlazi na url od iframea
-    await page.goto(iframeTXT);
+    try {
+        await page.goto(iframeTXT);
+    } catch (error) {
+        console.log(error);
+        return 1;
+    }
+    
 
     //Sprema sve spanove u jedno polje
     const svi_spanovi_scrape= await page.$x('//*/div/table/tbody/tr/td');
@@ -145,11 +157,19 @@ exports.sql=async() =>{
     razredi_B=await baza.razredi_iz_smjene('B');
     
     izmjena=await scraper(razredi_A);
+    if(izmjena===1){
+        console.log("Doslo je do greske pri spajanju");
+        return 1;
+    }
     await sql_upis(izmjena,razredi_A);
-    console.log(prefix+'Gotov');
+    console.log(prefix+'Gotov (A)');
     izmjena=await scraper(razredi_B);
+    if(izmjena===1){
+        console.log("Doslo je do greske pri spajanju");
+        return 1;
+    }
     sql_upis(izmjena,razredi_B);
-    console.log(prefix+'Gotov')
+    console.log(prefix+'Gotov (B)')
 
 }
 async function sql_upis(izmjena,razredi){
@@ -169,10 +189,12 @@ async function sql_upis(izmjena,razredi){
                 upis=false;
                 
                 tablica_upis=await baza.upis_naslova_u_bazu(izmjena,index);
+                if(tablica_upis===1){
+                    console.log(prefix+"Problem sa upisom naslova u tablicu");
+                    return ;
+                }
             }
-            else {
-                
-            }
+
             tablica_id=await baza.dobi_id_tablice(izmjena,index);
             tablica_id=tablica_id[0].id;
             

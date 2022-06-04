@@ -19,10 +19,16 @@ exports.tablica_postoji=(izmjena,index) =>{
 }
 exports.upis_naslova_u_bazu=(izmjena,index) =>{
     return new Promise(async (resolve) =>{
-        let query=`INSERT INTO izmjene_tablica (naslov,smjena,prijepodne) 
+        try {
+            let query=`INSERT INTO izmjene_tablica (naslov,smjena,prijepodne) 
         VALUES('${izmjena[index].izmjene_tablica.naslov}','${izmjena[index].izmjene_tablica.smjena}',${izmjena[index].izmjene_tablica.prijepode})`;
         result=await promiseQuery(query);
         resolve("Upis gotov");
+        } catch (error) {
+            console.log(error);
+            resolve(1);
+        }
+        
     });
 }
 exports.dobi_id_tablice=(izmjena,index) =>{
@@ -46,7 +52,7 @@ exports.select_baza_izmjene=(izmjena,index,index2) =>{
             resolve(0);
         }
         else if(result[0]==null){
-            console.log("a");
+            
             resolve(0);
         }
         else{
