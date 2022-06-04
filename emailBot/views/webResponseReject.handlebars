@@ -1,17 +1,20 @@
 
-    <div class="heading">
-        <h1>Raspored bot</h1>
-    </div>
     <div class="card">
         {{#if rej1}}
+        <div class="card-heading">
+            <h3><b>Prekid pretplate</b></h3>
+        </div>
         <p>E-mail <b>{{email}}</b> ne postoji u našoj bazi.</p>
         <div class="form-part">
-            <input type="button" value="Natrag" onclick="window.location.assign('/{{unsubscribeRoute}}')">
+            <input type="button" value="Natrag" onclick="window.location.assign('./{{unsubscribeRoute}}')">
         </div>
         {{/if}}
 
         {{#if res1}}
-        <p>E-mail je uspješno posalan na adresu <b>{{email}}</b>.</p>
+        <div class="card-heading">
+            <h3><b>Prekid pretplate</b></h3>
+        </div>
+        <p>E-mail je uspješno poslan na adresu <b>{{email}}</b>.</p>
         <p>Kako bi poništili pretplatu, potrebno je otvoriti link koji je naveden u e-mailu.</p>
         <div class="form-part">
             <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/{{homeRoute}}')">
@@ -19,13 +22,19 @@
         {{/if}}
 
         {{#if rej2}}
+        <div class="card-heading">
+            <h3><b>Registracija</b></h3>
+        </div>
         <p>E-mail <b>{{email}}</b> već postoji u našoj bazi.</p>
         <div class="form-part">
-            <input type="button" value="Natrag" onclick="window.location.assign('/{{subscribeRoute}}')">
+            <input type="button" value="Natrag" onclick="window.location.assign('/{{homeRoute}}/{{subscribeRoute}}')">
         </div>
         {{/if}}
 
         {{#if res2}}
+        <div class="card-heading">
+            <h3><b>Registracija</b></h3>
+        </div>
         <p>Uspješno ste registrirani. Izmjene u rasporedu sati će<br>
         Vam dolaziti na adresu <b>{{email}}</b></p>
         <div class="form-part">
@@ -34,28 +43,46 @@
         {{/if}}
 
         {{#if auth}}
-        <p>Uspješno ste podnijeli zahtjev za pretplatu na Raspored bot.</p>
-        <p>Kako bi dovršili zahtjev, potrebno je otvoriti link koji je poslan na adresu <b>{{email}}</b></p>
+        <div class="card-heading">
+            <h3><b>Registracija</b></h3>
+        </div>
+        <h2 style="margin-bottom:10px;"><b>Hvala Vam</b></h2>
+        <p>Hvala Vam na registraciji! Još malo pa ste spremni primati izmjene.
+        Poslali smo Vam e-mail poruku s potvrdom na adresu <b>{{email}}</b>.</p>
+        <p>Molimo Vas provjerite e-mail, te otvorite link potvrde.</p><br><br>
         <div class="form-part">
             <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/{{homeRoute}}')">
         </div>
         {{/if}}
 
         {{#if invalid}}
+        <div class="card-heading">
+            <h3><b>Registracija</b></h3>
+        </div>
         <p>Link ne postoji ili je istekao, pokušajte ponovno ispuniti obrazac za pretplatu.</p>
         <p>Kliknite <a href="./">ovdje</a> kako bi ispunili obrazac.</p>
+        <div class="form-part">
+            <input type="button" value="Natrag" onclick="window.location.assign('./')">
+        </div>
         {{/if}}
 
         {{#if settingsRej}}
+        <div class="card-heading">
+            <h3><b>Postavke</b></h3>
+        </div>
         <p>E-mail <b>{{email}}</b> ne postoji u našoj bazi.</p>
         <div class="form-part">
-            <input type="button" value="Natrag" onclick="window.location.assign('/{{settingsRoute}}')">
+            <input type="button" value="Natrag" onclick="window.location.assign('./{{settingsRoute}}')">
         </div>
         {{/if}}
 
         {{#if settingsRes}}
-        <p>Uspješno ste podnijeli zahtjev za promjenu postavki za račun <b>{{email}}</b>.</p><br>
-        <p>Kako bi dovršili zahtjev, potrebno je otvoriti link koji je poslan na navedenu adresu.</p>
+        <div class="card-heading">
+            <h3><b>Postavke</b></h3>
+        </div>
+        <p>Još malo pa ste spremni izmjeniti postavke računa.
+        Poslali smo Vam e-mail poruku s potvrdom na adresu <b>{{email}}</b>.</p>
+        <p>Molimo Vas provjerite e-mail, te otvorite link potvrde.</p>
         <div class="form-part">
             <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('/{{homeRoute}}')">
         </div>

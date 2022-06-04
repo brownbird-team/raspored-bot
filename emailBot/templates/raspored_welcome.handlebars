@@ -1,113 +1,42 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>Dobrodošlica</title>
-        <style>
-            * 
-            {
-                padding: 0;
-                margin: 0;
-            }
-            html 
-            {
-                margin-left: auto;
-                margin-right: auto;
-                width: 600px;
-                font-family: sans-serif, "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS";
-                font-weight: bold;
-                color: rgb(73, 71, 71);
-                padding-top: 100px;
-            }
-            .welcome 
-            {
-                width:250px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            .welcome b
-            {
-                color: #5865F2;
-            }
-            table, tr, td, th
-            {
-                border: 1px solid black;
-                border-collapse: collapse;
-                padding: 5px;
-            }
-            td {
-                text-align: center;
-                color: rgb(73, 71, 71);      
-            }
-            table {
-                margin-left: auto;
-                margin-right: auto;
-                width: 250px;
-                margin-top: 250px;
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-            }
-            caption
-            {
-                font-weight: bold;
-            }
-            .footer p 
-            {
-                color: rgb(73, 71, 71);
-            }
-            .footer 
-            {
-                width: 400px;
-                margin-left: auto;
-                margin-right: auto;
-                padding-top: 200px;
-            }
-            @media only screen and (max-width: 600px) {
-                html {
-                    padding-top: 0px;
-                }
-                .footer {
-                    width: 300px;
-                    margin-left: auto;
-                    margin-right: auto;
-                    padding-top: 100px;
-                    padding-bottom: 20px;
-                }
-                .background {
-                    padding: 0px;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="background">
-            <div class="welcome">
-                <p>Bok <b>{{email}}</b>, Raspored bot ti želi dobrodošlicu!</p>
-            </div>
-            <table>
-                <caption>Vaša konfiguracija</caption>
-                <tr>
-                    <th>Adresa</th>
-                    <th>Razred</th>
-                    <th>Sve obavijesti</th>
-                    <th>Tamna tema</th>
-                </tr>
-                <tr>
-                    <td>{{email}}</td>
-                    <td>{{class}}</td>
-                    <td>{{sendAll}}</td>
-                    <td>{{darkTheme}}</td>
-                </tr>
-            </table>
-            <div class="footer">
-                <p>
-                Ova poruka je poslana <b>{{email}}</b>. Ako ne želite
-                primati ove poruke od <b>Raspored bota</b> u budućnosti,
-                možete promijeniti <a class="link" href="{{urlRoute}}/{{settingsRoute}}" target="_blank">postavke Vašeg profila</a> ili
-                kliknuti na <a class="link" href="{{urlRoute}}/{{unsubscribeRoute}}" target="_blank">poništi pretplatu</a>.
-                </p>
-            </div>
-        </div>
-    </body>
+<html lang="en" style=" width: 500px; font-family: Helvetica, Arial, sans-serif;
+color: rgb(73, 71, 71); margin: 10px;">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dobrodošlica</title>
+    <style>
+        *{padding: 0; margin: 0;}
+    </style>
+</head>
+<body>
+    <div class="message" style="width: 500px; margin: 50px;">
+        <p style="margin-bottom: 25px;">Poštovani/a <b>{{email}}</b>,
+        <br>Hvala Vam što ste u potpunosti završili registraciju
+        s Raspored botom.</p>
+
+        <p style="margin-bottom: 25px;">Poslali smo Vam ovu e-mail poruku kako biste znali da ste
+        postali korisnik Raspored bota.</p>
+
+        <p style="margin-bottom: 25px;">Vaša trenutna konfiguracija:</p>
+
+        <ul style="margin-bottom: 25px; list-style-position: inside;">
+            <li>adresa: <b>{{email}}</b></li>
+            <li>razred: <b>{{className}}</b></li>
+            <li>pretplata: <b>{{subscribed}}</b></li>
+            <li>izmjene: <b>{{sendAll}}</b></li>
+            <li>tema: <b>{{theme}}</b></li>
+        </ul>
+    </div>
+    <footer style="width: 400px; text-align: left;">
+        <p style="color:#595959; font-size: 12px; margin-bottom: 25px; margin-left: 50px; margin-top: 25px;">E-mail poruka poslana je {{email}}.
+        Ako ne želite primati e-mail poruke od Raspored bota u budućnosti,
+        možete promijeniti <a href="{{urlRoute}}/{{homeRoute}}/{{settingsRoute}}" target="_blank" style="color: rgb(73, 71, 71); font-weight: bolder;">postavke Vašeg profila</a>
+        ili <a href="{{urlRoute}}/{{homeRoute}}/{{unsubscribeRoute}}" target="_blank" style="color: rgb(73, 71, 71); font-weight: bolder;">poništiti pretplatu</a>.</p>
+
+        <p style="color:#595959; font-size: 12px; margin-left: 50px;">Lijep pozdrav,</p>
+        <p class="copyright" style="color:#595959; font-size: 12px; margin-left: 50px;">© BrownBird Team</p>
+    </footer>
+</body>
 </html>

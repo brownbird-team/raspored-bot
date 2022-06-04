@@ -10,36 +10,24 @@ html
     font-family: LatoBold, sans-serif, Helvetica, Arial;
     color: whitesmoke;
     background-color: #272626;
-}
-
-.heading
-{
-    /*color:#5865F2;*/
-    color: #ffdf2b;
-    font-weight: bold;
-    margin-left: auto;
-    margin-right: auto;
-    width: 300px;
-    text-align: center;
-    position: relative;
-    top: 150px;
+    height: 100%;
 }
 
 .card
 {
     margin-left: auto;
     margin-right: auto;
-    width: 30rem;
+    width: 40rem;
+    min-height: 10rem;
     padding: 2rem;
     background-color: #36393F;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 0.4rem;
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+    border-radius: 0.2rem;
+    justify-content: center;
 }
-
 .card a
 {
     text-decoration: none;
@@ -54,6 +42,8 @@ html
 .card .form-part
 {
     text-align: center;
+    /*border: 1px solid red;*/
+    margin: 20px;
 }
 
 .card .form-part input[type="email"]
@@ -61,12 +51,17 @@ html
     border: none;
     background: none;
     outline: none;
-    padding-top: 0.5rem;
-    color: aliceblue;
-    font-size: 18px;
-    text-align: center;
-    border-bottom: 2px solid whitesmoke;
+
     width:250px;
+    padding: 4px;
+    position: relative;
+    margin: 20px;
+    
+    color: aliceblue;
+    font-size: 16px;
+    text-align:center;
+    border: 2px solid whitesmoke;
+    border-radius: 4px;
     transition: transform 0.2s, border-bottom-color 0.5s;
 }
 
@@ -77,29 +72,48 @@ html
 
 .card .form-part input[type="email"]:valid
 {
-    /*border-bottom-color: #5865F2;*/
-    border-bottom-color: #ffdf2b;
+    border-color: #ffdf2b;
 }
 
 .card .form-part select
 {
-    border: none;
+    
     background: none;
     outline: none;
-    width: 100px;
-    /*color:aliceblue;*/
-    color: #36393F;
+    width: 250px;
+    height: 30px;
+    color:whitesmoke;
     font-weight: bold;
-    /*background-color: #5865F2;*/
-    background-color: #ffdf2b;
-    margin-top: 5px;
+    background-color:#36393F;
+    border: 2px solid whitesmoke;
+    border-radius: 4px;
+    margin: 20px;
     padding: 2px 5px;
-    border-radius: 5px;
+    text-align: center;
 }
 
 .card .form-checkbox input[type="checkbox"]
 {
     margin-top: 10px;
+}
+
+.card .form-checkbox
+{
+    position: relative;
+    bottom: 100px;
+    left: 25%;
+}
+
+.form-part:last-child
+{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.card-heading
+{
+    margin-bottom: 30px;
 }
 
 label
@@ -114,11 +128,11 @@ label
     outline: none;
     width: 100px;
     background-color: #ffdf2b;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    margin-left: 5px;
+    margin-right: 5px;
     margin-top: 2rem;
     padding: 0.4rem 0.2rem;
-    border-radius: 5px;
+    border-radius: 3px;
     color: #36393F;
     font-family: LatoBold;
     font-weight: bolder;
@@ -140,11 +154,12 @@ label
     outline: none;
     width:100px;
     background-color: #ffdf2b;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    margin-left: 5px;
+    margin-right: 5px;
     margin-top: 2rem;
     padding: 0.4rem 0.2rem;
-    border-radius: 5px;
+    border-radius: 3px;
+    
     color: #36393F;
     font-family: LatoBold;
     font-weight: bolder;
@@ -161,8 +176,28 @@ label
 
 #click
 {
-    width: fit-content;
-    padding: 0.5rem 0.3rem;
+    border: 2px solid #ffdf2b;
+    background: none;
+    outline: none;
+    width:100px;
+    background-color: #ffdf2b;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-top: 2rem;
+    padding: 0.4rem 0.2rem;
+    border-radius: 3px;
+    color: #36393F;
+    font-family: LatoBold;
+    font-weight: bolder;
+    font-size: 16px;
+    transition: background-color 0.08s;
+}
+
+#click:hover
+{
+    background-color: #36393F;
+    color: #ffdf2b;
+    border: 2px solid #ffdf2b;
 }
 
 .card h2, p
@@ -179,6 +214,62 @@ b
 {
     width: fit-content;
 }
+
+header
+{
+    display: flex;
+    color: #595959;
+    background-color: #ffdf2b;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+header h2:hover
+{
+    color: #aaa;
+}
+
+footer
+{
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffdf2b;
+    text-align: center;
+    padding: 10px;
+}
+
+.list-inline
+{
+    margin-bottom: 10px;
+}
+
+.list-inline-item
+{
+    display: inline;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.list-inline-item a
+{
+    color:#595959;
+    font-size: 16px;
+}
+
+.list-inline-item a:hover
+{
+    color:#aaa;
+}
+
+.copyright
+{
+    color:#595959;
+    font-size: 16px;
+}
+
 
 /*=============== webSettings ===============*/
 

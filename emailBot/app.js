@@ -46,9 +46,10 @@ checkTokenState();
 let initialize = async() => {
     let rNames = await routeNames.giveAllRouteNames();
     app.use(`/${rNames[0]}`, require('./routes/home'));
-    app.use(`/${rNames[1]}`, require('./routes/subscribe'));
-    app.use(`/${rNames[2]}`, require('./routes/settings'));
-    app.use(`/${rNames[3]}`, require('./routes/unsubscribe'));
+    app.use(`/${rNames[0]}/${rNames[1]}`, require('./routes/subscribe'));
+    app.use(`/${rNames[0]}/${rNames[2]}`, require('./routes/settings'));
+    app.use(`/${rNames[0]}/${rNames[3]}`, require('./routes/unsubscribe'));
+    app.use(`/${rNames[0]}/${rNames[4]}`, require('./routes/privacyPolicy'));
     app.use('/*', require('./routes/page404'));
 }
 initialize();

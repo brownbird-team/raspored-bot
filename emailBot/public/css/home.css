@@ -6,7 +6,7 @@
     justify-content: center;
     flex-wrap: wrap;
     position: relative;
-    top: 20rem; 
+    top: 30vh;
 }
 
 a
@@ -23,8 +23,7 @@ a
     color: #36393F;
     background-color: #ffdf2b;
     border: 2px solid #ffdf2b;
-    border-radius: 0.5rem;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 0.1rem;
     transition: 0.08s background-color, 0.08s color;
 }
 

@@ -14,6 +14,8 @@ router.get('/', async(req, res) => {
     res.render('webUnsubscribe', {
         layout: 'index',
         title: 'Raspored bot | Odjava',
+        urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+        urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
         unsubscribeRoute: await routeNames.giveRouteName('unsubscribe'),
         homeRoute: await routeNames.giveRouteName('home')
     });
@@ -31,6 +33,8 @@ router.post('/', async(req, res) => {
         res.render('webResponseReject', {
             layout: 'index', 
             title: 'Raspored bot | Odjava',
+            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
             email: req.body.unsubEmail,
             res1: true,
             homeRoute: await routeNames.giveRouteName('home')
@@ -40,6 +44,8 @@ router.post('/', async(req, res) => {
         res.render('webResponseReject', {
             layout: 'index', 
             title: 'Raspored bot | Odjava',
+            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
             email: req.body.unsubEmail,
             rej1: true,
             unsubscribeRoute: await routeNames.giveRouteName('unsubscribe')
@@ -55,21 +61,28 @@ router.get('/:id', async(req, res) => {
             res.render('webEmailUnsubscribe', {
                 layout: 'index',
                 title: 'Raspored bot | Odjava',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
                 invalid: true
             });
         } catch {
             res.render('webEmailUnsubscribe', {
                 layout: 'index',
                 title: 'Raspored bot | Odjava',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
                 tokenURL: req.params.id,
                 before: true,
-                unsubscribeRoute: await routeNames.giveRouteName('unsubscribe')
+                unsubscribeRoute: await routeNames.giveRouteName('unsubscribe'),
+                homeRoute: await routeNames.giveRouteName('home')
              });
         }
     } else {
         res.render('webEmailUnsubscribe', {
            layout: 'index',
            title: 'Raspored bot | Odjava',
+           urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+           urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
            invalid: true,
         });
     }
@@ -83,6 +96,8 @@ router.post('/:id', async(req, res) => {
             res.render('webEmailUnsubscribe', {
                 layout: 'index',
                 title: 'Raspored bot | Odjava',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
                 invalid: true,
                 invalidToken: req.params.id
              });
@@ -97,9 +112,10 @@ router.post('/:id', async(req, res) => {
                 res.render('webEmailUnsubscribe', {
                     layout: 'index',
                     title: 'Raspored bot | Odjava',
+                    urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                    urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
                     after: true, 
                     email: userEmail,
-                    homeRoute: await routeNames.giveRouteName('home')
                 });
             }
         }
@@ -107,6 +123,8 @@ router.post('/:id', async(req, res) => {
         res.render('webEmailUnsubscribe', {
             layout: 'index',
             title: 'Raspored bot | Odjava',
+            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
             invalid: true,
             invalidToken: req.params.id
          });

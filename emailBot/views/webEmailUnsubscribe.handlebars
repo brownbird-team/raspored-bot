@@ -1,26 +1,35 @@
-    <div class="heading">
-        <h1>Raspored bot</h1>
-    </div>
     <div class="card">
         {{#if before}}
+        <div class="card-heading">
+            <h3><b>Prekid pretplate</b></h3>
+        </div>
         <p>Želite li poništiti pretplatu s Raspored botom?</p>
-        <form action='/{{unsubscribeRoute}}/{{tokenURL}}' method="POST">
+        <form action='/{{homeRoute}}/{{unsubscribeRoute}}/{{tokenURL}}' method="POST">
             <div class="form-part">
-                <input type="submit" value="Poništi pretplatu" id="click" name="click">
+                <input type="submit" value="Poništi pretplatu" id="end-button" name="click">
             </div>
         </form>
         {{/if}}
 
         {{#if after}}
+        <div class="card-heading">
+            <h3><b>Prekid pretplate</b></h3>
+        </div>
         <p>Uspješno ste poništili pretplatu s adresom <b>{{email}}</b>.</p>
         <div class="form-part">
-            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../{{homeRoute}}')">
+            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../')">
         </div>
         {{/if}}
 
         {{#if invalid}}
+        <div class="card-heading">
+            <h3><b>Prekid pretplate</b></h3>
+        </div>
         <p>Link ne postoji ili je istekao, pokušajte ponovno ispuniti obrazac za prekid pretplate.</p>
         <p>Kliknite <a href="./">ovdje</a> kako bi ispunili obrazac.</p>
+        <div class="form-part">
+            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign('../')">
+        </div>
         {{/if}}
     </div>
 

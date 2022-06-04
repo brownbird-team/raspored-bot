@@ -14,6 +14,8 @@ router.get('/', async(req, res) => {
     res.render('webSettings', {
         layout: 'index',
         title: 'Raspored bot | Postavke',
+        urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+        urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
         before: true,
         settingsRoute: await routeNames.giveRouteName('settings'),
         homeRoute: await routeNames.giveRouteName('home')
@@ -29,6 +31,8 @@ router.post('/', async(req, res) => {
         res.render('webResponseReject', {
             layout: 'index',
             title: 'Raspored bot | Postavke',
+            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
             settingsRes: true,
             email: req.body.sEmail,
             homeRoute: await routeNames.giveRouteName('home')
@@ -37,6 +41,8 @@ router.post('/', async(req, res) => {
         res.render('webResponseReject', {
             layout: 'index',
             title: 'Raspored bot | Postavke',
+            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
             settingsRej: true,
             email: req.body.sEmail,
             settingsRoute: await routeNames.giveRouteName('settings')
@@ -52,6 +58,8 @@ router.get('/:id', async(req, res) => {
             res.render('webSettings', {
                 layout: 'index',
                 title: 'Raspored bot | Postavke',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
                 expired: true,
                 homeRoute: await routeNames.giveRouteName('home')
             });
@@ -66,6 +74,8 @@ router.get('/:id', async(req, res) => {
             res.render('webSettings', {
                 layout: 'index',
                 title: 'Raspored bot | Postavke',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
                 tokenURL: req.params.id,
                 notExpired: true,
                 classID: clID,
@@ -75,13 +85,16 @@ router.get('/:id', async(req, res) => {
                 darkTheme: darkThemeState,
                 unsubscribe: unsubState,
                 classL: classList,
-                settingsRoute: await routeNames.giveRouteName('settings')
+                settingsRoute: await routeNames.giveRouteName('settings'),
+                homeRoute: await routeNames.giveRouteName('home')
             });
         }
     } else {
         res.render('webSettings', {
             layout: 'index',
             title: 'Raspored bot | Postavke',
+            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
             expired: true,
             homeRoute: await routeNames.giveRouteName('home')
         });
@@ -96,6 +109,8 @@ router.post('/:id', async(req, res) => {
             res.render('webSettings', {
                 layout: 'index',
                 title: 'Raspored bot | Postavke',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
                 expired: true,
                 homeRoute: await routeNames.giveRouteName('home')
             });
@@ -112,6 +127,8 @@ router.post('/:id', async(req, res) => {
                 res.render('webSettings', {
                     layout: 'index',
                     title: 'Raspored bot | Postavke',
+                    urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                    urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
                     complete: true,
                     email: clientEmail,
                     homeRoute: await routeNames.giveRouteName('home')
@@ -122,6 +139,8 @@ router.post('/:id', async(req, res) => {
         res.render('webSettings', {
             layout: 'index',
             title: 'Raspored bot | Postavke',
+            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
             expired: true,
             homeRoute: await routeNames.giveRouteName('home')
         });
