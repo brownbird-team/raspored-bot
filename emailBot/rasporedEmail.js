@@ -56,12 +56,13 @@ exports.sender = async(tableData, j, chooseTemplate) => {
             scheduleChangesSat9 : tableData.sat9,
             unsubscribeRoute    : await routeNames.giveRouteName('unsubscribe'),
             urlRoute            : await routeNames.giveRouteName('url'),
+            homeRoute           : await routeNames.giveRouteName('home'),
             settingsRoute       : await routeNames.giveRouteName('settings')
         };
         selectedSubject = `Izmjene u rasporedu sati za ${tableData.className}`;
         selectedTemplate = 'raspored_dark_theme';
         if (!chooseTemplate) selectedTemplate = 'raspored_light_theme';
-    } else if (chooseTemplate == 2 || chooseTemplate == 'postavke') {
+    } else if (chooseTemplate == 'welcome' || chooseTemplate == 'postavke') {
         // dobrodoslica
         let sendAllMessage = 'sve'; 
         let messageTheme = 'tamna';

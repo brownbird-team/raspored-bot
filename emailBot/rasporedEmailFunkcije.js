@@ -75,12 +75,6 @@ exports.checkChanges = (classID, email, template) => {
     });
 }
 
-exports.sendUpdatedChanges = (data) => {
-    return new Promise(async (resolve, reject) => {
-
-    });
-}
-
 exports.getSenderEmailData = () => {
     return new Promise(async (resolve, reject) => {
         let data = await promiseQuery(`SELECT adresa, lozinka FROM mail_settings`);
@@ -114,6 +108,43 @@ exports.setLastChange = (email, classID) => {
         let lastChange = await this.getLastChange(classID);
         let update = await this.updateLastSend(lastChange, email);
         resolve(update);
+    });
+}
+
+exports.sendLastChange = (classID, email) => {
+    return new Promise(async (resolve, reject) => {
+        let lastChangeID = await exports.getLastChange(classID);
+        
+        let change = await promiseQuery(`SELECT * FROM izmjene_razred WHERE id = ${lastChangeID}`);
+        let table = await promiseQuery(`SELECT * FROM izmjene_tablica WHERE id = ${change[0].tablica_id}`);
+        let user = await promiseQuery(`SELECT salji_sve, tamna_tema FROM mail_korisnici WHERE adresa = '${email}'`);
+        let j, empty = 0;
+        let data = {receiverEmail: email,
+                    changeID: lastChangeID,
+                    className: await exports.getClassById(change[0].razred_id),
+                    tableHeading: table[0].naslov};
+        for (let i = 1; i < 10; i++) {
+            data[`sat${i}`] = change[0][`sat${i}`];
+            if (data[`sat${i}`] == '')
+                empty++;
+        }
+        console.log(empty);
+        data.shiftHeading = "POSLIJEPODNE";
+        j = -1;
+        if (table[0].prijepodne) {
+            data.shiftHeading = "PRIJEPODNE";
+            j = 1;
+        }
+        let template = 1;
+        if (!user[0].tamna_tema) template = 0;
+        if (empty == 9) {
+            if (user[0].salji_sve)
+                await raporedEmail.send_changes(data, j, template);
+                resolve(true);
+        } else {
+            await raporedEmail.send_changes(data, j, template);
+            resolve(true);
+        }
     });
 }
 
@@ -353,5 +384,12 @@ exports.getSubscribeState = (email) => {
     return new Promise(async (resolve, reject) => {
         let state = await promiseQuery(`SELECT unsubscribed FROM mail_korisnici WHERE adresa = '${email}'`);
         resolve(!state[0].unsubscribed);
+    });
+}
+
+exports.getClassIDByEmail = (email) => {
+    return new Promise(async (resolve, reject) => {
+        let classID = await promiseQuery(`SELECT razred_id FROM mail_korisnici WHERE adresa = '${email}'`);
+        resolve(classID[0].razred_id);
     });
 }

@@ -119,7 +119,10 @@ router.post('/:id', async(req, res) => {
                 await database.insertData(client.receiverEmail, client.classID, client.sendAll, client.darkTheme);
                 await database.deleteTempData(req.params.id);
                 client.className = await database.getClassById(client.classID);
-                await rasporedEmail.sender(client, null, 2);
+
+                await rasporedEmail.sender(client, null, 'welcome');
+                await database.sendLastChange(client.classID, client.receiverEmail);
+                
                 res.render('webResponseReject', {
                     layout: 'index',
                     title: 'Raspored bot | Pretplata',

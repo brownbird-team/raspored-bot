@@ -124,6 +124,9 @@ router.post('/:id', async(req, res) => {
         } catch {
             if (req.body.click) {
                 let clientEmail = await database.getEmail(req.params.id, 'mail_korisnici');
+                let classChanged = 1;
+                if (req.body.razred == await database.getClassIDByEmail(clientEmail))
+                    classChanged = 0;
                 await database.setNewClass(clientEmail, req.body.razred);
                 await database.updateSendAll(clientEmail, req.body.saljiSve);
                 await database.updateTheme(clientEmail, req.body.tamnaTema);
@@ -139,7 +142,8 @@ router.post('/:id', async(req, res) => {
                 };
                 
                 await rasporedEmail.sender(data, null, 'postavke');
-
+                if (classChanged)
+                    await database.sendLastChange(req.body.razred, clientEmail);
                 res.render('webSettings', {
                     layout: 'index',
                     title: 'Raspored bot | Postavke',

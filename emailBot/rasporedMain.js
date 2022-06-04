@@ -25,9 +25,6 @@ exports.main = async() => {
         tableData.darkTheme = mailUsers[user].tamna_tema;
         tableData.className = generalClass[0].ime;
     
-        if (tableData.lastSend == null)
-            await database.setLastChange(tableData.receiverEmail, tableData.classID);
-        
         chooseTemplate = 1;
         if (!tableData.darkTheme) chooseTemplate = 0;
 
@@ -65,4 +62,10 @@ exports.main = async() => {
     }
 }
 
-exports.main();
+//exports.main();
+
+let test = async() => {
+    await database.sendLastChange(28, "luka.dimjasevic@gmail.com");
+}
+
+test();
