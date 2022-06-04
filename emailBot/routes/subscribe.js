@@ -38,7 +38,7 @@ router.post('/', async(req, res) => {
     } catch {
         await database.insertTempData(req.body.subEmail, token.token());
         await database.setTokenDate(req.body.subEmail, 'mail_privremeni_korisnici');
-        let userToken = await database.getToken(req.body.subEmail);
+        let userToken = await database.getToken(req.body.subEmail, 'mail_privremeni_korisnici');
         let data = {receiverEmail: req.body.subEmail,
                     urlR: await routeNames.giveRouteName('url'),
                     homeR: await routeNames.giveRouteName('home'),

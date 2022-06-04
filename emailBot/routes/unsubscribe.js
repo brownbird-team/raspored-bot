@@ -26,10 +26,16 @@ router.post('/', async(req, res) => {
     try {
         await database.checkEmail(req.body.unsubEmail, 'mail_korisnici');
         let emailToken = token.token();
-        const emailData = {receiverEmail: req.body.unsubEmail, tokenEmail: emailToken};
-        await database.updateToken(emailData.receiverEmail, emailData.tokenEmail);
-        await database.setTokenDate(emailData.receiverEmail, 'mail_korisnici');
-        await rasporedEmail.sender(emailData, null, 3);
+        await database.updateToken(req.body.unsubEmail, emailToken);
+        await database.setTokenDate(req.body.unsubEmail, 'mail_korisnici');
+        
+        let data = {receiverEmail: req.body.unsubEmail,
+                    tExpired: (await database.getTokenDate(emailToken))[0].zadnji_token,
+                    tokenR: emailToken
+        };
+        
+        await rasporedEmail.sender(data, null, 'prekid-pretplate-potvrda');
+        
         res.render('webResponseReject', {
             layout: 'index', 
             title: 'Raspored bot | Odjava',
@@ -109,6 +115,10 @@ router.post('/:id', async(req, res) => {
                 
                 await database.removeTokenDate(req.params.id);
                 await database.removeToken(req.params.id);
+
+                let data = {receiverEmail: userEmail}
+                await rasporedEmail.sender(data, null, 'prekid-pretplate');
+
                 res.render('webEmailUnsubscribe', {
                     layout: 'index',
                     title: 'Raspored bot | Odjava',

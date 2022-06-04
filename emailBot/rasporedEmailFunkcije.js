@@ -132,9 +132,9 @@ exports.removeToken = (token) => {
     });
 }
 
-exports.getToken = (email) => {
+exports.getToken = (email, table) => {
     return new Promise(async (resolve, reject) => {
-        let getT = await promiseQuery(`SELECT token FROM mail_privremeni_korisnici WHERE adresa = '${email}'`);
+        let getT = await promiseQuery(`SELECT token FROM ${table} WHERE adresa = '${email}'`);
         resolve(getT[0].token);
     });
 }

@@ -5,7 +5,7 @@ color: rgb(73, 71, 71); margin: 10px;">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prekid pretplate</title>
+    <title>Validacija</title>
     <style>
         *{padding: 0; margin: 0;}
     </style>
@@ -14,9 +14,30 @@ color: rgb(73, 71, 71); margin: 10px;">
     <div class="message" style="width: 500px; margin: 50px;">
         <p style="margin-bottom: 25px;">Pozdrav <b>{{email}}</b>,</p>
 
-        <p>Poslali smo Vam ovu e-mail poruku kako biste znali da ste
-        uspješno prekinuli pretplatu s Raspored botom.</p>
+        <p style="margin-bottom: 25px;">htjeli bismo potvrditi da je račun {{email}}
+        Vaš.<br>
+        Kako biste potvrdili prijavu i uspješno prekinuli pretplatu, 
+        molimo Vas da kliknete na gumb ispod.</p>
+
+        <p style="margin-bottom: 50px;">Potvrda vrijedi do: <br><b>{{timeExpired}}</b></p>
+        
+        <table width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 50px;">
+            <tr>
+                <td>
+                    <table cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td style="border-radius: 2px; background-color: #ffdf2b">
+                                <a href="{{urlRoute}}/{{homeRoute}}/{{unsubscribeRoute}}/{{tokenUrl}}" target="_blank" style="padding: 16px 20px;
+                                border: 2px solid #ffdf2b; border-radius: 2px; font-family: Helvetica, Arial, sans-serif;
+                                font-size: 14px; color: #36393F; text-decoration: none; font-weight: bold; display: inline-block;">Potvrdi e-mail</a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
     </div>
+
     <footer style="width: 400px; text-align: left;">
         <p style="color:#595959; font-size: 12px; margin-bottom: 25px; margin-left: 50px; margin-top: 25px;">E-mail poruka poslana je {{email}}.
         Ako ne želite primati e-mail poruke od Raspored bota u budućnosti,
