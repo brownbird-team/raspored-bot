@@ -27,7 +27,14 @@ router.post('/', async(req, res) => {
         await database.checkEmail(req.body.sEmail, 'mail_korisnici');
         await database.updateToken(req.body.sEmail, token.token());
         await database.setTokenDate(req.body.sEmail, 'mail_korisnici');
-        // ovdje poslati e-mail poruku
+        
+        let userToken = await database.getToken(req.body.sEmail, 'mail_korisnici');
+        let userTokenDate = await database.getTokenDate(userToken);
+        let data = {receiverEmail: req.body.sEmail,
+                    tExpired: userTokenDate[0].zadnji_token,
+                    tokenR: userToken
+        };
+        await rasporedEmail.sender(data, null, 'postavke-potvrda');
         res.render('webResponseReject', {
             layout: 'index',
             title: 'Raspored bot | Postavke',
@@ -124,6 +131,15 @@ router.post('/:id', async(req, res) => {
 
                 await database.removeTokenDate(req.params.id);
                 await database.removeToken(req.params.id);
+
+                let data = {receiverEmail: clientEmail,
+                            className: await database.getClassById(req.body.razred),
+                            sendAll: req.body.saljiSve,
+                            darkTheme: req.body.tamnaTema
+                };
+                
+                await rasporedEmail.sender(data, null, 'postavke');
+
                 res.render('webSettings', {
                     layout: 'index',
                     title: 'Raspored bot | Postavke',
