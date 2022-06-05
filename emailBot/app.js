@@ -55,5 +55,5 @@ let initialize = async() => {
 initialize();
 
 app.listen(port, () => {
-    console.log(`Server started at http://localhost:${port}`);
+    console.log("[\u001b[33mEmail\033[00m]" + ` Server started at ${require("./routeNames.json").url}`);
 });
