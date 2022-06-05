@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const database = require('./../rasporedEmailFunkcije');
 const routeNames = require('../getRouteName');
+const func = require('../../databaseQueries');
 let rasporedEmail = require('./../rasporedEmail');
 let token = require('./../createToken');
 
@@ -25,26 +26,33 @@ router.get('/', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        await database.checkEmail(req.body.sEmail, 'mail_korisnici');
-        await database.updateToken(req.body.sEmail, token.token());
-        await database.setTokenDate(req.body.sEmail, 'mail_korisnici');
+        if (func.onlyASCII(req.body.sEmail)) {
+            let newEmail = func.prepareForSQL(req.body.sEmail);
+
+            await database.checkEmail(newEmail, 'mail_korisnici');
+            await database.updateToken(newEmail, token.token());
+            await database.setTokenDate(newEmail, 'mail_korisnici');
+
+            let userToken = await database.getToken(newEmail, 'mail_korisnici');
+            let userTokenDate = await database.getTokenDate(userToken);
+            let data = {receiverEmail: newEmail,
+                        tExpired: userTokenDate[0].zadnji_token,
+                        tokenR: userToken
+            };
+
+            await rasporedEmail.sender(data, null, 'postavke-potvrda');
+
+            res.render('webResponseReject', {
+                layout: 'index',
+                title: 'Raspored bot | Postavke',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
+                settingsRes: true,
+                email: req.body.sEmail,
+                homeRoute: await routeNames.giveRouteName('home')
+            });
+        }
         
-        let userToken = await database.getToken(req.body.sEmail, 'mail_korisnici');
-        let userTokenDate = await database.getTokenDate(userToken);
-        let data = {receiverEmail: req.body.sEmail,
-                    tExpired: userTokenDate[0].zadnji_token,
-                    tokenR: userToken
-        };
-        await rasporedEmail.sender(data, null, 'postavke-potvrda');
-        res.render('webResponseReject', {
-            layout: 'index',
-            title: 'Raspored bot | Postavke',
-            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
-            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
-            settingsRes: true,
-            email: req.body.sEmail,
-            homeRoute: await routeNames.giveRouteName('home')
-        });
     } catch {
         res.render('webResponseReject', {
             layout: 'index',
@@ -52,7 +60,7 @@ router.post('/', async(req, res) => {
             urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
             urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
             settingsRej: true,
-            email: req.body.sEmail,
+            email: func.prepareForSQL(req.body.sEmail),
             settingsRoute: await routeNames.giveRouteName('settings')
         });
     }

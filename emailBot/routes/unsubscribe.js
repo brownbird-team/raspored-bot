@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const database = require('./../rasporedEmailFunkcije');
 const routeNames = require('../getRouteName');
+const func = require('../../databaseQueries');
 let rasporedEmail = require('./../rasporedEmail');
 let token = require('./../createToken');
 

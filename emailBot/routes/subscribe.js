@@ -125,23 +125,26 @@ router.post('/:id', async(req, res) => {
             });
         } catch {
             if (req.body.click) {
-                const client = new database.Client(req.body.email, req.body.razred, req.body.saljiSve, req.body.tamnaTema);
-                await database.insertData(client.receiverEmail, client.classID, client.sendAll, client.darkTheme);
-                await database.deleteTempData(req.params.id);
-                client.className = await database.getClassById(client.classID);
+                if (req.body.razred > 0 && req.body.razred <= 40) {
+                    let dbEmail = await database.getEmail(req.params.id, 'mail_privremeni_korisnici');
+                    const client = new database.Client(dbEmail, req.body.razred, req.body.saljiSve, req.body.tamnaTema);
+                    await database.insertData(client.receiverEmail, client.classID, client.sendAll, client.darkTheme);
+                    await database.deleteTempData(req.params.id);
+                    client.className = await database.getClassById(client.classID);
 
-                await rasporedEmail.sender(client, null, 'welcome');
-                await database.sendLastChange(client.classID, client.receiverEmail);
-                
-                res.render('webResponseReject', {
-                    layout: 'index',
-                    title: 'Raspored bot | Pretplata',
-                    urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
-                    urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
-                    email: client.receiverEmail,
-                    res2: true,
-                    homeRoute: await routeNames.giveRouteName('home')
-                });
+                    await rasporedEmail.sender(client, null, 'welcome');
+                    await database.sendLastChange(client.classID, client.receiverEmail);
+                    
+                    res.render('webResponseReject', {
+                        layout: 'index',
+                        title: 'Raspored bot | Pretplata',
+                        urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                        urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
+                        email: client.receiverEmail,
+                        res2: true,
+                        homeRoute: await routeNames.giveRouteName('home')
+                    });
+                } // response ako je razred id veci od 40 ili manji od 1
             }
         }
     } else {
