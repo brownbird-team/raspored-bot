@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const database = require('./../rasporedEmailFunkcije');
 const routeNames = require('../getRouteName');
+const func = require('../../databaseQueries');
 let rasporedEmail = require('./../rasporedEmail');
 let token = require('./../createToken');
 
@@ -36,26 +37,30 @@ router.post('/', async(req, res) => {
             homeRoute: await routeNames.giveRouteName('home')
         });
     } catch {
-        await database.insertTempData(req.body.subEmail, token.token());
-        await database.setTokenDate(req.body.subEmail, 'mail_privremeni_korisnici');
-        let userToken = await database.getToken(req.body.subEmail, 'mail_privremeni_korisnici');
-        let data = {receiverEmail: req.body.subEmail,
-                    urlR: await routeNames.giveRouteName('url'),
-                    homeR: await routeNames.giveRouteName('home'),
-                    subscribeR: await routeNames.giveRouteName('subscribe'),
-                    tokenR: userToken,
-                    tExpired: await database.getTokenDateT2(userToken),
-                    privacyR: await routeNames.giveRouteName('privacy-policy')};
-        await rasporedEmail.sender(data, null, 4);
-        res.render('webResponseReject', {
-            layout: 'index',
-            title: 'Raspored bot | Pretplata',
-            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
-            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
-            email: req.body.subEmail,
-            auth: true,
-            homeRoute: await routeNames.giveRouteName('home')
-        });
+        if (func.onlyASCII(req.body.subEmail)) {
+            let newEmail = func.prepareForSQL(req.body.subEmail);
+
+            await database.insertTempData(newEmail, token.token());
+            await database.setTokenDate(newEmail, 'mail_privremeni_korisnici');
+            let userToken = await database.getToken(newEmail, 'mail_privremeni_korisnici');
+            let data = {receiverEmail: newEmail,
+                        urlR: await routeNames.giveRouteName('url'),
+                        homeR: await routeNames.giveRouteName('home'),
+                        subscribeR: await routeNames.giveRouteName('subscribe'),
+                        tokenR: userToken,
+                        tExpired: await database.getTokenDateT2(userToken),
+                        privacyR: await routeNames.giveRouteName('privacy-policy')};
+            await rasporedEmail.sender(data, null, 4);
+            res.render('webResponseReject', {
+                layout: 'index',
+                title: 'Raspored bot | Pretplata',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
+                email: req.body.subEmail,
+                auth: true,
+                homeRoute: await routeNames.giveRouteName('home')
+            });
+        }
     }
 });
 
