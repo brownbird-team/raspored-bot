@@ -5,7 +5,7 @@ const izmjene = require('./../databaseQueries.js');
 // Provjeri ima li izmjena za sve korisnike u bazi i pošalji im
 exports.check = async (client) => {
     // Prekini ako bot nije spreman
-    if (client !== undefined && !client.isReady()) return false;
+    if (client === undefined || !client.isReady()) return false;
 
     // Povuci sve registrirane kanale iz baze
     channels = await baza.listKanal();

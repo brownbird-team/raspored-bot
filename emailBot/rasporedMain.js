@@ -68,4 +68,4 @@ let test = async() => {
     await database.sendLastChange(28, "luka.dimjasevic@gmail.com");
 }
 
-test();
+//test();
