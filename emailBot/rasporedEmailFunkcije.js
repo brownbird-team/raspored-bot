@@ -167,7 +167,7 @@ exports.updateToken = (email, token) => {
 
 exports.removeToken = (token) => {
     return new Promise(async (resolve, reject) => {
-        let rmToken = await promiseQuery(`UPDATE mail_korisnici SET token = "", zadnji_token = "" WHERE token = '${token}'`);
+        let rmToken = await promiseQuery(`UPDATE mail_korisnici SET token = "", zadnji_token = "0000-00-00 00:00:00" WHERE token = '${token}'`);
         resolve(rmToken);
     });
 }
