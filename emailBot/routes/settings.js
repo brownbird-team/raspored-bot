@@ -18,7 +18,8 @@ router.get('/', async(req, res) => {
         urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
         before: true,
         settingsRoute: await routeNames.giveRouteName('settings'),
-        homeRoute: await routeNames.giveRouteName('home')
+        homeRoute: await routeNames.giveRouteName('home'),
+        url: await routeNames.giveRouteName('url')
     });
 });
 
