@@ -43,34 +43,44 @@ exports.getDateNow = () => {
     return formatted;
 };
 
+exports.getUserLastChange = (email) => {
+    return new Promise(async (resolve, reject) => {
+        let userLast = await promiseQuery(`SELECT zadnja_poslana FROM mail_korisnici WHERE adresa = '${email}'`);
+        resolve(userLast[0].zadnja_poslana);
+    });
+}
+
 exports.checkChanges = (classID, email, template) => {
     return new Promise(async (resolve, reject) => {
         let changes = await promiseQuery(`SELECT id, tablica_id FROM izmjene_razred WHERE razred_id = ${classID} ORDER BY id DESC`);
-        let browse = await promiseQuery(`SELECT id FROM izmjene_razred WHERE tablica_id = ${changes[0].tablica_id} AND razred_id = ${classID}`);
-
+        let browse = await promiseQuery(`SELECT id FROM izmjene_razred WHERE tablica_id = ${changes[0].tablica_id} AND razred_id = ${classID} ORDER BY id DESC`);
         if (browse.length > 1) {
-            let data = {}, j;
-            let fResult = await promiseQuery(`SELECT razred_id, tablica_id, sat1, sat2, sat3, sat4, sat5, sat6, sat7, sat8, sat9 FROM izmjene_razred WHERE id = ${changes[0].id}`);
-            let sResult = await promiseQuery(`SELECT naslov, smjena, prijepodne FROM izmjene_tablica WHERE id = ${fResult[0].tablica_id}`);
-            //console.log(fResult, sResult);
-            for (let i = 1; i < 10; i++) {
-                data[`sat${i}`] = fResult[0][`sat${i}`];
+            if (browse[0].id != (await exports.getUserLastChange(email))) {
+                let data = {}, j;
+                let fResult = await promiseQuery(`SELECT razred_id, tablica_id, sat1, sat2, sat3, sat4, sat5, sat6, sat7, sat8, sat9 FROM izmjene_razred WHERE id = ${changes[0].id}`);
+                let sResult = await promiseQuery(`SELECT naslov, smjena, prijepodne FROM izmjene_tablica WHERE id = ${fResult[0].tablica_id}`);
+                //console.log(fResult, sResult);
+                for (let i = 1; i < 10; i++) {
+                    data[`sat${i}`] = fResult[0][`sat${i}`];
+                }
+                cName = await promiseQuery(`SELECT ime FROM general_razred WHERE id = ${fResult[0].razred_id}`);
+                data.receiverEmail = email;
+                data.changeID = changes[0].id
+                data.className = cName[0].ime;
+                data.tableHeading = sResult[0].naslov;
+                data.shiftHeading = "POSLIJEPODNE";
+                j = -1;
+                if (sResult[0].prijepodne) {
+                    data.shiftHeading = "PRIJEPODNE";
+                    j = 1;
+                }
+                //console.log(data);
+                await raporedEmail.send_changes(data, j, template);
+                resolve(1);
             }
-            cName = await promiseQuery(`SELECT ime FROM general_razred WHERE id = ${fResult[0].razred_id}`);
-            data.receiverEmail = email;
-            data.changeID = changes[0].id
-            data.className = cName[0].ime;
-            data.tableHeading = sResult[0].naslov;
-            data.shiftHeading = "POSLIJEPODNE";
-            j = -1;
-            if (sResult[0].prijepodne) {
-                data.shiftHeading = "PRIJEPODNE";
-                j = 1;
-            }
-            //console.log(data);
-            await raporedEmail.send_changes(data, j, template);
+            resolve(0);
         } else {
-            return;
+            resolve(0);
         }
     });
 }
