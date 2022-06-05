@@ -144,7 +144,16 @@ router.post('/:id', async(req, res) => {
                         res2: true,
                         homeRoute: await routeNames.giveRouteName('home')
                     });
-                } // response ako je razred id veci od 40 ili manji od 1
+                } else {
+                    // response ako je razred id veci od 40 ili manji od 1
+                    res.render('webGeneralResponse', {
+                        layout: 'index',
+                        title: 'Raspored bot',
+                        generalErr: true,
+                        url: `${await routeNames.giveRouteName('url')}`,
+                        homeRoute: `${await routeNames.giveRouteName('home')}`
+                    });
+                }
             }
         }
     } else {
