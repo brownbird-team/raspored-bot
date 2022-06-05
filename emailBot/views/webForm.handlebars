@@ -1,5 +1,14 @@
     <div class="card">
         {{#if before}}
+        <style>
+            @media only screen and (max-width: 700px) {
+                .card .form-part input[type="email"] {width: 150px;}
+            }
+
+            @media only screen and (max-width: 500px) {
+                .card .form-part input[type="email"] {width: 150px;}
+            }
+        </style>
         <div class="card-heading">
             <h3><b>Registracija</b></h3>
         </div>
@@ -42,6 +51,31 @@
                 position: relative;
                 left: 25%;
                 bottom: 135px;
+            }
+
+            @media only screen and (max-width: 700px) {
+                .card .form-part:nth-child(2) {
+                    position: relative;
+                    left: 25%;
+                    bottom: 124px;
+                }
+
+                .card .form-checkbox {
+                    position: relative;
+                    left: 5%;
+                }
+            }
+            @media only screen and (max-width: 500px) {
+                .card .form-part:nth-child(2) {
+                    position: relative;
+                    left: 25%;
+                    bottom: 124px;
+                }
+
+                .card .form-checkbox {
+                    position: relative;
+                    left: 5%;
+                }
             }
         </style>
         <div class="card-heading">

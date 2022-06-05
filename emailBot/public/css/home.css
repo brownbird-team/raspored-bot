@@ -5,8 +5,13 @@
     text-align: center;
     justify-content: center;
     flex-wrap: wrap;
-    position: relative;
-    top: 30vh;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
 a

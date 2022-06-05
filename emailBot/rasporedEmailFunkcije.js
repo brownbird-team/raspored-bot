@@ -128,7 +128,6 @@ exports.sendLastChange = (classID, email) => {
             if (data[`sat${i}`] == '')
                 empty++;
         }
-        console.log(empty);
         data.shiftHeading = "POSLIJEPODNE";
         j = -1;
         if (table[0].prijepodne) {
