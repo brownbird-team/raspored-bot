@@ -39,6 +39,14 @@ router.post('/', async(req, res) => {
                 subscribeRoute: await routeNames.giveRouteName('subscribe'),
                 homeRoute: await routeNames.giveRouteName('home')
             });
+        } else {
+            res.render('webGeneralResponse', {
+                layout: 'index',
+                title: 'Raspored bot',
+                generalErr: true,
+                url: `${await routeNames.giveRouteName('url')}`,
+                homeRoute: `${await routeNames.giveRouteName('home')}`
+            });
         }
 
     } catch {
@@ -64,6 +72,14 @@ router.post('/', async(req, res) => {
                 email: req.body.subEmail,
                 auth: true,
                 homeRoute: await routeNames.giveRouteName('home')
+            });
+        } else {
+            res.render('webGeneralResponse', {
+                layout: 'index',
+                title: 'Raspored bot',
+                generalErr: true,
+                url: `${await routeNames.giveRouteName('url')}`,
+                homeRoute: `${await routeNames.giveRouteName('home')}`
             });
         }
     }
