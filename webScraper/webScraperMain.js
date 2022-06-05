@@ -170,7 +170,7 @@ exports.sql=async() =>{
         console.log("Doslo je do greske pri spajanju");
         return 1;
     }
-    sql_upis(izmjena,razredi_B);
+    await sql_upis(izmjena,razredi_B);
     console.log(prefix+'Gotov (B)')
     poslje=await baza.broj_izmjena();
     poslje=poslje[0].broj;
