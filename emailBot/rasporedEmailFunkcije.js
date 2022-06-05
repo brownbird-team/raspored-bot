@@ -206,7 +206,7 @@ exports.getTokenDateT2 = (token) => {
 
 exports.removeTokenDate = (token) => {
     return new Promise(async (resolve, reject) => {
-        let removeDate = await promiseQuery(`UPDATE mail_korisnici SET zadnji_token = NULL WHERE token = '${token}'`);
+        let removeDate = await promiseQuery(`UPDATE mail_korisnici SET zadnji_token = "" WHERE token = '${token}'`);
         resolve(removeDate);
     });
 }
