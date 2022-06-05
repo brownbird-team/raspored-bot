@@ -43,4 +43,4 @@ exports.strugacStatus=async() =>{
         return 1;
     }
 }
-strugac.sql();
+//strugac.sql();
