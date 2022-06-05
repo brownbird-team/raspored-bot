@@ -66,7 +66,7 @@ exports.main = async() => {
     }
 }
 
-exports.main();
+//exports.main();
 
 let test = async() => {
     await database.sendLastChange(28, "luka.dimjasevic@gmail.com");
