@@ -51,6 +51,14 @@ router.post('/', async(req, res) => {
                 email: req.body.sEmail,
                 homeRoute: await routeNames.giveRouteName('home')
             });
+        } else {
+            res.render('webGeneralResponse', {
+                layout: 'index',
+                title: 'Raspored bot',
+                generalErr: true,
+                url: `${await routeNames.giveRouteName('url')}`,
+                homeRoute: `${await routeNames.giveRouteName('home')}`
+            });
         }
         
     } catch {
@@ -132,36 +140,47 @@ router.post('/:id', async(req, res) => {
             });
         } catch {
             if (req.body.click) {
-                let clientEmail = await database.getEmail(req.params.id, 'mail_korisnici');
-                let classChanged = 1;
-                if (req.body.razred == await database.getClassIDByEmail(clientEmail))
-                    classChanged = 0;
-                await database.setNewClass(clientEmail, req.body.razred);
-                await database.updateSendAll(clientEmail, req.body.saljiSve);
-                await database.updateTheme(clientEmail, req.body.tamnaTema);
-                await database.updateUnsubscribe(clientEmail, req.body.pretplata);
+                if (req.body.razred > 0 && req.body.razred <= 40) {
+                    let clientEmail = await database.getEmail(req.params.id, 'mail_korisnici');
+                    let classChanged = 1;
+                    if (req.body.razred == await database.getClassIDByEmail(clientEmail))
+                        classChanged = 0;
+                    await database.setNewClass(clientEmail, req.body.razred);
+                    await database.updateSendAll(clientEmail, req.body.saljiSve);
+                    await database.updateTheme(clientEmail, req.body.tamnaTema);
+                    await database.updateUnsubscribe(clientEmail, req.body.pretplata);
 
-                await database.removeTokenDate(req.params.id);
-                await database.removeToken(req.params.id);
+                    await database.removeTokenDate(req.params.id);
+                    await database.removeToken(req.params.id);
 
-                let data = {receiverEmail: clientEmail,
-                            className: await database.getClassById(req.body.razred),
-                            sendAll: req.body.saljiSve,
-                            darkTheme: req.body.tamnaTema
-                };
-                
-                await rasporedEmail.sender(data, null, 'postavke');
-                if (classChanged)
-                    await database.sendLastChange(req.body.razred, clientEmail);
-                res.render('webSettings', {
-                    layout: 'index',
-                    title: 'Raspored bot | Postavke',
-                    urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
-                    urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
-                    complete: true,
-                    email: clientEmail,
-                    homeRoute: await routeNames.giveRouteName('home')
-                })
+                    let data = {receiverEmail: clientEmail,
+                                className: await database.getClassById(req.body.razred),
+                                sendAll: req.body.saljiSve,
+                                darkTheme: req.body.tamnaTema
+                    };
+                    
+                    await rasporedEmail.sender(data, null, 'postavke');
+                    if (classChanged)
+                        await database.sendLastChange(req.body.razred, clientEmail);
+                    res.render('webSettings', {
+                        layout: 'index',
+                        title: 'Raspored bot | Postavke',
+                        urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                        urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
+                        complete: true,
+                        email: clientEmail,
+                        homeRoute: await routeNames.giveRouteName('home')
+                    });
+
+                } else {
+                    res.render('webGeneralResponse', {
+                        layout: 'index',
+                        title: 'Raspored bot',
+                        generalErr: true,
+                        url: `${await routeNames.giveRouteName('url')}`,
+                        homeRoute: `${await routeNames.giveRouteName('home')}`
+                    });
+                }
             }
         }
     } else {

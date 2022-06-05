@@ -25,27 +25,39 @@ router.get('/', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        await database.checkEmail(req.body.unsubEmail, 'mail_korisnici');
-        let emailToken = token.token();
-        await database.updateToken(req.body.unsubEmail, emailToken);
-        await database.setTokenDate(req.body.unsubEmail, 'mail_korisnici');
-        
-        let data = {receiverEmail: req.body.unsubEmail,
-                    tExpired: (await database.getTokenDate(emailToken))[0].zadnji_token,
-                    tokenR: emailToken
-        };
-        
-        await rasporedEmail.sender(data, null, 'prekid-pretplate-potvrda');
-        
-        res.render('webResponseReject', {
-            layout: 'index', 
-            title: 'Raspored bot | Odjava',
-            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
-            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
-            email: req.body.unsubEmail,
-            res1: true,
-            homeRoute: await routeNames.giveRouteName('home')
-        });
+        if (func.onlyASCII(req.body.unsubEmail)) {
+            let newEmail = func.prepareForSQL(req.body.unsubEmail);
+            await database.checkEmail(newEmail, 'mail_korisnici');
+            let emailToken = token.token();
+            await database.updateToken(newEmail, emailToken);
+            await database.setTokenDate(newEmail, 'mail_korisnici');
+            
+            let data = {receiverEmail: newEmail,
+                        tExpired: (await database.getTokenDate(emailToken))[0].zadnji_token,
+                        tokenR: emailToken
+            };
+            
+            await rasporedEmail.sender(data, null, 'prekid-pretplate-potvrda');
+            
+            res.render('webResponseReject', {
+                layout: 'index', 
+                title: 'Raspored bot | Odjava',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
+                email: newEmail,
+                res1: true,
+                homeRoute: await routeNames.giveRouteName('home')
+            });
+
+        } else {
+            res.render('webGeneralResponse', {
+                layout: 'index',
+                title: 'Raspored bot',
+                generalErr: true,
+                url: `${await routeNames.giveRouteName('url')}`,
+                homeRoute: `${await routeNames.giveRouteName('home')}`
+            });
+        }
 
     } catch {
         res.render('webResponseReject', {
@@ -53,7 +65,7 @@ router.post('/', async(req, res) => {
             title: 'Raspored bot | Odjava',
             urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
             urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
-            email: req.body.unsubEmail,
+            email: func.prepareForSQL(req.body.unsubEmail),
             rej1: true,
             unsubscribeRoute: await routeNames.giveRouteName('unsubscribe')
         });
