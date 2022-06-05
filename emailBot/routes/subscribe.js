@@ -25,17 +25,22 @@ router.get('/', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        await database.checkAllEmailTables(req.body.subEmail);
-        res.render('webResponseReject', {
-            layout: 'index',
-            title: 'Raspored bot | Pretplata',
-            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
-            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
-            email: req.body.subEmail,
-            rej2: true,
-            subscribeRoute: await routeNames.giveRouteName('subscribe'),
-            homeRoute: await routeNames.giveRouteName('home')
-        });
+        if (func.onlyASCII(req.body.subEmail)) {
+            let newEmail = func.prepareForSQL(req.body.subEmail);
+
+            await database.checkAllEmailTables(newEmail);
+            res.render('webResponseReject', {
+                layout: 'index',
+                title: 'Raspored bot | Pretplata',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
+                email: req.body.subEmail,
+                rej2: true,
+                subscribeRoute: await routeNames.giveRouteName('subscribe'),
+                homeRoute: await routeNames.giveRouteName('home')
+            });
+        }
+
     } catch {
         if (func.onlyASCII(req.body.subEmail)) {
             let newEmail = func.prepareForSQL(req.body.subEmail);
