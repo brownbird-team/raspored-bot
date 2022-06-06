@@ -7,12 +7,12 @@ const fs = require("fs");
 exports.check = izmjeneCheck;
 
 exports.isRunning = false;
-let client;
+exports.client = undefined;
 
 exports.startDiscordBot = async () => {
 
     const eventFiles = fs.readdirSync("./discordBot/events").filter(file => file.endsWith(".js"));
-    client = new Client({
+    exports.client = new Client({
         intents: [
             Intents.FLAGS.GUILDS,
             Intents.FLAGS.GUILD_MESSAGES,
@@ -26,7 +26,7 @@ exports.startDiscordBot = async () => {
         ]
     });
 
-    client.commands = new Collection();
+    exports.client.commands = new Collection();
 
     const goodToGo = await func.checkOptions();
     if (!goodToGo) return false;
@@ -36,9 +36,9 @@ exports.startDiscordBot = async () => {
     for (const file of eventFiles) {
         const event = require(`./events/${file}`);
         if (event.once) {
-            client.once(event.name, (...args) => event.execute(...args));
+            exports.client.once(event.name, (...args) => event.execute(...args));
         } else {
-            client.on(event.name, (...args) => event.execute(...args));
+            exports.client.on(event.name, (...args) => event.execute(...args));
         }
     }
 
@@ -46,10 +46,10 @@ exports.startDiscordBot = async () => {
 
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`);
-        client.commands.set(command.name, command);
+        exports.client.commands.set(command.name, command);
     }
 
-    client.on('messageCreate', async message => {
+    exports.client.on('messageCreate', async message => {
         if (message.author.bot) return;
 
         const primaryCommand = message.content.split(' ')[0];
@@ -64,7 +64,7 @@ exports.startDiscordBot = async () => {
         if (!primaryCommand.startsWith(prefix)) return;
 
         const cmdName = primaryCommand.slice(prefix.length);
-        const command = client.commands.get(cmdName) || client.commands.find(cmd => cmd.aliases.includes(cmdName));
+        const command = exports.client.commands.get(cmdName) || exports.client.commands.find(cmd => cmd.aliases.includes(cmdName));
         if (!command) return;
 
         if (!message.channel.type.startsWith('DM') && command.dmOnly) {
@@ -92,12 +92,12 @@ exports.startDiscordBot = async () => {
         command.execute(message);
     });
 
-    await client.login(token.value);
+    await exports.client.login(token.value);
     exports.isRunning = true;
 }
 
 exports.stopDiscordBot = async () => {
-    await client.destroy();
+    await exports.client.destroy();
     func.discordLog("Gasim discord bota");
     exports.isRunning = false;
 }

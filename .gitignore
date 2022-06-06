@@ -1,4 +1,5 @@
-node_modules
-.env
-config.json
-.wwebjs_auth
+/node_modules
+/.env
+/config.json
+/.wwebjs_auth
+/emailBot/routeNames.json

@@ -4,13 +4,12 @@
     padding: 0;
 }
 
-html
+body
 {
     font-size: 18px;
     font-family: LatoBold, sans-serif, Helvetica, Arial;
     color: whitesmoke;
     background-color: #272626;
-    height: 100%;
 }
 
 .card
@@ -21,10 +20,8 @@ html
     min-height: 10rem;
     padding: 2rem;
     background-color: #36393F;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    top: 200px;
     border-radius: 0.2rem;
     justify-content: center;
 }
@@ -42,7 +39,6 @@ html
 .card .form-part
 {
     text-align: center;
-    /*border: 1px solid red;*/
     margin: 20px;
 }
 
@@ -231,14 +227,23 @@ header h2:hover
 
 footer
 {
-    height: 50px;
+
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
+    height: 50px;
+     
     background-color: #ffdf2b;
+    margin-top: 150px;
     text-align: center;
     padding: 10px;
+}
+
+.main
+{
+    position: relative;
+    min-height: 800px;
 }
 
 .list-inline

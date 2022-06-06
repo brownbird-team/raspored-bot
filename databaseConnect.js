@@ -74,7 +74,7 @@ exports.databaseInit = () => {
                         ('4.G', 'B'), ('4.H', 'B'), ('4.M', 'B'), ('4.N', 'B');
                 `);
             }
-            if (!tables.includes("general_settings")) {
+            /*if (!tables.includes("general_settings")) {
                 databaseLog("Kreiram tablicu general_settings");
                 await query(con, `
                     CREATE TABLE general_settings (
@@ -83,8 +83,9 @@ exports.databaseInit = () => {
                         value TEXT
                     )
                 `);
-            }
-            if (!tables.includes("izmjene_settings")) {
+            }*/
+            // Kreiraj tablice skupine izmjene ako ne postoje
+            /*if (!tables.includes("izmjene_settings")) {
                 databaseLog("Kreiram tablicu izmjene_settings");
                 await query(con, `
                     CREATE TABLE izmjene_settings (
@@ -93,8 +94,7 @@ exports.databaseInit = () => {
                         value TEXT
                     )
                 `);
-            }
-            // Kreiraj tablice skupine izmjene ako ne postoje
+            }*/
             if(!tables.includes("izmjene_tablica")) {
                 databaseLog("Kreiram tablicu izmjene_tablica");
                 await query(con, `
@@ -131,7 +131,7 @@ exports.databaseInit = () => {
                 `);
             }
             // Kreiraj tablice skupine wap ako ne postoje
-            if (!tables.includes("wap_settings")) {
+            /*if (!tables.includes("wap_settings")) {
                 databaseLog("Kreiram tablicu wap_settings");
                 await query(con, `
                     CREATE TABLE wap_settings (
@@ -140,7 +140,7 @@ exports.databaseInit = () => {
                         value TEXT
                     )
                 `);
-            }
+            }*/
             if (!tables.includes("wap_kontakti")) {
                 databaseLog("Kreiram tablicu wap_kontakti");
                 await query(con, `
@@ -241,15 +241,15 @@ exports.databaseInit = () => {
                 `);
             }
             // Kreiraj tablice skupine panel ako ne postoje
-            if (!tables.includes("panel_admins")) {
+            /*if (!tables.includes("panel_admins")) {
                 databaseLog("Kreiram tablicu panel_admins");
                 await query(con, `
                     CREATE TABLE panel_admins (
                         discord_user_id INT PRIMARY KEY
                     )
                 `);
-            }
-            if (!tables.includes("panel_disc")) {
+            }*/
+            /*if (!tables.includes("panel_disc")) {
                 databaseLog("Kreiram tablicu panel_disc");
                 await query(con, `
                     CREATE TABLE panel_disc (
@@ -261,7 +261,7 @@ exports.databaseInit = () => {
                         refresh_token CHAR(50)
                     )
                 `);
-            }
+            }*/
 
             resolve('done');
         });

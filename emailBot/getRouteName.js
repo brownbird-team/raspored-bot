@@ -1,5 +1,19 @@
 const fs = require("fs");
 
+if (!fs.existsSync("./emailBot/routeNames.json")) {
+    console.log("[\u001b[33mEmail\033[00m]" + " Datoteka routeNames.json nije pronađena");
+    try {
+        fs.copyFileSync("./emailBot/routeNames.sample.json", "./emailBot/routeNames.json");
+    } catch {
+        console.log(err)
+        console.log("[\u001b[33mEmail\033[00m]" + " Nije uspjelo kreiranje datoteke routeNames.json");
+        console.log("[\u001b[33mEmail\033[00m]" + " Postoji li datoteka routeNames.sample.json ?");
+        process.exit(1);
+    }
+    console.log("[\u001b[33mEmail\033[00m]" + " Datoteka routeNames.json uspješno kreirana");
+}
+
+
 exports.giveRouteName = (routeName) => {
     return new Promise(async (resolve, reject) => {
         fs.readFile("./emailBot/routeNames.json", "utf8", (err, jsonString) => {

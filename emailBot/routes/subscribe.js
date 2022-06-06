@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const database = require('./../rasporedEmailFunkcije');
 const routeNames = require('../getRouteName');
+const func = require('../../databaseQueries');
 let rasporedEmail = require('./../rasporedEmail');
 let token = require('./../createToken');
 
@@ -24,38 +25,63 @@ router.get('/', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        await database.checkAllEmailTables(req.body.subEmail);
-        res.render('webResponseReject', {
-            layout: 'index',
-            title: 'Raspored bot | Pretplata',
-            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
-            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
-            email: req.body.subEmail,
-            rej2: true,
-            subscribeRoute: await routeNames.giveRouteName('subscribe'),
-            homeRoute: await routeNames.giveRouteName('home')
-        });
+        if (func.onlyASCII(req.body.subEmail)) {
+            let newEmail = func.prepareForSQL(req.body.subEmail);
+
+            await database.checkAllEmailTables(newEmail);
+            res.render('webResponseReject', {
+                layout: 'index',
+                title: 'Raspored bot | Pretplata',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
+                email: req.body.subEmail,
+                rej2: true,
+                subscribeRoute: await routeNames.giveRouteName('subscribe'),
+                homeRoute: await routeNames.giveRouteName('home')
+            });
+        } else {
+            res.render('webGeneralResponse', {
+                layout: 'index',
+                title: 'Raspored bot',
+                generalErr: true,
+                url: `${await routeNames.giveRouteName('url')}`,
+                homeRoute: `${await routeNames.giveRouteName('home')}`
+            });
+        }
+
     } catch {
-        await database.insertTempData(req.body.subEmail, token.token());
-        await database.setTokenDate(req.body.subEmail, 'mail_privremeni_korisnici');
-        let userToken = await database.getToken(req.body.subEmail, 'mail_privremeni_korisnici');
-        let data = {receiverEmail: req.body.subEmail,
-                    urlR: await routeNames.giveRouteName('url'),
-                    homeR: await routeNames.giveRouteName('home'),
-                    subscribeR: await routeNames.giveRouteName('subscribe'),
-                    tokenR: userToken,
-                    tExpired: await database.getTokenDateT2(userToken),
-                    privacyR: await routeNames.giveRouteName('privacy-policy')};
-        await rasporedEmail.sender(data, null, 4);
-        res.render('webResponseReject', {
-            layout: 'index',
-            title: 'Raspored bot | Pretplata',
-            urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
-            urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
-            email: req.body.subEmail,
-            auth: true,
-            homeRoute: await routeNames.giveRouteName('home')
-        });
+        if (func.onlyASCII(req.body.subEmail)) {
+            let newEmail = func.prepareForSQL(req.body.subEmail);
+
+            await database.insertTempData(newEmail, token.token());
+            await database.setTokenDate(newEmail, 'mail_privremeni_korisnici');
+            let userToken = await database.getToken(newEmail, 'mail_privremeni_korisnici');
+            let data = {receiverEmail: newEmail,
+                        urlR: await routeNames.giveRouteName('url'),
+                        homeR: await routeNames.giveRouteName('home'),
+                        subscribeR: await routeNames.giveRouteName('subscribe'),
+                        tokenR: userToken,
+                        tExpired: await database.getTokenDateT2(userToken),
+                        privacyR: await routeNames.giveRouteName('privacy-policy')};
+            await rasporedEmail.sender(data, null, 4);
+            res.render('webResponseReject', {
+                layout: 'index',
+                title: 'Raspored bot | Pretplata',
+                urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
+                email: req.body.subEmail,
+                auth: true,
+                homeRoute: await routeNames.giveRouteName('home')
+            });
+        } else {
+            res.render('webGeneralResponse', {
+                layout: 'index',
+                title: 'Raspored bot',
+                generalErr: true,
+                url: `${await routeNames.giveRouteName('url')}`,
+                homeRoute: `${await routeNames.giveRouteName('home')}`
+            });
+        }
     }
 });
 
@@ -115,20 +141,35 @@ router.post('/:id', async(req, res) => {
             });
         } catch {
             if (req.body.click) {
-                const client = new database.Client(req.body.email, req.body.razred, req.body.saljiSve, req.body.tamnaTema);
-                await database.insertData(client.receiverEmail, client.classID, client.sendAll, client.darkTheme);
-                await database.deleteTempData(req.params.id);
-                client.className = await database.getClassById(client.classID);
-                await rasporedEmail.sender(client, null, 2);
-                res.render('webResponseReject', {
-                    layout: 'index',
-                    title: 'Raspored bot | Pretplata',
-                    urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
-                    urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
-                    email: client.receiverEmail,
-                    res2: true,
-                    homeRoute: await routeNames.giveRouteName('home')
-                });
+                if (req.body.razred > 0 && req.body.razred <= 40) {
+                    let dbEmail = await database.getEmail(req.params.id, 'mail_privremeni_korisnici');
+                    const client = new database.Client(dbEmail, req.body.razred, req.body.saljiSve, req.body.tamnaTema);
+                    await database.insertData(client.receiverEmail, client.classID, client.sendAll, client.darkTheme);
+                    await database.deleteTempData(req.params.id);
+                    client.className = await database.getClassById(client.classID);
+
+                    await rasporedEmail.sender(client, null, 'welcome');
+                    await database.sendLastChange(client.classID, client.receiverEmail);
+                    
+                    res.render('webResponseReject', {
+                        layout: 'index',
+                        title: 'Raspored bot | Pretplata',
+                        urlP: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}`,
+                        urlZ: `${await routeNames.giveRouteName('url')}/${await routeNames.giveRouteName('home')}/${await routeNames.giveRouteName('privacy-policy')}`,
+                        email: client.receiverEmail,
+                        res2: true,
+                        homeRoute: await routeNames.giveRouteName('home')
+                    });
+                } else {
+                    // response ako je razred id veci od 40 ili manji od 1
+                    res.render('webGeneralResponse', {
+                        layout: 'index',
+                        title: 'Raspored bot',
+                        generalErr: true,
+                        url: `${await routeNames.giveRouteName('url')}`,
+                        homeRoute: `${await routeNames.giveRouteName('home')}`
+                    });
+                }
             }
         }
     } else {

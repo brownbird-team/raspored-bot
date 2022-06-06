@@ -1,5 +1,12 @@
 const { promiseQuery } = require("./../databaseConnect.js");
 
+exports.broj_izmjena=() =>{
+    return new Promise(async (resolve) =>{
+        let query=`SELECT COUNT(id) AS broj from izmjene_razred;`;
+        result=await promiseQuery(query);
+        resolve(result);
+    });
+}
 exports.razredi_iz_smjene=(smjena) =>{
     return new Promise(async (resolve) =>{
         let query=`SELECT * FROM general_razred WHERE smjena='${smjena}' AND aktivan=1`;

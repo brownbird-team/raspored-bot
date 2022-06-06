@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const {promiseQuery}=require('./../databaseConnect.js');
 const baza =require('./funkcije_za_bazu');
+const {uzbuna}=require('./../notifyPeople.js');
 const prefix='[\u001b[31mSTRUGAC\033[00m] '
 async function scraper(raz){
     //url
@@ -148,11 +149,12 @@ async function scraper(raz){
     
 exports.sql=async() =>{
 
-    
+    let prije,poslje;
     let razredi_A;
     let razredi_B;
     let izmjena;
-    
+    prije=await baza.broj_izmjena();
+    prije=prije[0].broj;
     razredi_A=await baza.razredi_iz_smjene('A');
     razredi_B=await baza.razredi_iz_smjene('B');
     
@@ -168,9 +170,13 @@ exports.sql=async() =>{
         console.log("Doslo je do greske pri spajanju");
         return 1;
     }
-    sql_upis(izmjena,razredi_B);
+    await sql_upis(izmjena,razredi_B);
     console.log(prefix+'Gotov (B)')
-
+    poslje=await baza.broj_izmjena();
+    poslje=poslje[0].broj;
+    if (poslje!=prije){
+        uzbuna();
+    }
 }
 async function sql_upis(izmjena,razredi){
     let datum = "";

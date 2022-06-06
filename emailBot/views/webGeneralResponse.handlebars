@@ -1,0 +1,11 @@
+    <div class="card">
+        {{#if generalErr}}
+        <div class="card-heading">
+            <h3><b>Greška pri unosu</b></h3>
+        </div>
+        <p>Nešto ste pogrešno upisali.</p>
+        <div class="form-part">
+            <input type="button" value="Natrag na početnu" id="end-button" onclick="window.location.assign(`{{url}}/{{homeRoute}}`)">
+        </div>
+        {{/if}}
+    </div>

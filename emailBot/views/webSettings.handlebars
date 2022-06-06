@@ -1,5 +1,14 @@
     <div class="card">
         {{#if before}}
+        <style>
+            @media only screen and (max-width: 700px) {
+                .card .form-part input[type="email"] {width: 150px;}
+            }
+
+            @media only screen and (max-width: 500px) {
+                .card .form-part input[type="email"] {width: 150px;}
+            }
+        </style>
         <div class="card-heading">
             <h3><b>Postavke</b></h3>
         </div>
@@ -9,7 +18,7 @@
                 <input type="email" id="sEmail" name="sEmail" placeholder="E-mail" required>
             </div>
             <div class="form-part">
-                <input type="button" value="Natrag" onclick="window.location.assign('../{{homeRoute}}')">
+                <input type="button" value="Natrag" onclick="window.location.assign(`{{url}}/{{homeRoute}}`)">
                 <input type="submit" value="Pošalji">
             </div>
         </form>
@@ -33,9 +42,29 @@
                 position: relative;
                 top: 1px;
             }
+
+            #username {font-size: large;}
+
+            @media only screen and (max-width: 700px) {
+                #username {font-size: 14px;}
+
+                .card .form-checkbox {
+                    position: relative;
+                    left: 5%;
+                }
+            }
+
+            @media only screen and (max-width: 500px) {
+                #username {font-size: 14px;}
+
+                .card .form-checkbox {
+                    position: relative;
+                    left: 5%;
+                }
+            }
         </style>
         <div class="card-heading">
-            <h3><b>Postavke - <i style="font-size:large;">{{email}}</i></b></h3>
+            <h3><b>Postavke - <i id="username">{{email}}</i></b></h3>
         </div>
         
         <form action="/{{homeRoute}}/{{settingsRoute}}/{{tokenURL}}" method="POST">
@@ -59,7 +88,7 @@
             <div class="form-checkbox">	
                 <input type="checkbox" id="pretplata" name="pretplata" {{#if unsubscribe}}checked{{/if}}>
                 <label for="pretplata">&nbsp;Želim pratiti izmjene u rasporedu sati</label>
-            </div>
+            </div><br><br><br>
             <div class="form-part">
                 <input type="button" value="Natrag" onclick="window.location.assign('./')">
                 <input type="submit" value="Promijeni" id="click" name="click">
