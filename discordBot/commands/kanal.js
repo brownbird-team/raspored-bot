@@ -145,7 +145,7 @@ module.exports = {
             } else  if (value === 'ne' && options.length === 1) {
                 let zadnja_poslana = null;
                 if (kanal.razred)
-                    zadnja_poslana = await dajZadnju(kanal.razred.id);
+                    zadnja_poslana = await general.dajZadnju(kanal.razred.id);
                 await baza.updateKanal({
                     id: message.channelId,
                     mute: false,
