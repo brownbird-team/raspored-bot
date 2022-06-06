@@ -149,7 +149,7 @@ module.exports = {
                 await baza.updateKanal({
                     id: message.channelId,
                     mute: false,
-                    zadnja_poslana: zadnja_poslana
+                    zadnja_poslana: zadnja_poslana.id
                 });
                 embed = await normalEmbed(
                     'Izmjena postavki za slanje izmjena',
