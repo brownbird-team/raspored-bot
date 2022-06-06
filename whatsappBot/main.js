@@ -5,11 +5,17 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const fs = require('fs');
 const { wapLog } = require('./helperFunctionsWap.js');
 const baza = require('./databaseQueriesWap.js');
+const daj_f_baza = require('./daj_f_za_bazu');
+const provjera_izmjena = require("./provjera_izmjena");
+
+
 
 //Novi klijent
 const client = new Client({
     authStrategy: new LocalAuth()
 });
+
+//module.exports = client;
 
 // Pogledaj imena svih datoteka koje završavaju na .js u commands folderu
 client.commands = [];
@@ -44,7 +50,7 @@ process.on("SIGINT", async () => {
 });
 
 client.on('message', async (msg) => {
-    console.log(msg.body);
+    console.log(msg.body.slice(0, 30));
     // Pronađi chat i kontakt gdje je poruka poslana
     const chat = await msg.getChat();
     const kontakt = await msg.getContact();
@@ -119,6 +125,10 @@ client.on('message', async (msg) => {
         client.sendMessage(msg.from, 'Ovu naredbu mogu koristiti samo Administratori grupe');
         return;
     }
+    
+    
+    //await provjera_izmjena.ima_li_izmjene();
+    
 
     // Ako je sve prošlo OK izvrši naredbu
     command.execute(msg, bazaVal, client);

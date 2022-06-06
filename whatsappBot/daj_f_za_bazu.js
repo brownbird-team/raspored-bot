@@ -32,10 +32,9 @@ exports.dajKontakt = (broj) => {
 }
 
 //Daj sve brojeve iz baze
-exports.daj_brojeve = () => {
+exports.daj_brojeve_sa_salji_izmjene = () => {
     return new Promise(async (resolve) => {
-        let baza_brojevi = `SELECT broj FROM wap_kontakti`;
-        let brojevi = await promiseQuery(baza_brojevi);
+        const brojevi = await promiseQuery('SELECT broj FROM wap_kontakti WHERE salji_izmjene = 1');
         resolve(brojevi);
     });
 }
