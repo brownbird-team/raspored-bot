@@ -215,6 +215,13 @@ module.exports = {
                 `Kanal #${message.channel.name} nije dodan u bazu Raspored Bota, dodajte kanal kako bi mogli mijenjati postavke`
             );
         }
+        
+        // Ako je specificirana nepoznata podnaredba ispiši grešku
+        else {
+            embed = await errorEmbed(
+                `Tražena podnaredba** ${command} ** nije pronađena za naredbu kanal`
+            );
+        }
 
         // Pošalji rezultate na Discord
         await message.reply({
