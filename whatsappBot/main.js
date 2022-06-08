@@ -37,9 +37,9 @@ client.on('qr', qr => {
 client.on('ready', () => {
     wapLog('Klijent je spreman !');
     // Ispiši ime zadnjeg chata
-    client.getChats().then(chats => {
-        wapLog('Zadnji chat je: ' + chats[0].name);
-    });
+    //client.getChats().then(chats => {
+    //    wapLog('Zadnji chat je: ' + chats[0].name);
+    //});
 });
 
 //kod za gašenje servera
