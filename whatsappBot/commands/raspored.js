@@ -1,6 +1,6 @@
 const { ChatTypes } = require('whatsapp-web.js');
 const baza = require('../../databaseQueries.js');
-const dodaj_f_baza = require('../dodaj_f_za_bazu');
+const wapbaza = require('../databaseQueriesWap');
 module.exports = {
     name: "raspored",
     aliases: ["r"],
@@ -31,7 +31,7 @@ module.exports = {
             }
 
             client.sendMessage(msg.from, izmjena_test);
-            await baza.izmjeniKontakt({
+            await wapbaza.izmjeniKontakt({
                 broj: kontakt.broj,
                 zadnja_poslana: izmjena.id
             });
