@@ -52,7 +52,7 @@ module.exports = {
         }
 
         // Izmjeni razred_id record u bazi za ovaj kontakt/grupu
-        baza.izmjeniKontakt({
+        await baza.izmjeniKontakt({
             broj: kontakt.broj,
             razred: razred.id,
             zadnja_poslana: (await gen.dajZadnju(razred.id)).id

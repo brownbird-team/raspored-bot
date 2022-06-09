@@ -31,7 +31,10 @@ module.exports = {
             }
 
             client.sendMessage(msg.from, izmjena_test);
-            await dodaj_f_baza.dodaj_zadnju_poslanu(izmjena.id, kontakt.broj);
+            await baza.izmjeniKontakt({
+                broj: kontakt.broj,
+                zadnja_poslana: izmjena.id
+            });
         }else if (!kontakt.razred) {
             client.sendMessage(msg.from, 'Niste postavili razred.');
         }
