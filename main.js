@@ -13,7 +13,7 @@ const start = async () => {
     // Pokreni email web sucelje
     const emailWeb = require('./emailBot/app.js');
     // Pokreni whatsapp bota
-    const whatsapp = require('./whatsappBot/main.js');
+    //const whatsapp = require('./whatsappBot/main.js');
     // Pokreni strugač za stalno
     await strugac.strugacRun(true);
 }
