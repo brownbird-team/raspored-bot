@@ -55,6 +55,9 @@ async function scraper(raz){
 
     for(i in raz)
      broj_razreda++;
+    let ime=[];
+    for(i in raz){
+        ime[i]=raz[i].ime;    }
     //Spremanje podataka u polje
     for(index in svi_spanovi_scrape){
         const str_txt=await svi_spanovi_scrape[index].getProperty('textContent');
@@ -117,7 +120,7 @@ async function scraper(raz){
             
             result[k].izmjene_tablica.prijepode=0;
         }
-        else if(svi_spanovi[index]==raz[l].ime){
+        else if(ime.includes(svi_spanovi[index])){
             
             result[k].izmjene_razred[l].razred=svi_spanovi[index];
             
