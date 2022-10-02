@@ -1,6 +1,14 @@
 const { MessageEmbed } = require("discord.js");
 const baza = require("./databaseQueriesDisc.js");
 
+exports.asyncFilter = async (arr, condFunc) => {
+    const results = await Promise.all(arr.map(condFunc));
+
+    return arr.filter((val, index) => 
+        results[index]
+    );
+}
+
 exports.discordLog = async (logThis) => {
     console.log('[\u001b[34mDiscord\033[00m] ' + logThis);
 }

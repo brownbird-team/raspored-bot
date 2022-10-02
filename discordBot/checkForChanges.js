@@ -1,4 +1,4 @@
-const { normalEmbed, formatDateString } = require('./helperFunctionsDisc.js');
+const { normalEmbed, formatDateString, asyncFilter } = require('./helperFunctionsDisc.js');
 const baza = require('./databaseQueriesDisc.js');
 const izmjene = require('./../databaseQueries.js');
 
@@ -24,7 +24,7 @@ exports.check = async (client) => {
 
         // Filtriraj nove izmjene tako da ako je korisnik odabrao da ne želi primati sve
         // ne dobije prazne izmjene
-        noveIzmjene = noveIzmjene.filter(async izmjena => {
+        noveIzmjene = await asyncFilter(noveIzmjene, async (izmjena) => {
             // Ako je korisnik odabrao sve preskoći filtriranje
             if (!izmjena.sve_null || channelData.salji_sve) {
                 return true;
