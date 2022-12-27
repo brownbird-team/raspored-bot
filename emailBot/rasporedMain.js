@@ -4,6 +4,9 @@ const { dajIzmjene } = require('../databaseQueries');
 const database = require('./rasporedEmailFunkcije');
 
 exports.main = async() => {
+    if (!(await database.checkOptions())) {
+        return false;
+    }
     const mailUsers = await promiseQuery(`SELECT * FROM mail_korisnici`);
     for (let user in mailUsers) {
         let j, chooseTemplate;

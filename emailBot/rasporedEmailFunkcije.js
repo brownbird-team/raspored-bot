@@ -2,6 +2,93 @@ const { promiseQuery, query } = require('./../databaseConnect.js');
 const token = require('./createToken');
 const raporedEmail = require('./rasporedEmail');
 
+const prefix = '[\u001b[33mEmail\033[00m]';
+
+// Vrati vrijednost optiona iz baze
+exports.getOption = (option) => {
+    return new Promise(async (resolve, reject) => {
+        const query = `SELECT * FROM mail_settings WHERE option = '${option}'`;
+        let result = await promiseQuery(query);
+        let objekt;
+        if(result.length === 0) {
+            objekt = null;
+        } else {
+            objekt = {
+                id: result[0].id,
+                option: result[0].option,
+                value: result[0].value
+            }
+        }
+        resolve(objekt);
+    });
+}
+// Postavi novu vrijednost na option i kreiraj ga ako ne postoji
+exports.setOption = (option, value) => {
+    return new Promise(async (resolve, reject) => {
+        const check = await exports.getOption(option);
+        let query;
+        if(check !== null) {
+            query = `UPDATE mail_settings SET value = '${value}' WHERE option = '${option}'`;
+        } else {
+            query = `INSERT INTO mail_settings (option, value) VALUES ('${option}', '${value}')`;
+        }
+        await promiseQuery(query);
+        resolve("done");
+    });
+}
+// Pregledaj sve postavke u tablici mail_settings i kreiraj ih ako ne postoje
+exports.checkOptions = async () => {
+    // Postavi allGood na false ako je neki settings u takvom stanju da se bot
+    // ne može pokrenuti
+    let allGood = true;
+    const host = await this.getOption("host");
+    if (!host) {
+        this.setOption("host", "");
+        console.log(prefix + " Host record nije pronađen, kreiram ga (ne porećem bota)");
+        allGood = false;
+    } else if (host.value === "") {
+        console.log(prefix + " Host record je prazan (ne pokrećem bota)");
+        allGood = false;
+    }
+    const port = await this.getOption("port");
+    if (!port) {
+        this.setOption("port", "587");
+        console.log(prefix + " Port record nije pronađen, kreiram ga (ne porećem bota)");
+        allGood = false;
+    } else if (port.value === "") {
+        console.log(prefix + " Port record je prazan (ne pokrećem bota)");
+        allGood = false;
+    }
+    const name = await this.getOption("name");
+    if (!name) {
+        this.setOption("name", "Raspored bot");
+        console.log(prefix + " Name record nije pronađen, kreiram ga (ne porećem bota)");
+        allGood = false;
+    } else if (name.value === "") {
+        console.log(prefix + " Name record je prazan (ne pokrećem bota)");
+        allGood = false;
+    }
+    const username = await this.getOption("username");
+    if (!username) {
+        this.setOption("username", "");
+        console.log(prefix + " Username record nije pronađen, kreiram ga (ne porećem bota)");
+        allGood = false;
+    } else if (username.value === "") {
+        console.log(prefix + " Username record je prazan (ne pokrećem bota)");
+        allGood = false;
+    }
+    const password = await this.getOption("password");
+    if (!password) {
+        this.setOption("password", "");
+        console.log(prefix + " Password record nije pronađen, kreiram ga (ne porećem bota)");
+        allGood = false;
+    } else if (password.value === "") {
+        console.log(prefix + " Password record je prazan (ne pokrećem bota)");
+        allGood = false;
+    }
+    return allGood;
+}
+
 exports.Client = class {
     constructor(receiverEmail, classID, sendAll, darkTheme) {
         this.receiverEmail = receiverEmail;

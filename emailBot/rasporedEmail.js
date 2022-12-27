@@ -8,9 +8,19 @@ const prefix = '[\u001b[33mEmail\033[00m]';
 
 exports.sender = async(tableData, j, chooseTemplate) => {
     let isEmpty = {}, selectedTemplate, selectedContext, selectedSubject;
-    const senderData = await database.getSenderEmailData();
-    const username = senderData[0].adresa;
-    const password = senderData[0].lozinka;
+
+    if (!(await database.checkOptions())) {
+        return false;
+    }
+
+    const senderUser = {
+        host: (await database.getOption("host")).value,
+        port: (await database.getOption("port")).value,
+        name: (await database.getOption("name")).value,
+        user: (await database.getOption("username")).value,
+        pass: (await database.getOption("password")).value
+    };
+
     if (chooseTemplate == 0 || chooseTemplate == 1) {
         for (let i = 1; i < 10; i++) {
             if (tableData[`sat${i}`] != "") {
@@ -140,10 +150,12 @@ exports.sender = async(tableData, j, chooseTemplate) => {
     } 
     // povezivanje s posiljateljom
     let transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: senderUser.host,
+        port: senderUser.port,
+        secure: (senderUser.port === '465') ? true : false,
         auth: {
-            user: username,
-            pass: password
+            user: senderUser.user,
+            pass: senderUser.pass
         }
     });
 
@@ -161,7 +173,7 @@ exports.sender = async(tableData, j, chooseTemplate) => {
 
     // kreiranje e-mail poruke
     let mailOptions = {
-        from: `Raspored bot <${username}>`,
+        from: `${senderUser.name} <${senderUser.user}>`,
         to: tableData.receiverEmail,
         subject: selectedSubject,
         template: selectedTemplate,

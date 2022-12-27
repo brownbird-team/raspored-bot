@@ -54,6 +54,8 @@ let initialize = async() => {
 }
 initialize();
 
+database.checkOptions();
+
 app.listen(port, () => {
     console.log("[\u001b[33mEmail\033[00m]" + ` Server started at ${require("./routeNames.json").url}`);
 });
