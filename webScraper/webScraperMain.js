@@ -40,7 +40,7 @@ async function scraper(raz){
     //Sprema sve spanove u jedno polje
     const svi_spanovi_scrape= await page.$x('//*/div/table/tbody/tr/td');
     const col_scrape = await page.$x("//*/div/table/tbody/tr/td/@colspan");
-    const naslovi_scrape = await page.$x("/html/body/div/div/p/span");
+    const naslovi_scrape = await page.$x("/html/body/div/div/p");
 
     let svi_spanovi=[];
     let col=[];
