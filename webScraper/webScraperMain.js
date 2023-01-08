@@ -183,8 +183,9 @@ exports.sql=async() =>{
 }
 async function sql_upis(izmjena,razredi){
     let datum = "";
-    const d = new Date()
-    datum += d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+    const d = new Date();
+    // Formiraj trenutno vrijeme/datum (mjeseci iz nekog razloga pocinju od 0)
+    datum += d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
     
     let upis=false;
     for (index=izmjena.length-1;index>=0;index--){
