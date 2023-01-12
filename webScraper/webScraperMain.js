@@ -37,28 +37,30 @@ async function scraper(raz){
     }
     
 
-    //Sprema sve spanove u jedno polje
+    // Napravi niz svih polja tablica
     const svi_spanovi_scrape= await page.$x('//*/div/table/tbody/tr/td');
+    // Spremi colspan za svako polje tablica
     const col_scrape = await page.$x("//*/div/table/tbody/tr/td/@colspan");
+    // Napravi niz svih paragrafa na stranici
     const naslovi_scrape = await page.$x("/html/body/div/div/p");
 
-    let svi_spanovi=[];
-    let col=[];
-    let naslovi=[];
+    let svi_spanovi=[];  // Sadržaj svakog od polja tablica
+    let col=[];          // Colspan svakog polja tablica
+    let naslovi=[];      // Naslov svake od tablica
     
-    //Brojac za tablica.redni_broj
-    let k=0;
-    let control=0;
-    let broj_tablica=0;
-    let result=[];
-    let broj_razreda=0;
+    let k = 0;                      // Koju tablicu trenutno obrađujemo (brojač za tablica.redni_broj)
+    let control = 0;                // Broji na kojoj smo čeliji danog reda
+    let broj_tablica = 0;           // Koliko ukupno tablica imamo
+    let result = [];                // Krajnji objekt sa rezultatom pretrage
+    let broj_razreda = raz.length;  // Koliko ukupno razreda imamo
 
-    for(i in raz)
-     broj_razreda++;
-    let ime=[];
-    for(i in raz){
-        ime[i]=raz[i].ime;    }
-    //Spremanje podataka u polje
+    // Izvuci ime svakog od razreda
+    let ime = [];
+    for (i in raz){
+        ime[i] = raz[i].ime;
+    }
+    
+    // Izvuci tekstualni sadržaj svakog od elemenata koje je dobavio scraper
     for(index in svi_spanovi_scrape){
         const str_txt=await svi_spanovi_scrape[index].getProperty('textContent');
         svi_spanovi[index]=await str_txt.jsonValue();
@@ -71,13 +73,15 @@ async function scraper(raz){
         const str_txt=await col_scrape[index].getProperty('textContent');
         col[index]=await str_txt.jsonValue();
     }
+    // Za svaki od paragrafa provjeri je li naslov
+    // ako je, povećaj broj tablica
     for(index in naslovi){
         if(naslovi[index].startsWith('IZMJENE U RASPOREDU')){
             broj_tablica++;
         }
     }
 
-    //Kreiranje result polja
+    // Inicijaliziraj vrijednosti svakog objekta u result polju
     for(i=0;i<broj_tablica;i++){
         
         result[i]={
@@ -98,9 +102,9 @@ async function scraper(raz){
                 sat8:null,
                 sat9:null,
             }
-
         }
     }
+    // Postavi naslov i smjenu svake od tablica
     broj_tablica=0;
     for(index in naslovi){
         if(naslovi[index].startsWith('IZMJENE U RASPOREDU')){
@@ -109,43 +113,51 @@ async function scraper(raz){
             broj_tablica++;
         }
     }
-    //Čitanje izmjena
+
+    // Čitanje izmjena iz prikupljenih podataka
+
+    // Trenutni razred
     let l=0;
+    // Za svaku od čelija u tablicama
     for(index in svi_spanovi){
+        // Ako sadržaj ćelije počinje s 9 znači da je jutarnja smjena
         if(svi_spanovi[index].startsWith('9')){
-            
             result[k].izmjene_tablica.prijepode=1;
         }
-        if(svi_spanovi[index].startsWith('-1')){
-            
+        // Ako počinje s -1 popodnevna je
+        else if(svi_spanovi[index].startsWith('-1')){
             result[k].izmjene_tablica.prijepode=0;
         }
+        // Ako je sadržaj dane čelije ime jednog od razreda
         else if(ime.includes(svi_spanovi[index])){
-            
+            // Postavi da se trenutno gledaju izmjene za razred tog imena
             result[k].izmjene_razred[l].razred=svi_spanovi[index];
-            
+            // Sljedeće ćelije su ćelije sa izmjenama
             control=1;
         }
+        // Ako trenutno gledamo za čelije s izmjenama
         else if(control < 10 && control > 0){
+            // Ako se čelija proteže kroz više sati sadržaj čelije dodaj za svaki sat
             for(j=0;j<col[index];j++){
-                //izmjena[k][`sat${control}`]=svi_spanovi[index];
                 result[k].izmjene_razred[l][`sat${control}`]=svi_spanovi[index];
-                
                 control++
             }
+            // Ako smo obradili svih 9 sati izmjena, pređi na sljedeći razred
             if(control==10){
                 l++
             }
+            // Ako smo obradili sve razrede ove tablice, počni od prvog razreda i pređi
+            // na sljedeću tablicu
             if(l==broj_razreda){
                 l=0;
                 k++
             }
         }
+        // Ako smo obradili sve tablice prekini
+        if (k >= broj_tablica)
+            break;
     }
-    
-  /*  for(i in result){
-    console.log(result[i].izmjene_tablica);
-    }*/
+
     browser.close();
     return result;
 }
