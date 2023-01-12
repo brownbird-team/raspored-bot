@@ -10,10 +10,17 @@ module.exports = {
 
         const activityType = (await baza.getOption('activityType')).value
         const activityText = (await baza.getOption('activityText')).value
+        
+        // Funkcija koja postavlja status bota
+        const setBotStatus = () => {
+            client.user.setActivity(activityText, {
+                type: activityType
+            });
+        }
+        // Postavi status bota i ponovi to svakih pola sata, da status ne nestane
+        setBotStatus();
+        setInterval(setBotStatus, 30 * 60 * 1000);
 
-        client.user.setActivity(activityText, {
-            type: activityType
-        });
         func.discordLog(`Status postavljen na [${activityType.charAt(0) + activityType.toLowerCase().slice(1)} ${activityText}]`);
 
         client.guilds.cache.forEach( async (value, key) => {
