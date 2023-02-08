@@ -22,7 +22,7 @@ module.exports = {
             prefix = await baza.getPrefix(null, message.author.id);
         }
 
-        const helpWaitingTime = (await baza.getOption('helpWaitingTime')).value;
+        const helpWaitingTime = await baza.getOption('helpWaitingTime');
         const help = getHelp(prefix);
 
         let embed = await normalEmbed(help.home.title, help.home.desc);

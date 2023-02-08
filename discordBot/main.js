@@ -1,18 +1,15 @@
 const { Client, Intents, Collection } = require("discord.js");
 const baza = require("./databaseQueriesDisc.js");
 const func = require("./helperFunctionsDisc.js");
-const izmjeneCheck = require("./checkForChanges.js").check;
 const fs = require("fs");
+const notifier = require("./../globalErrorNotifier.js");
 
-exports.check = izmjeneCheck;
-
-exports.isRunning = false;
-exports.client = undefined;
+exports.client = null;
 
 exports.startDiscordBot = async () => {
 
     const eventFiles = fs.readdirSync("./discordBot/events").filter(file => file.endsWith(".js"));
-    exports.client = new Client({
+    this.client = new Client({
         intents: [
             Intents.FLAGS.GUILDS,
             Intents.FLAGS.GUILD_MESSAGES,
@@ -26,19 +23,22 @@ exports.startDiscordBot = async () => {
         ]
     });
 
-    exports.client.commands = new Collection();
+    this.client.commands = new Collection();
 
     const goodToGo = await func.checkOptions();
-    if (!goodToGo) return false;
+    if (!goodToGo) {
+        func.discordLog("Unable to start discord bot, there is no token in table disc_settings");
+        return false;
+    }
 
     const token = await baza.getOption("token");
 
     for (const file of eventFiles) {
         const event = require(`./events/${file}`);
         if (event.once) {
-            exports.client.once(event.name, (...args) => event.execute(...args));
+            this.client.once(event.name, (...args) => event.execute(...args));
         } else {
-            exports.client.on(event.name, (...args) => event.execute(...args));
+            this.client.on(event.name, (...args) => event.execute(...args));
         }
     }
 
@@ -46,10 +46,10 @@ exports.startDiscordBot = async () => {
 
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`);
-        exports.client.commands.set(command.name, command);
+        this.client.commands.set(command.name, command);
     }
 
-    exports.client.on('messageCreate', async message => {
+    this.client.on('messageCreate', async message => {
         if (message.author.bot) return;
 
         const primaryCommand = message.content.split(' ')[0];
@@ -64,7 +64,7 @@ exports.startDiscordBot = async () => {
         if (!primaryCommand.startsWith(prefix)) return;
 
         const cmdName = primaryCommand.slice(prefix.length);
-        const command = exports.client.commands.get(cmdName) || exports.client.commands.find(cmd => cmd.aliases.includes(cmdName));
+        const command = this.client.commands.get(cmdName) || this.client.commands.find(cmd => cmd.aliases.includes(cmdName));
         if (!command) return;
 
         if (!message.channel.type.startsWith('DM') && command.dmOnly) {
@@ -88,16 +88,22 @@ exports.startDiscordBot = async () => {
             });
             return;
         }
-
-        command.execute(message);
+        try {
+            await command.execute(message);
+        } catch (err) {
+            notifier.handle(err);
+            // Treba probati postati embed koji govori da je došlo do greške
+            // također još fali i error handle za evente i sve skupa bi trebalo
+            // provjerit, ako ima nekih drugih gluposti
+        }
     });
 
-    await exports.client.login(token.value);
-    exports.isRunning = true;
+    await this.client.login(token);
 }
 
 exports.stopDiscordBot = async () => {
-    await exports.client.destroy();
+    if (!this.client) return;
+    this.client.destroy();
+    this.client = null;
     func.discordLog("Gasim discord bota");
-    exports.isRunning = false;
 }

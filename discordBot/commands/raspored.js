@@ -21,7 +21,7 @@ module.exports = {
             kanal = await baza.getKanal(message.channelId);
         }
         const server = await baza.getServer(message.guildId);
-        const embedWaitingTime = (await baza.getOption('embedWaitingTime')).value;
+        const embedWaitingTime = await baza.getOption('embedWaitingTime');
 
         // Izvuci podkomandu i prefix u ovom kanalu
         const options = message.content.trim().split(' ').slice(1).slice(-2);

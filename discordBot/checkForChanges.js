@@ -1,11 +1,12 @@
 const { normalEmbed, formatDateString, asyncFilter } = require('./helperFunctionsDisc.js');
 const baza = require('./databaseQueriesDisc.js');
 const izmjene = require('./../databaseQueries.js');
+const { client } = require('./main.js');
 
 // Provjeri ima li izmjena za sve korisnike u bazi i pošalji im
-exports.check = async (client) => {
+exports.check = async () => {
     // Prekini ako bot nije spreman
-    if (client === undefined || !client.isReady()) return false;
+    if (!client || !client.isReady()) return false;
 
     // Povuci sve registrirane kanale iz baze
     channels = await baza.listKanal();

@@ -4,7 +4,7 @@ module.exports = {
     name: "shardError",
     once: false,
     async execute(error) {
-        discordLog('Network error accrued');
+        discordLog('Network error accured');
         console.log(error);
     }
 }

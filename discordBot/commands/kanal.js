@@ -17,7 +17,7 @@ module.exports = {
             const embed = await errorEmbed(
                 'Ova naredba može se koristiti samo u serverima'
             );
-            message.reply({
+            await message.reply({
                 embeds: [ embed ],
                 allowedMentions: { repliedUser: false }
             });

@@ -7,8 +7,17 @@
         "password": "password",
         "connectionLimit": 15
     },
+    "webServer": {
+        "port": 3000
+    },
     "discord": {
         "clientId": "my-client-id",
         "clientSecret": "my-client-secret"
+    },
+    "administration": {
+        "sendErrorNotificationEmails": false,
+        "email": "user@example.com",
+        "sendErrorNotificationsOnDiscord": false,
+        "channelId": "your-channel-id"
     }
 }

@@ -8,8 +8,8 @@ module.exports = {
     async execute(client) {
         func.discordLog(`Spreman! Ulogirao sam se kao [${client.user.tag}]`);
 
-        const activityType = (await baza.getOption('activityType')).value
-        const activityText = (await baza.getOption('activityText')).value
+        const activityType = await baza.getOption('activityType');
+        const activityText = await baza.getOption('activityText');
         
         // Funkcija koja postavlja status bota
         const setBotStatus = () => {
