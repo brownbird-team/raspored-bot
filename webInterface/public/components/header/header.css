@@ -1,0 +1,135 @@
+.home-heading {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 105px;
+    display: flex;
+    flex-direction: row;
+    background-color: var(--secondary);
+    border-bottom: 1px solid var(--tertiary);
+}
+
+.home-heading a {
+    color: var(--tertiary);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.home-left-navigation {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20%;
+    margin-left: 30px;
+}
+
+.home-right-navigation {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20%;
+    margin-right: 30px;
+}
+
+.header-link {
+    user-select: none;
+    transition: transform 0.25s;
+}
+
+.header-link:hover {
+    transform: scale(1.1);
+}
+
+.header-profile {
+    width: 6vw;
+    min-width: 100px;
+    color: var(--fullwhite) !important;
+    background-color: var(--tertiary);
+    border-radius: 5px;
+    padding: 10px 10px 10px 40px;
+    background-image: url("../login/assets/Email_Icon.png");
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 30px;
+    text-align: right;
+    transition: opacity 0.25s;
+    user-select: none;
+}
+
+.header-profile:hover {
+    opacity: 0.75;
+}
+
+/* PROFILE MENU */
+
+.profile-menu-root {
+    position: absolute;
+    top: 104px;
+    right: 30px;
+    border-radius: 0 0 5px 5px;
+    height: 30vh;
+    min-height: 250px;
+    width: 12vw;
+    min-width: 250px; 
+    background-color: var(--secondary);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+    border-bottom: 1px solid var(--tertiary);
+    border-left: 1px solid var(--tertiary);
+    border-right: 1px solid var(--tertiary);
+}
+
+.profile-menu-item {
+    box-sizing: border-box;
+    width: 100%;
+    height: 20%;
+    font-size: 14px;
+    color: var(--fullwhite);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+}
+
+.profile-menu-item:hover {
+    background-color: var(--primary);
+}
+
+.profile-menu-item button {
+    outline: none;
+    border: none;
+    background: none;
+    color: var(--fullwhite);
+    font-size: 14px;
+    width: 100%;
+    height: 100%;
+    cursor: pointer !important;
+}
+
+.profile-menu-logout {
+    background-image: url("./assets/logout.png");
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: calc(50% + 50px) center;
+}
+
+
+@media only screen and (max-width: 520px) {
+    .header-profile {
+        visibility: hidden;
+    }
+    .header-profile::after {
+        visibility: visible;
+        content: url("../login/assets/Email_Icon.png");
+        width: 30px !important;
+        height: 30px !important;
+        color: var(--fullwhite) !important;
+        user-select: none;
+    }
+}

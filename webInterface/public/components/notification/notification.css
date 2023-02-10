@@ -1,0 +1,72 @@
+.notification-root {
+    display: flex;
+    flex-direction: row;
+
+    position: absolute;
+    top: 30px;
+    right: 30px;
+
+    padding: 15px;
+    max-width: 300px;
+    width: 80%;
+    border-radius: 8px;
+    background-color: var(--quaternary);
+
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--primary);
+}
+
+.notification-root img {
+    display: flex;
+    align-self: center;
+    margin-right: 5px;
+}
+
+.notification-root p {
+    display: flex;
+    align-self: center;
+    flex-grow: 2;
+}
+
+.notification-root button {
+    display: flex;
+    align-self: flex-start;
+    float: right;
+    margin-left: 5px;
+    background: none;
+    outline: none;
+    border: none;
+    color: var(--primary);
+    font-size: 16px;
+    font-weight: 800;
+    transition: transform .25s;
+}
+
+.notification-root button:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+
+@keyframes slideIn {
+    from {
+        right: -330px;
+    }
+
+    to {
+        right: 30px;
+    }
+}
+
+
+@keyframes slideOut {
+    from {
+        right: 30px;
+    }
+
+    to {
+        right: -330px;
+    }
+}

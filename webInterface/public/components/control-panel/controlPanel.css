@@ -1,0 +1,174 @@
+.control-panel-root {
+    width: 100%;
+    height: calc(100vh - 105px - 30px);
+    color: var(--fullwhite);
+}
+
+.control-panel-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.control-panel-body {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.control-panel-settings {
+    min-width: 400px;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.control-panel-email-input p {
+    color: var(--quinary);
+    font-size: 14px;
+    background-image: url("./assets/email_icon.png");
+    background-repeat: no-repeat;
+    background-size: 25px;
+    padding-left: 40px;
+}
+
+.control-panel-class {
+    cursor: pointer;
+}
+
+.control-panel-class-input p {
+    color: var(--quinary);
+    font-size: 14px;
+    user-select: none;
+    padding-left: 40px;
+}
+
+.control-panel-class-input {
+    background-image: url("./assets/razred_icon.png"), url("./assets/select.png");
+    background-repeat: no-repeat, no-repeat;
+    background-position: left center, right center;
+    background-size: 25px 20px;
+}
+
+.control-panel-option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 300px;
+    width: 100%;
+    margin-left: 19%;
+}
+
+.control-panel-option-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    font-size: 75%;
+    flex-wrap: wrap;
+}
+
+.control-panel-option-container p {
+    width: 65%;
+}
+
+.control-panel-settings h5 {
+    align-self: flex-start;
+    margin-left: 9.75%;
+    color: var(--tertiary);
+}
+
+.control-panel-footer-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.delete-account {
+    border: 2px solid var(--fullwhite);
+    color: var(--fullwhite);
+    transition: color 0.25s, border-color 0.25s;
+}
+
+.delete-account:hover {
+    color: rgb(148, 30, 30);
+    border-color:rgb(148, 30, 30);
+}
+
+.save-settings {
+    border: 2px solid var(--fullwhite);
+    color: var(--fullwhite);
+    transition: color 0.25s, border-color 0.25s;
+}
+
+.save-settings:hover {
+    border: 2px solid var(--tertiary);
+    color: var(--tertiary);
+    transition: color 0.25s, border-color 0.25s;
+}
+
+/* DELETE WARNING */
+
+.delete-warning, .select-class {
+    min-width: 300px;
+    width: 40%;
+    position: absolute;
+    top: calc(50% - 110px);
+    color: var(--fullwhite);
+    border: 1px solid var(--fullwhite);
+}
+
+.cancel-button {
+    color: var(--fullwhite);
+    border: 2px solid var(--fullwhite);
+    transition: color 0.25s, border-color 0.25s;
+}
+
+.cancel-button:hover {
+    color: var(--tertiary);
+    border-color: var(--tertiary);
+}
+
+.delete-warning-footer {
+    flex-direction: row !important;
+}
+
+.delete-warning-message {
+    font-size: 16px;
+}
+
+/* SELECT CLASS */
+
+.select-class {
+    padding: 0 !important;
+}
+
+.select-class-body {
+    height: 300px;
+    gap: 0 !important;
+}
+
+.select-class-main-container {
+    overflow-y: auto;
+}
+
+.select-class-container {
+    width: 100%;
+    height: 50px !important;
+    outline: none;
+    background: none;
+    border: none;
+    color: var(--fullwhite);
+    cursor: pointer;
+}
+
+.select-class-container:hover {
+    background-color: var(--secondary);
+}
