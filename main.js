@@ -8,13 +8,19 @@ const scraperHelpers = require("./webScraper/helperFunctionsScraper.js");
 const notifier = require('./globalErrorNotifier.js');
 
 const webServer = require('./webInterface/app.js');
+const config = require('./loadConfig.js').getData();
 
 const start = async () => {
     //throw new errors.DiscordError('test', new Error('innertest'));
     // Napravi check za bazu
     await database.databaseInit();
     // Inicijaliziraj email
-    await sendEmail.init();
+    try {
+        await sendEmail.init();
+    } catch (err) {
+        if (!config.email.ignoreEmailErrorsOnStartup)
+            throw err;
+    }
 
     // Pokreni strugač prvi put
     await scraperHelpers.checkOptions();

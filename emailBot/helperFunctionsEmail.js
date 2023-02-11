@@ -24,7 +24,7 @@ exports.checkOptions = async () => {
         { name: 'username',      value: '',                                     defaultOk: false },
         { name: 'password',      value: '',                                     defaultOk: false },
         { name: 'maxEmailSend',  value: '3',                                    defaultOk: true  },
-        { name: 'dashboardUrl',  value: 'http://localhost:3000/',               defaultOk: false },
+        { name: 'dashboardUrl',  value: 'http://localhost:3000/',               defaultOk: true  },
         { name: 'tokenUrl',      value: 'http://localhost:3000/login/<token>',  defaultOk: true  },
         { name: 'supportEmail',  value: 'support@brownbird.eu',                 defaultOk: true  },
         { name: 'maxTempTokens', value: '3',                                    defaultOk: true  },
