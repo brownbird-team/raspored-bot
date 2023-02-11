@@ -1,7 +1,6 @@
 import * as service from "../../services/main.js";
 import * as checkInput from "../../services/checkInput.js";
 import { createNotification } from "../notification/main.js";
-import { createLoginModal } from "./main.js";
 
 
 export const createEmailLoginModal = () => {
@@ -30,7 +29,8 @@ export const createEmailLoginModal = () => {
     heading.appendChild(exitButton);
 
     exitButton.addEventListener("click", () => {
-        createLoginModal();
+        service.unBlurElement(document.querySelector(".home"));
+        service.unBlurElement(document.querySelector(".project-goal"));
         service.removeElement(root);
     });
 
@@ -112,6 +112,9 @@ export const createEmailLoginModal = () => {
             console.log(json);
             if (json.status == "ok") {
                 createNotification("Email za prijavu je uspješno poslan");
+                service.unBlurElement(document.querySelector(".home"));
+                service.unBlurElement(document.querySelector(".project-goal"));
+                service.removeElement(root);
             }
 
             if (json.status == "error") {

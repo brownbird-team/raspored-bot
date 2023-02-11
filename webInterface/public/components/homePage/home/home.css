@@ -1,5 +1,5 @@
 .home {
-    min-height: 100vh;
+    min-height: calc(90vh - 105px);
     margin-top: 5vh;
     margin-bottom: 5vh;
 }

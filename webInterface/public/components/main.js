@@ -6,8 +6,7 @@ import * as handler from "./header/handlers.js";
 
 const headerLinksDefault = {
     left: {
-        0: {name: "Kontakt", class: "header-link", handler: handler.contactHandler},
-        1: {name: "Cilj projekta", class: "header-link", handler: handler.goalHandler},
+        0: {name: "Cilj projekta", class: "header-link", handler: handler.goalHandler},
     },
     right: {
         0: {name: "Registriraj se", class: "header-link", handler: handler.registerHandler},
@@ -19,8 +18,7 @@ const headerLinksDefault = {
 const headerLinksLogin = {
     left: {
         0: {name: "Početna", class: "header-link", handler: handler.homeHandler},
-        1: {name: "Kontakt", class: "header-link", handler: handler.contactHandler},
-        2: {name: "Cilj projekta", class: "header-link", handler: handler.goalHandler},
+        1: {name: "Cilj projekta", class: "header-link", handler: handler.goalHandler},
     },
     right: {
         0: {name: "Prijavljeni", class: "header-profile"}

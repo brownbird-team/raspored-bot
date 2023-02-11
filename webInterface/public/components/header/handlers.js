@@ -1,7 +1,7 @@
 import { createHome } from "../homePage/home/main.js";
 import { createProjectGoal } from "../homePage/projectGoal/main.js";
 import { createRegistrationModal } from "../registration/main.js";
-import { createLoginModal } from "../login/main.js";
+import { createEmailLoginModal } from "../login/email.js";
 import { createProfileMenu } from "../header/menu.js";
 import * as service from "../../services/main.js";
 
@@ -14,11 +14,6 @@ export const homeHandler = () => {
     createHome();
     createProjectGoal();
     window.location.href = "#home";
-}
-
-
-export const contactHandler = () => {
-    return;
 }
 
 
@@ -49,7 +44,7 @@ export const loginHandler = () => {
     }
     service.blurElement(document.querySelector(".home"));
     service.blurElement(document.querySelector(".project-goal"));
-    createLoginModal();
+    createEmailLoginModal();
 }
 
 

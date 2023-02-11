@@ -50,6 +50,12 @@ body {
     right: 0;
     border-radius: 10px;
     margin: 0 auto;
+    animation: fadeIn 0.25s;
+}
+
+@keyframes fadeIn {
+    0% { transform: scale(0.5); }
+    100% { transform: scale(1.0); }
 }
 
 .modal-heading {

@@ -5,7 +5,10 @@ import { main } from "../main.js";
 
 export const createProfileMenu = (userData) => {
     if (document.querySelector(".profile-menu-root") != null) {
-        service.removeElement(document.querySelector(".profile-menu-root"));
+        document.querySelector(".profile-menu-root").classList.add("moveUp");
+        setTimeout(() => {
+            service.removeElement(document.querySelector(".profile-menu-root"));
+        }, 240);
         return;
     }
 

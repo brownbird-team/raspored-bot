@@ -1,3 +1,7 @@
+import * as service from "../../../services/main.js";
+import { createRegistrationModal } from "../../registration/main.js";
+
+
 export const createHome = () => {
     if (document.querySelector(".home") != null) {
         return;
@@ -92,6 +96,15 @@ export const createHome = () => {
 
     // Right Panel Text
     const rightPanelText = document.createElement("p");
-    rightPanelText.innerHTML = "Registriraj se putem <span class='register-with'>Emaila</span> ili <span class='register-with'>Discorda</span>";
+    rightPanelText.innerHTML = "Registriraj se putem <span class='register-with'>Emaila</span>";
     rightPanelItemContainer.appendChild(rightPanelText);
+
+    document.querySelector(".register-with").addEventListener("click", () => {
+        if (document.querySelector(".header-profile") != null) {
+            return
+        };
+        service.blurElement(document.querySelector(".home"));
+        service.blurElement(document.querySelector(".project-goal"));
+        createRegistrationModal();
+    });
 }

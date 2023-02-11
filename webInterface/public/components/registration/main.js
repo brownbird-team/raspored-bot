@@ -111,6 +111,9 @@ export const createRegistrationModal = () => {
             console.log(json);
             if (json.status == "ok") {
                 createNotification("Email za registraciju je uspješno poslan");
+                service.unBlurElement(document.querySelector(".home"));
+                service.unBlurElement(document.querySelector(".project-goal"));
+                service.removeElement(root);
             }
 
             if (json.status == "error") {

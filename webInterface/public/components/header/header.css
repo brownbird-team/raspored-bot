@@ -83,6 +83,34 @@
     border-bottom: 1px solid var(--tertiary);
     border-left: 1px solid var(--tertiary);
     border-right: 1px solid var(--tertiary);
+    animation: moveDown 0.25s;
+    z-index: 0;
+}
+
+@keyframes moveDown {
+    0% { 
+        transform: scale(100%, 0%);
+        transform-origin: top;    
+    }
+    100% { 
+        transform: scale(100%, 100%);
+        transform-origin: top;
+    }
+}
+
+@keyframes moveUp {
+    0% { 
+        transform: scale(100%, 100%);
+        transform-origin: top;    
+    }
+    100% { 
+        transform: scale(100%, 0%);
+        transform-origin: top;
+    }
+}
+
+.moveUp {
+    animation: moveUp 0.25s;
 }
 
 .profile-menu-item {
