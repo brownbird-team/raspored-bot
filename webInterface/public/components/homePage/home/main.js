@@ -82,29 +82,43 @@ export const createHome = () => {
 
     // Right Panel Desc
     const rightPanelDesc = document.createElement("p");
-    rightPanelDesc.innerText = "Želite početi primati dnevne izmjene u rasporedu sati, ali niste sigurni kako ?";
+    rightPanelDesc.innerHTML = "Želite primati dnevne izmjene koristeći našeg <span class='yellow'>Discord bota</span> ?";
     rightPanelTextContainer.appendChild(rightPanelDesc);
 
     // Right Panel Item Container
     const rightPanelItemContainer = document.createElement("div");
     rightPanelContainer.appendChild(rightPanelItemContainer);
 
+    // Discord Invite Button
+    const discordInviteButton = document.createElement("button");
+    discordInviteButton.classList.add("discord-invite-button");
+    discordInviteButton.innerText = "Dodaj bota";
+    
+    discordInviteButton.addEventListener("click", async() => {
+        await fetch("/api/general/discord/invite", {
+            headers: {
+                "Content-Type" : "application/json",
+            },
+            method: "GET"
+        })
+        .then((res) => res.json())
+        .then((json) => {
+            if (json.status == "ok") {
+                window.open(json.link, "_blank");
+            }
+        })
+        .catch((err) => console.error(err));
+    });
+
+    rightPanelItemContainer.appendChild(discordInviteButton);
+
     // Right Panel Mark
-    const rightPanelMark = document.createElement("img");
+    /* const rightPanelMark = document.createElement("img");
     rightPanelMark.src = "/static/components/homePage/home/assets/Kvacica.png";
-    rightPanelItemContainer.appendChild(rightPanelMark);
+    rightPanelItemContainer.appendChild(rightPanelMark); */
 
     // Right Panel Text
-    const rightPanelText = document.createElement("p");
+    /* const rightPanelText = document.createElement("p");
     rightPanelText.innerHTML = "Registriraj se putem <span class='register-with'>Emaila</span>";
-    rightPanelItemContainer.appendChild(rightPanelText);
-
-    document.querySelector(".register-with").addEventListener("click", () => {
-        if (document.querySelector(".header-profile") != null) {
-            return
-        };
-        service.blurElement(document.querySelector(".home"));
-        service.blurElement(document.querySelector(".project-goal"));
-        createRegistrationModal();
-    });
+    rightPanelItemContainer.appendChild(rightPanelText); */
 }

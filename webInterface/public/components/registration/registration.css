@@ -1,5 +1,5 @@
 .registration-root {
-    top: 20vh;
+    top: calc(50vh - 108px) !important;
     border: 1px solid var(--fullwhite);
     position: fixed;
     z-index: 4;

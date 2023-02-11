@@ -23,6 +23,10 @@
     src: url("/static/fonts/TitilliumWeb/TitilliumWeb-Light.ttf");
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: TitilliumRegular;
     font-size: 20px;

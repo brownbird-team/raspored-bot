@@ -51,3 +51,8 @@
     font-size: 16px;
     text-align: center;
 }
+
+
+.email-login-root {
+    top: calc(50vh - 108px) !important;
+}
