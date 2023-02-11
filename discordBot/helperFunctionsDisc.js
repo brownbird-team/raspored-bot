@@ -71,6 +71,7 @@ exports.checkOptions = async () => {
         { name: 'embedFooter',       value: 'RasporedBot by BrownBird Team',  defaultOk: true  },
         { name: 'activityType',      value: 'WATCHING',                       defaultOk: true  },
         { name: 'activityText',      value: 'for schedule changes',           defaultOk: true  },
+        { name: 'botInviteLink',     value: 'http://localhost:3000',          defaultOk: true  },
 
     ], this.discordLog);
 }
