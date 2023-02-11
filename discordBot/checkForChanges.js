@@ -1,20 +1,21 @@
 const { normalEmbed, formatDateString, asyncFilter } = require('./helperFunctionsDisc.js');
 const baza = require('./databaseQueriesDisc.js');
 const izmjene = require('./../databaseQueries.js');
-const { client } = require('./main.js');
+const discord = require('./main.js');
 
 // Provjeri ima li izmjena za sve korisnike u bazi i pošalji im
 exports.check = async () => {
     // Prekini ako bot nije spreman
-    if (!client || !client.isReady()) return false;
+    if (!discord.client || !discord.client.isReady()) return false;
 
     // Povuci sve registrirane kanale iz baze
-    channels = await baza.listKanal();
+    let channels = await baza.listKanal();
     
     // Za svaki kanal
-    channelsLoop: for (each of channels) {
+    channelsLoop: for (const each of channels) {
         // Povuci podatke o kanalu
         const channelData = await baza.getKanal(each);
+        
         let embeds = [];
         // Ako kanalu nije definiran razred ili je mutean preskoči ga
         if (channelData.mute || !channelData.razred) { continue; }
@@ -74,7 +75,7 @@ exports.check = async () => {
         }
         // Ako je kanal u serveru i ima bar jednu izmjenu pošalji embeds array
         if (channelData.server && embeds.length !== 0) {
-            const channel = await client.channels.fetch(channelData.id);
+            const channel = await discord.client.channels.fetch(channelData.id);
             try {
                 await channel.send({
                     embeds: embeds
@@ -85,7 +86,7 @@ exports.check = async () => {
         // Ako je kanal DM i ima bar jednu izmjenu pošalji embeds array
         } else if (embeds.length !== 0) {
             try {
-                client.users.send(channelData.id, {
+                discord.client.users.send(channelData.id, {
                     embeds: embeds
                 });
             } catch {
