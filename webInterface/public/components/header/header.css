@@ -148,16 +148,13 @@
 }
 
 
-@media only screen and (max-width: 520px) {
-    .header-profile {
-        visibility: hidden;
+@media only screen and (max-width: 780px) {
+    .home-heading a {
+        font-size: 14px;
+        text-align: center;
     }
-    .header-profile::after {
-        visibility: visible;
-        content: url("../login/assets/Email_Icon.png");
-        width: 30px !important;
-        height: 30px !important;
-        color: var(--fullwhite) !important;
-        user-select: none;
+
+    .home-right-navigation {
+        width: 160%;
     }
 }
