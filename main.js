@@ -11,10 +11,12 @@ const webServer = require('./webInterface/app.js');
 const config = require('./loadConfig.js').getData();
 
 const start = async () => {
-    //throw new errors.DiscordError('test', new Error('innertest'));
     // Napravi check za bazu
     await database.databaseInit();
+
     // Inicijaliziraj email
+    // Ako je u config datoteci traženo da zanemari email error i svejedno
+    // pokrene aplikaciju, zanemari errore
     try {
         await sendEmail.init();
     } catch (err) {
@@ -22,7 +24,7 @@ const start = async () => {
             throw err;
     }
 
-    // Pokreni strugač prvi put
+    // Provjeri 
     await scraperHelpers.checkOptions();
     await strugac.run();
     // Inicijaliziraj web postavke
