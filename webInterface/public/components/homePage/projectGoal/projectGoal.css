@@ -171,4 +171,32 @@
     .project-goal-line-container {
         display: none;
     }
+
+    .project-goal-vertical-line {
+        height: 1200px;
+    }
+
+    .project-goal-arrow {
+        top: calc(1200px + 60px - 40px);
+    }
+
+    .project-goal-circle:nth-child(2n - 1) {
+        top: calc(120px + 60px + 150px);
+    }
+
+    .project-goal-circle:nth-child(2n) {
+        top: calc(390px + 210px + 150px);
+    }
+
+    .project-goal-paragraph-1 {
+        top: 15px;
+    }
+
+    .project-goal-paragraph-2 {
+        top: calc(15px + 150px + 45px);
+    }
+
+    .project-goal-paragraph-3 {
+        top: calc(15px + 300px + 100px);
+    }
 }
