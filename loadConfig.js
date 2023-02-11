@@ -3,7 +3,11 @@
 
 const fs = require("fs");
 
+let configChecked = false;
+
 exports.configCheck = () => {
+    configChecked = true;
+
     try {
         if (!fs.existsSync("./config.json")) {
             console.log("Datoteka config.json nije pronađena");
@@ -25,6 +29,8 @@ exports.configCheck = () => {
 }
 
 exports.getData = () => {
+    if (!configChecked)
+        this.configCheck();
     let rawdata = fs.readFileSync("./config.json");
     let jsonData = JSON.parse(rawdata);
     return jsonData;
@@ -32,6 +38,8 @@ exports.getData = () => {
 
 exports.promiseGetData = () => {
     return new Promise((resolve, reject) => {
+        if (!configChecked)
+            this.configCheck();
         fs.readFile("./config.json", (err, rawdata) => {
             if(err) throw err;
 

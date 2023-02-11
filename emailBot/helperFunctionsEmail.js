@@ -18,16 +18,16 @@ exports.asyncFilter = async (arr, condFunc) => {
 exports.checkOptions = async () => {
     return await checkOptions('email_settings', [
         
-        { name: 'host',          value: '',                         defaultOk: false },
-        { name: 'port',          value: '587',                      defaultOk: true  },
-        { name: 'name',          value: 'Raspored Bot',             defaultOk: true  },
-        { name: 'username',      value: '',                         defaultOk: false },
-        { name: 'password',      value: '',                         defaultOk: false },
-        { name: 'maxEmailSend',  value: '3',                        defaultOk: true  },
-        { name: 'dashboardUrl',  value: '',                         defaultOk: false },
-        { name: 'tokenUrl',      value: 'brownbird.eu/<token>',     defaultOk: true  },
-        { name: 'supportEmail',  value: 'support@brownbird.eu',     defaultOk: true  },
-        { name: 'maxTempTokens', value: '3',                        defaultOk: true  },
+        { name: 'host',          value: '',                                     defaultOk: false },
+        { name: 'port',          value: '587',                                  defaultOk: true  },
+        { name: 'name',          value: 'Raspored Bot',                         defaultOk: true  },
+        { name: 'username',      value: '',                                     defaultOk: false },
+        { name: 'password',      value: '',                                     defaultOk: false },
+        { name: 'maxEmailSend',  value: '3',                                    defaultOk: true  },
+        { name: 'dashboardUrl',  value: 'http://localhost:3000/',               defaultOk: false },
+        { name: 'tokenUrl',      value: 'http://localhost:3000/login/<token>',  defaultOk: true  },
+        { name: 'supportEmail',  value: 'support@brownbird.eu',                 defaultOk: true  },
+        { name: 'maxTempTokens', value: '3',                                    defaultOk: true  },
 
     ], this.emailLog);
 }

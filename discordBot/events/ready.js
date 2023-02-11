@@ -6,7 +6,7 @@ module.exports = {
     name: "ready",
     once: true,
     async execute(client) {
-        func.discordLog(`Spreman! Ulogirao sam se kao [${client.user.tag}]`);
+        func.discordLog(`Ready! Logged in as [${client.user.tag}]`);
 
         const activityType = await baza.getOption('activityType');
         const activityText = await baza.getOption('activityText');
@@ -21,7 +21,7 @@ module.exports = {
         setBotStatus();
         setInterval(setBotStatus, 30 * 60 * 1000);
 
-        func.discordLog(`Status postavljen na [${activityType.charAt(0) + activityType.toLowerCase().slice(1)} ${activityText}]`);
+        func.discordLog(`Bot status set to [${activityType.charAt(0) + activityType.toLowerCase().slice(1)} ${activityText}]`);
 
         client.guilds.cache.forEach( async (value, key) => {
             server = await baza.getServer(key);

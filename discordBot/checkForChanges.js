@@ -12,7 +12,7 @@ exports.check = async () => {
     channels = await baza.listKanal();
     
     // Za svaki kanal
-    for (each of channels) {
+    channelsLoop: for (each of channels) {
         // Povuci podatke o kanalu
         const channelData = await baza.getKanal(each);
         let embeds = [];
@@ -75,14 +75,22 @@ exports.check = async () => {
         // Ako je kanal u serveru i ima bar jednu izmjenu pošalji embeds array
         if (channelData.server && embeds.length !== 0) {
             const channel = await client.channels.fetch(channelData.id);
-            await channel.send({
-                embeds: embeds
-            });
+            try {
+                await channel.send({
+                    embeds: embeds
+                });
+            } catch {
+                continue channelsLoop;
+            }
         // Ako je kanal DM i ima bar jednu izmjenu pošalji embeds array
         } else if (embeds.length !== 0) {
-            client.users.send(channelData.id, {
-                embeds: embeds
-            });
+            try {
+                client.users.send(channelData.id, {
+                    embeds: embeds
+                });
+            } catch {
+                continue channelsLoop;
+            }
         }
         // Ako je došlo do bar jedne izmjene osvježi zadnju poslanu za kanal
         if (zadanjaIzmjena !== undefined)

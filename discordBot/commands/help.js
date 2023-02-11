@@ -2,6 +2,7 @@ const { MessageActionRow, MessageSelectMenu } = require("discord.js");
 const { errorEmbed, normalEmbed } = require('./../helperFunctionsDisc.js');
 const baza = require('./../databaseQueriesDisc.js');
 const helpObj = require('./help.json');
+const notifier = require('./../../globalErrorNotifier.js');
 
 // Zamjeni %prefix% iz datoteke sa prefixom korisnika
 const getHelp = (prefix) => JSON.parse(JSON.stringify(helpObj).replaceAll('%prefix%', prefix));
@@ -79,7 +80,12 @@ module.exports = {
             const page = help[inter.values[0]];
 
             if (page !== undefined) {
-                embed = await normalEmbed(page.title, page.desc);
+                try {
+                    embed = await normalEmbed(page.title, page.desc);
+                } catch (err) {
+                    notifier.handle(err);
+                    return;
+                }
                 for (field of page.fields) {
                     embed.addFields({
                         name: field.name,

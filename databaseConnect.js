@@ -104,10 +104,7 @@ exports.promiseQuery = promiseQuery;
 // Kreira connection pool i provjerava postojanje nužnih tablica u bazi, te
 // ih kreira po potrebi
 exports.databaseInit = async () => {
-    databaseLog("Provjeravam konfiguracijski file config.json");
-
-    // Provjeri postoji li konfiguracijski file
-    configCheck();
+    // Dobavi konfiguraciju za bazu
     const database = getData().database;
 
     // Kreiraj connection pool
@@ -121,11 +118,11 @@ exports.databaseInit = async () => {
         debug              : false,
         multipleStatements : true
     });
-    databaseLog(`Spajanje na bazu ${database.name} - ${database.host}:${database.port}`);
+    databaseLog(`Connecting to database ${database.name} - ${database.host}:${database.port}`);
 
     // Provjeri postoje li sve potrebne tablice
     const con = await createConnection();
-    databaseLog("Pokrećem provjeru postojanja tablica u bazi");
+    databaseLog("Starting database tables check");
     
     // Zatraži listu svih tablica u bazi
     const result = await pureQuery(con, `USE ${database.name}; SHOW TABLES`);

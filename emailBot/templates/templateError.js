@@ -5,7 +5,7 @@ module.exports = (err) => {
 let message = `
 Dear administrator of RasporedBot,
 
-I'm sorry to inform you that a FATAL ERROR accured on your RasporedBot instance. Here is some information that might help you debug.
+I'm sorry to inform you that a FATAL ERROR occurred on your RasporedBot instance. Here is some information that might help you debug.
 
 Time: ${now.toUTCString()}
 Error name: ${err.name}

@@ -116,3 +116,43 @@ class TooManyAttemptsError extends AuthorizationError {
     }
 }
 exports.TooManyAttemptsError = TooManyAttemptsError;
+
+
+// --------------------------- Discord errors -------------------------- //
+
+class DiscordError extends Error {
+    constructor(message, err) {
+        super(message);
+        this.name = 'DiscordError';
+        this.nonFatal = false;
+
+        if (err) {
+            this.originalName = err.name;
+            this.originalMessage = err.message;
+
+            for (const property of Object.keys(err))
+                this[`original${property.charAt(0).toUpperCase() + property.slice(1)}`] = err[property];
+        }
+    }
+}
+exports.DiscordError = DiscordError;
+
+
+// --------------------------- Scraper errors -------------------------- //
+
+class ScraperError extends Error {
+    constructor(message, err) {
+        super(message);
+        this.name = 'ScraperError';
+        this.nonFatal = false;
+
+        if (err) {
+            this.originalName = err.name;
+            this.originalMessage = err.message;
+
+            for (const property of Object.keys(err))
+                this[`original${property.charAt(0).toUpperCase() + property.slice(1)}`] = err[property];
+        }
+    }
+}
+exports.ScraperError = ScraperError;

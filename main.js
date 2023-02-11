@@ -1,25 +1,24 @@
 const database = require("./databaseConnect.js");
-const databaseQueries = require("./databaseQueries.js");
 const discord = require("./discordBot/main.js");
-const strugac = require('./webScraper/WebScraperLoop.js');
-const strugacOnce = require('./webScraper/webScraperMain.js');
+const strugac = require('./webScraper/webScraperLoop.js');
 const emailCheck = require('./emailBot/checkForChanges.js');
 const sendEmail = require("./emailBot/sendEmail.js");
-const databaseEmail = require("./emailBot/databaseQueriesEmail.js");
 const webHelpers = require("./webInterface/helperFunctionsWeb.js");
+const scraperHelpers = require("./webScraper/helperFunctionsScraper.js");
 const notifier = require('./globalErrorNotifier.js');
-const errors = require('./errors.js');
 
 const webServer = require('./webInterface/app.js');
 
 const start = async () => {
+    //throw new errors.DiscordError('test', new Error('innertest'));
     // Napravi check za bazu
     await database.databaseInit();
     // Inicijaliziraj email
     await sendEmail.init();
 
     // Pokreni strugač prvi put
-    await strugacOnce.sql();
+    await scraperHelpers.checkOptions();
+    await strugac.run();
     // Inicijaliziraj web postavke
     await webHelpers.checkOptions();
     
@@ -35,9 +34,6 @@ const start = async () => {
 
     // Pokreni discord Bota
     await discord.startDiscordBot();
-
-    // Pokreni strugač za stalno
-    await strugac.strugacRun(true);
 }
 
 start();

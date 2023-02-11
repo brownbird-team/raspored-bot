@@ -1,14 +1,19 @@
 const puppeteer = require('puppeteer');
-const {promiseQuery}=require('./../databaseConnect.js');
-const baza =require('./funkcije_za_bazu');
-const {uzbuna}=require('./../notifyPeople.js');
-const prefix='[\u001b[31mSTRUGAC\033[00m] '
-async function scraper(raz){
-    //url
-    let url='https://www.tsrb.hr/'+raz[0].smjena.toLowerCase()+'-smjena/';
-    console.log(prefix+'Provjera:'+raz[0].smjena+' smjena');
+const baza = require('./databaseQueriesScraper');
+const { uzbuna } = require('./../notifyPeople.js');
+const { scraperLog } = require('./helperFunctionsScraper.js');
+const errors = require('./../errors.js');
+const config = require('./../loadConfig.js');
+
+const debugMode = config.getData().debugMode;
+
+async function scraper(raz) {
+    // url
+    const url = await baza.getOption(`urlSmjena${raz[0].smjena}`);
+
+    if (debugMode) scraperLog('Running check for '+raz[0].smjena+' shift');
     
-    //Spajanje na stranicu
+    // Spajanje na stranicu
     const browser = await puppeteer.launch({args: ['--no-sandbox']});
     const page = await browser.newPage();
     try {
@@ -17,23 +22,20 @@ async function scraper(raz){
             timeout: 0,
          });
     } catch (error) {
-        console.log(error);
-        return 1;
+        throw new errors.ScraperError(`Error occurred while scraping main web page for shift ${raz[0].smjena}`, error);
     }
-    
 
-     //Dobivanje linka od iframea
-    const [iframe]= await page.$x('//*[@id="dnevne-izmjene-u-rasporedu-sati-tab"]/iframe')
-    const src=await iframe.getProperty('src');
-    const iframeTXT=await src.jsonValue();
+    // Dobivanje linka od iframea
+    const [iframe] = await page.$x('//*[@id="dnevne-izmjene-u-rasporedu-sati-tab"]/iframe')
+    const src = await iframe.getProperty('src');
+    const iframeTXT = await src.jsonValue();
     
 
     //Odlazi na url od iframea
     try {
         await page.goto(iframeTXT);
     } catch (error) {
-        console.log(error);
-        return 1;
+        throw new errors.ScraperError(`Error occurred while scraping main izmjene page for shift ${raz[0].smjena}`, error);
     }
     
 
@@ -56,39 +58,39 @@ async function scraper(raz){
 
     // Izvuci ime svakog od razreda
     let ime = [];
-    for (i in raz){
+    for (let i in raz){
         ime[i] = raz[i].ime;
     }
     
     // Izvuci tekstualni sadržaj svakog od elemenata koje je dobavio scraper
-    for(index in svi_spanovi_scrape){
+    for (let index in svi_spanovi_scrape){
         const str_txt=await svi_spanovi_scrape[index].getProperty('textContent');
         svi_spanovi[index]=await str_txt.jsonValue();
     }
-    for(index in naslovi_scrape){
+    for (let index in naslovi_scrape){
         const str_txt=await naslovi_scrape[index].getProperty('textContent');
         naslovi[index]=await str_txt.jsonValue();
     }
-    for(index in col_scrape){
+    for (let index in col_scrape){
         const str_txt=await col_scrape[index].getProperty('textContent');
         col[index]=await str_txt.jsonValue();
     }
     // Za svaki od paragrafa provjeri je li naslov
     // ako je, povećaj broj tablica
-    for(index in naslovi){
+    for (let index in naslovi){
         if(naslovi[index].startsWith('IZMJENE U RASPOREDU')){
             broj_tablica++;
         }
     }
 
     // Inicijaliziraj vrijednosti svakog objekta u result polju
-    for(i=0;i<broj_tablica;i++){
+    for(let i = 0; i < broj_tablica; i++){
         
         result[i]={
             izmjene_tablica:{naslov:null,smjena:null,prijepode:null},
             izmjene_razred:[],
         }
-        for(j in raz){
+        for(let j in raz){
             result[i].izmjene_razred[j]={
                 datum:null,
                 razred:null,
@@ -105,8 +107,8 @@ async function scraper(raz){
         }
     }
     // Postavi naslov i smjenu svake od tablica
-    broj_tablica=0;
-    for(index in naslovi){
+    broj_tablica = 0;
+    for(let index in naslovi){
         if(naslovi[index].startsWith('IZMJENE U RASPOREDU')){
             result[broj_tablica].izmjene_tablica.naslov=naslovi[index];
             result[broj_tablica].izmjene_tablica.smjena=raz[0].smjena;
@@ -117,9 +119,9 @@ async function scraper(raz){
     // Čitanje izmjena iz prikupljenih podataka
 
     // Trenutni razred
-    let l=0;
+    let l = 0;
     // Za svaku od čelija u tablicama
-    for(index in svi_spanovi){
+    for(let index in svi_spanovi){
         // Ako sadržaj ćelije počinje s 9 znači da je jutarnja smjena
         if(svi_spanovi[index].startsWith('9')){
             result[k].izmjene_tablica.prijepode=1;
@@ -138,7 +140,7 @@ async function scraper(raz){
         // Ako trenutno gledamo za čelije s izmjenama
         else if(control < 10 && control > 0){
             // Ako se čelija proteže kroz više sati sadržaj čelije dodaj za svaki sat
-            for(j=0;j<col[index];j++){
+            for(let j = 0; j < col[index]; j++){
                 result[k].izmjene_razred[l][`sat${control}`]=svi_spanovi[index];
                 control++
             }
@@ -161,90 +163,77 @@ async function scraper(raz){
     browser.close();
     return result;
 }
-    
-exports.sql=async() =>{
 
-    let prije,poslje;
-    let razredi_A;
-    let razredi_B;
-    let izmjena;
-    prije=await baza.broj_izmjena();
-    prije=prije[0].broj;
-    razredi_A=await baza.razredi_iz_smjene('A');
-    razredi_B=await baza.razredi_iz_smjene('B');
+async function sql_upis(izmjena, razredi) {
+    // Sada
+    const now = new Date();
+    // Formiraj trenutno vrijeme/datum (mjeseci iz nekog razloga pocinju od 0)
+    const datum = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate() + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
     
-    izmjena=await scraper(razredi_A);
-    if(izmjena===1){
-        console.log("Doslo je do greske pri spajanju");
-        return 1;
+    // Za svaku tablicu izmjena
+    for (let index = izmjena.length - 1; index >= 0; index--) {
+        // Provjeri postoji li tablica
+        const tablica = await baza.tablica_postoji(izmjena, index);
+        
+        // Ako tablica ne postoji
+        if (!tablica) {
+            // Upiši tablicu u bazu
+            await baza.upis_naslova_u_bazu(izmjena,index);
+        }
+
+        // Dobavi ID tablice
+        const tablica_id = await baza.dobi_id_tablice(izmjena,index);
+        
+        // Za svaki razred u toj tablici
+        for (let index2 in izmjena[index].izmjene_razred) {
+            let razred_id;
+            // Dobavi razred id
+            for(let i in razredi) {
+                if(razredi[i].ime == izmjena[index].izmjene_razred[index2].razred){
+                    razred_id = razredi[i].id;
+                }
+            }
+
+            // Provjeri je li razred upisan
+            const razred_upis = await baza.select_baza_izmjene(izmjena, index, index2, tablica_id, razred_id);
+            // Ako nije upiši ga
+            if (razred_upis == false) {
+                razred_upis_sad = await baza.upis_izmjena_u_bazu(izmjena, index, index2, datum, tablica_id, razred_id);
+            }
+        }
     }
-    await sql_upis(izmjena,razredi_A);
-    console.log(prefix+'Gotov (A)');
-    izmjena=await scraper(razredi_B);
-    if(izmjena===1){
-        console.log("Doslo je do greske pri spajanju");
-        return 1;
-    }
-    await sql_upis(izmjena,razredi_B);
-    console.log(prefix+'Gotov (B)')
-    poslje=await baza.broj_izmjena();
-    poslje=poslje[0].broj;
-    if (poslje!=prije){
+}
+
+exports.run = async () => {
+    let prije, poslje;  // Broj izmjena prije i poslije upisa novih
+    let razredi_A;      // Array razreda A smjene
+    let razredi_B;      // Array razreda B smjene
+    let izmjena;        // Izmjene razreda trenutne smjene
+
+    // Provjeri trenutan broj izmjena
+    prije = await baza.broj_izmjena();
+    // Dobavi razrede A smjene
+    razredi_A = await baza.razredi_iz_smjene('A');
+    // Dobavi razrede B smjene
+    razredi_B = await baza.razredi_iz_smjene('B');
+    
+    // Pogledaj na Web za izmjene A smjene
+    izmjena = await scraper(razredi_A);
+    // Upiši izmjene u bazu
+    await sql_upis(izmjena, razredi_A);
+    if (debugMode) scraperLog('Done (A)');
+
+    // Pogledaj na Web za izmjene A smjene
+    izmjena = await scraper(razredi_B);
+    // Upiši izmjene u bazu
+    await sql_upis(izmjena, razredi_B);
+    if (debugMode) scraperLog('Done (B)')
+
+    // Provjeri broj izmjena nakon upisa
+    poslje = await baza.broj_izmjena();
+    // Ako se broj izmjena prije i nakon upisa razlikuje pokreni funkcije
+    // koje šalju notifikacije korisnicima
+    if (poslje != prije){
         uzbuna();
     }
 }
-async function sql_upis(izmjena,razredi){
-    let datum = "";
-    const d = new Date();
-    // Formiraj trenutno vrijeme/datum (mjeseci iz nekog razloga pocinju od 0)
-    datum += d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-    
-    let upis=false;
-    for (index=izmjena.length-1;index>=0;index--){
-      
-        tablica=await baza.tablica_postoji(izmjena,index);
-        
-            if(tablica==null){
-                upis=true;
-            }
-            else if(tablica[0]==null || upis){
-                upis=false;
-                
-                tablica_upis=await baza.upis_naslova_u_bazu(izmjena,index);
-                if(tablica_upis===1){
-                    console.log(prefix+"Problem sa upisom naslova u tablicu");
-                    return ;
-                }
-            }
-
-            tablica_id=await baza.dobi_id_tablice(izmjena,index);
-            tablica_id=tablica_id[0].id;
-            
-            
-            for(index2 in izmjena[index].izmjene_razred){
-                for(i in razredi){
-                    if(razredi[i].ime==izmjena[index].izmjene_razred[index2].razred){
-                        razred_id=razredi[i].id;
-                        
-                    }
-                }
-
-               
-                razred_upis=await baza.select_baza_izmjene(izmjena,index,index2);
-               //console.log(razred_upis);
-                
-             
-                
-                if(razred_upis==false){
-                    razred_upis_sad=await baza.upis_izmjena_u_bazu(izmjena,index,index2,datum);
-                }
-
-            else{
-               
-            }
-            
-        }
-    }
-    
-}
-//sql();

@@ -23,15 +23,12 @@
     "discord-api-types": "^0.31.2",
     "discord.js": "^13.6.0",
     "express": "^4.17.3",
-    "express-handlebars": "^6.0.5",
     "mysql": "^2.18.1",
     "node-schedule": "^2.1.0",
     "nodemailer": "^6.7.3",
-    "nodemailer-express-handlebars": "^5.0.0",
     "nodemon": "^2.0.15",
     "pg": "^8.7.3",
     "puppeteer": "^14.1.1",
-    "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "^1.16.6"
+    "qrcode-terminal": "^0.12.0"
   }
 }

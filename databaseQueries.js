@@ -318,7 +318,7 @@ exports.checkOptions = async (tableName, optionsList, logFunction) => {
 
         if (value === null) {
             if (logFunction)
-                logFunction(`Rekord "${optionsList[i].name}" nije pronađen u tablici "${tableName}" kreiram ga i postavljam na vrijednost "${optionsList[i].value}"`);
+                logFunction(`Record "${optionsList[i].name}" not found in table "${tableName}" inserting record and setting it to "${optionsList[i].value}"`);
             await this.setOption(tableName, optionsList[i].name, optionsList[i].value);
             if (!optionsList[i].defaultOk)
                 allOk = false;

@@ -4,6 +4,7 @@ const { errorEmbed, normalEmbed, formatDateString } = require('./../helperFuncti
 const wait = require('node:timers/promises').setTimeout;
 const baza = require('./../databaseQueriesDisc.js');
 const general = require('./../../databaseQueries.js');
+const notifier = require('./../../globalErrorNotifier.js');
 
 module.exports = {
     name: 'raspored',
@@ -201,7 +202,13 @@ module.exports = {
                 }
             }
 
-            izmjena = await general.dajPovijest(razred.id, trenutnoRikverc);
+            try {
+                izmjena = await general.dajPovijest(razred.id, trenutnoRikverc);
+            } catch (err) {
+                notifier.handle(err);
+                return;
+            }
+
             izmjena = izmjena.izmjena;
 
             let izmjeneString = '```\n';
@@ -211,7 +218,13 @@ module.exports = {
             }
             izmjeneString += '```'
 
-            embed = await normalEmbed(`Pregled izmjena u rasporedu za ${razred.ime} razred`);
+            try {
+                embed = await normalEmbed(`Pregled izmjena u rasporedu za ${razred.ime} razred`);
+            } catch (err) {
+                notifier.handle(err);
+                return;
+            }
+
             embed.addFields({
                 name: izmjena.naslov,
                 value: izmjeneString

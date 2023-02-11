@@ -35,7 +35,7 @@ exports.send = async (toAddress, mailSubject, mailHtmlContent, mailPlainTextCont
     if (!toAddress)
         throw new errors.EmailError('Receiver address cannot be undefined');
     if (!transporter || !mailSettings)
-        throw new errors.EmailError('Internal error, either transporter or mailSerrings object is undefined');
+        throw new errors.EmailError('Internal error, either transporter or mailSettings object is undefined');
     
     
     try {
