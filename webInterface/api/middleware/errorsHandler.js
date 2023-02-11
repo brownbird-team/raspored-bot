@@ -1,8 +1,6 @@
 const notifier = require('./../../../globalErrorNotifier.js');
 
 exports.handle = async (error, req, res, next) => {
-
-    console.log("Error i am");
     
     const statusCode = (error.httpErrorCode) ? error.httpErrorCode : 500;
 
