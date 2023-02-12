@@ -111,14 +111,4 @@ export const createHome = () => {
     });
 
     rightPanelItemContainer.appendChild(discordInviteButton);
-
-    // Right Panel Mark
-    /* const rightPanelMark = document.createElement("img");
-    rightPanelMark.src = "/static/components/homePage/home/assets/Kvacica.png";
-    rightPanelItemContainer.appendChild(rightPanelMark); */
-
-    // Right Panel Text
-    /* const rightPanelText = document.createElement("p");
-    rightPanelText.innerHTML = "Registriraj se putem <span class='register-with'>Emaila</span>";
-    rightPanelItemContainer.appendChild(rightPanelText); */
 }

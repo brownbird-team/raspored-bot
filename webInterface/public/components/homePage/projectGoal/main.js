@@ -5,9 +5,9 @@ const content = {
         3: "Koje smo rezultate postigli ?"
     },
     paragraph: { 
-        1: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eros lorem, imperdiet sed odio nec, luctus rutrum massa. Donec ornare neque vitae risus ultrices tincidunt.",
-        2: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eros lorem, imperdiet sed odio nec, luctus rutrum massa. Donec ornare neque vitae risus ultrices tincidunt.",
-        3: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eros lorem, imperdiet sed odio nec, luctus rutrum massa. Donec ornare neque vitae risus ultrices tincidunt."
+        1: "Cilj projekta je olakšati praćenje dnevnih izmjena u rasporedu sati učenicima Tehničke škole Ruđera Boškovića.",
+        2: "Tijekom školovanja u Tehničkoj školi Ruđera Boškovića, izmjene u rasporedu sati su postale svakodnevnica. Bilo je vrijeme da Raspored bot nastupi.",
+        3: "Uspješno smo napravili sustav koji prati dnevne izmjene u rasporedu sati te ih takve šalje našim korisnicima kako bi ih obavijestili o nastalim promjenama."
     }
 };
 
