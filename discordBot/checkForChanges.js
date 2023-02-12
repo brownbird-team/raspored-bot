@@ -86,7 +86,7 @@ exports.check = async () => {
         // Ako je kanal DM i ima bar jednu izmjenu pošalji embeds array
         } else if (embeds.length !== 0) {
             try {
-                discord.client.users.send(channelData.id, {
+                await discord.client.users.send(channelData.id, {
                     embeds: embeds
                 });
             } catch {
