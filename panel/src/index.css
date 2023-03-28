@@ -1,8 +1,22 @@
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
 :root {
+  --background-primary: #1f1b24;
+  --text-primary: #ffffff;
+}
+
+body {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: var(--text-primary) !important;
+}
+
+button {
+  outline: none;
+  border: none;
+  background: none;
+  color: var(--text-primary);
 }

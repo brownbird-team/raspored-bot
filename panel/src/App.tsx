@@ -1,9 +1,10 @@
 import "./App.css";
+import LeftSidebar from "./components/LeftSidebar";
 
 const App = () => {
   return (
     <div className="App">
-      <h1>Hello World</h1>
+      <LeftSidebar />
     </div>
   );
 };
