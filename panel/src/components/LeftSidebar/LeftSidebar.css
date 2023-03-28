@@ -26,6 +26,18 @@
   cursor: pointer;
 }
 
+.left-sidebar-item {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.left-sidebar-item:hover {
+  background-color: var(--background-secondary);
+  border-radius: 0.5rem;
+}
+
 .left-sidebar-item button span {
   font-size: 1.2rem;
 }
@@ -34,8 +46,9 @@
   position: absolute;
   background-color: var(--background-primary);
   padding: 1rem 1.5rem;
-  transform: translate(4rem, -2.5rem);
+  transform: translate(8rem, 0rem);
   width: 7rem;
+  border-radius: 0.5rem;
   display: none;
 }
 
@@ -48,7 +61,8 @@
 }
 
 .left-sidebar .left-sidebar-item:hover .item-tooltip {
-  display: block;
+  display: flex;
+  justify-content: center;
 }
 
 .left-sidebar.active {
@@ -79,4 +93,5 @@
   justify-content: flex-start;
   align-items: center;
   gap: 0.5rem;
+  width: 100%;
 }
