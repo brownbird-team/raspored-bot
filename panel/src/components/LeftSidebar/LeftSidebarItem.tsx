@@ -27,7 +27,7 @@ const LeftSidebarItem = ({ item }: Props) => {
 
         <div className="left-sidebar-children">
           {item.children.map((child: Items) => (
-            <div key={child.title}>{child.title}</div>
+            <LeftSidebarItem key={child.title} item={child} />
           ))}
         </div>
       </div>

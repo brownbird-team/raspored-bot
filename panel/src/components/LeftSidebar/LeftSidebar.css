@@ -7,6 +7,7 @@
   background-color: var(--background-primary);
   padding: 1.5rem;
   transition: all 0.5s ease;
+  overflow-y: unset;
 }
 
 .left-sidebar .left-sidebar-heading h4,
@@ -37,8 +38,7 @@
   padding: 0.5rem;
 }
 
-.left-sidebar-parent:hover,
-.left-sidebar-children div:hover {
+.left-sidebar-parent:hover {
   background-color: var(--background-secondary);
   border-radius: 0.5rem;
 }
@@ -72,6 +72,7 @@
 
 .left-sidebar.active {
   width: 18rem;
+  overflow-y: auto;
 }
 
 .left-sidebar.active .left-sidebar-heading h4,
@@ -94,6 +95,7 @@
 }
 
 .left-sidebar.active .left-sidebar-parent button {
+  position: relative;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -104,12 +106,12 @@
 /*  CSS za item children (podizbornik) */
 
 .left-sidebar-children {
-  margin-left: 2rem;
+  width: 100%;
   cursor: pointer;
 }
 
-.left-sidebar-children div {
-  padding: 0.2rem 1rem;
+.left-sidebar-children {
+  padding-left: 1rem;
 }
 
 .left-sidebar-item .left-sidebar-children {
@@ -124,13 +126,15 @@
   display: none;
 }
 
-.left-sidebar.active .left-sidebar-item.open .left-sidebar-children {
+.left-sidebar.active .left-sidebar-item.open > .left-sidebar-children {
   display: block;
 }
 
 /*  CSS za arrow down/up  */
 
 .arrow {
+  position: absolute;
+  right: 0;
   transition: all 0.25s ease;
 }
 

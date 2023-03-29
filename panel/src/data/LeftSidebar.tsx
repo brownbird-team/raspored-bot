@@ -3,6 +3,7 @@ import { IoSchool, BsTable, IoSettings, BiLogOut } from "react-icons/all";
 
 interface Item {
   title: string;
+  children?: Item[];
 }
 
 export interface Items {
@@ -33,6 +34,12 @@ const items: Items[] = [
   {
     title: "Postavke",
     icon: <IoSettings size={30} />,
+    children: [
+      {
+        title: "Grupacija",
+        children: [{ title: "Razreda" }, { title: "Perioda" }],
+      },
+    ],
   },
   {
     title: "Odjava",
