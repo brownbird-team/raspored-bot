@@ -8,6 +8,7 @@ import {
   BsTable,
 } from "react-icons/all";
 import { useState } from "react";
+import LeftSidebarItem from "./LeftSidebarItem";
 
 const LeftSidebar = () => {
   const [active, setActive] = useState("");
@@ -35,34 +36,25 @@ const LeftSidebar = () => {
       </div>
       <h6 className="sidebar-admin">{admin}</h6>
       <div className="left-sidebar-items">
-        <div className="left-sidebar-item">
-          <button type="button">
-            <IoSchool size={30} />
-            <span>Unesi raspored</span>
-          </button>
-          <span className="item-tooltip">Unesi raspored</span>
-        </div>
-        <div className="left-sidebar-item">
-          <button type="button">
-            <BsTable size={30} />
-            <span>Unesi izmjene</span>
-          </button>
-          <span className="item-tooltip">Unesi izmjene</span>
-        </div>
-        <div className="left-sidebar-item">
-          <button type="button">
-            <IoSettings size={30} />
-            <span>Postavke</span>
-          </button>
-          <span className="item-tooltip">Postavke</span>
-        </div>
-        <div className="left-sidebar-item">
-          <button type="button">
-            <BiLogOut size={30} />
-            <span>Odjava</span>
-          </button>
-          <span className="item-tooltip">Odjava</span>
-        </div>
+        <LeftSidebarItem tooltip="Upis rasporeda">
+          <IoSchool size={30} />
+          <span>Upis rasporeda</span>
+        </LeftSidebarItem>
+
+        <LeftSidebarItem tooltip="Upis izmjena">
+          <BsTable size={30} />
+          <span>Upis izmjena</span>
+        </LeftSidebarItem>
+
+        <LeftSidebarItem tooltip="Postavke">
+          <IoSettings size={30} />
+          <span>Postavke</span>
+        </LeftSidebarItem>
+
+        <LeftSidebarItem tooltip="Odjava">
+          <BiLogOut size={30} />
+          <span>Odjava</span>
+        </LeftSidebarItem>
       </div>
     </div>
   );
