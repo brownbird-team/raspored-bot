@@ -28,17 +28,22 @@
 
 .left-sidebar-item {
   width: 100%;
+}
+
+.left-sidebar-parent {
+  width: 100%;
   display: flex;
   justify-content: center;
   padding: 0.5rem;
 }
 
-.left-sidebar-item:hover {
+.left-sidebar-parent:hover,
+.left-sidebar-children div:hover {
   background-color: var(--background-secondary);
   border-radius: 0.5rem;
 }
 
-.left-sidebar-item button span {
+.left-sidebar-parent button span {
   font-size: 1.2rem;
 }
 
@@ -55,12 +60,12 @@
 .left-sidebar .left-sidebar-items {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 1rem;
   align-items: center;
   margin-top: 3rem;
 }
 
-.left-sidebar .left-sidebar-item:hover .item-tooltip {
+.left-sidebar .left-sidebar-parent:hover .item-tooltip {
   display: flex;
   justify-content: center;
 }
@@ -71,12 +76,12 @@
 
 .left-sidebar.active .left-sidebar-heading h4,
 .left-sidebar.active .sidebar-admin,
-.left-sidebar.active .left-sidebar-item button span {
+.left-sidebar.active .left-sidebar-parent button span {
   display: block;
 }
 
 .left-sidebar.active .item-tooltip,
-.left-sidebar.active .left-sidebar-item:hover .item-tooltip {
+.left-sidebar.active .left-sidebar-parent:hover .item-tooltip {
   display: none;
 }
 
@@ -88,10 +93,55 @@
   align-items: flex-start;
 }
 
-.left-sidebar.active .left-sidebar-item button {
+.left-sidebar.active .left-sidebar-parent button {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 0.5rem;
   width: 100%;
+}
+
+/*  CSS za item children (podizbornik) */
+
+.left-sidebar-children {
+  margin-left: 2rem;
+  cursor: pointer;
+}
+
+.left-sidebar-children div {
+  padding: 0.2rem 1rem;
+}
+
+.left-sidebar-item .left-sidebar-children {
+  display: none;
+}
+
+.left-sidebar-item.open .left-sidebar-children {
+  display: block;
+}
+
+.left-sidebar .left-sidebar-item.open .left-sidebar-children {
+  display: none;
+}
+
+.left-sidebar.active .left-sidebar-item.open .left-sidebar-children {
+  display: block;
+}
+
+/*  CSS za arrow down/up  */
+
+.arrow {
+  transition: all 0.25s ease;
+}
+
+.arrow.up {
+  transform: rotate(180deg);
+}
+
+.left-sidebar .left-sidebar-item .arrow {
+  display: none;
+}
+
+.left-sidebar.active .left-sidebar-item .arrow {
+  display: block;
 }

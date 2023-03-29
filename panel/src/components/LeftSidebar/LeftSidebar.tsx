@@ -1,14 +1,8 @@
 import "./LeftSidebar.css";
-import {
-  IoIosClose,
-  RxHamburgerMenu,
-  IoSchool,
-  BiLogOut,
-  IoSettings,
-  BsTable,
-} from "react-icons/all";
-import { useState } from "react";
+import { IoIosClose, RxHamburgerMenu } from "react-icons/all";
+import { ReactNode, useState } from "react";
 import LeftSidebarItem from "./LeftSidebarItem";
+import items from "../../data/LeftSidebar";
 
 const LeftSidebar = () => {
   const [active, setActive] = useState("");
@@ -36,25 +30,9 @@ const LeftSidebar = () => {
       </div>
       <h6 className="sidebar-admin">{admin}</h6>
       <div className="left-sidebar-items">
-        <LeftSidebarItem tooltip="Upis rasporeda">
-          <IoSchool size={30} />
-          <span>Upis rasporeda</span>
-        </LeftSidebarItem>
-
-        <LeftSidebarItem tooltip="Upis izmjena">
-          <BsTable size={30} />
-          <span>Upis izmjena</span>
-        </LeftSidebarItem>
-
-        <LeftSidebarItem tooltip="Postavke">
-          <IoSettings size={30} />
-          <span>Postavke</span>
-        </LeftSidebarItem>
-
-        <LeftSidebarItem tooltip="Odjava">
-          <BiLogOut size={30} />
-          <span>Odjava</span>
-        </LeftSidebarItem>
+        {items.map((item) => (
+          <LeftSidebarItem key={item.title} item={item} />
+        ))}
       </div>
     </div>
   );
