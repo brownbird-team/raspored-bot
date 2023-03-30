@@ -1,29 +1,29 @@
 import "./LeftSidebar.css";
 import { IoIosClose, RxHamburgerMenu } from "react-icons/all";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import LeftSidebarItem from "./LeftSidebarItem";
 import items from "../../data/LeftSidebar";
 
 const LeftSidebar = () => {
-  const [active, setActive] = useState("");
+  const [active, setActive] = useState(false);
   const [admin, setAdmin] = useState("admin"); // Promijeniti kasnije
 
   return (
-    <div className={`left-sidebar ${active}`}>
+    <div className={active ? "left-sidebar active" : "left-sidebar"}>
       <div className="left-sidebar-heading">
         <h4>Panel</h4>
-        {active === "active" ? (
+        {active ? (
           <IoIosClose
             color="white"
             size={50}
-            onClick={() => setActive("")}
+            onClick={() => setActive(false)}
             className="sidebar-icon"
           />
         ) : (
           <RxHamburgerMenu
             color="white"
             size={30}
-            onClick={() => setActive("active")}
+            onClick={() => setActive(true)}
             className="sidebar-icon"
           />
         )}

@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { Items } from "../../data/LeftSidebar";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
-interface Props {
-  item: Items;
-}
-
-const LeftSidebarItem = ({ item }: Props) => {
+const LeftSidebarItem = ({ item }: any) => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   if (item.children) {
     return (
@@ -26,7 +23,7 @@ const LeftSidebarItem = ({ item }: Props) => {
         </div>
 
         <div className="left-sidebar-children">
-          {item.children.map((child: Items) => (
+          {item.children.map((child: any) => (
             <LeftSidebarItem key={child.title} item={child} />
           ))}
         </div>
@@ -36,7 +33,7 @@ const LeftSidebarItem = ({ item }: Props) => {
     return (
       <div className="left-sidebar-item">
         <div className="left-sidebar-parent">
-          <button type="button">
+          <button type="button" onClick={() => navigate(item.path)}>
             {item.icon}
             <span>{item.title}</span>
           </button>

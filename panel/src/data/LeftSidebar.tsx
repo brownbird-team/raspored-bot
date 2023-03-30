@@ -1,24 +1,16 @@
 import { ReactNode } from "react";
 import { IoSchool, BsTable, IoSettings, BiLogOut } from "react-icons/all";
 
-interface Item {
-  title: string;
-  children?: Item[];
-}
+/*  Ovdje se definira struktura izbornika i podizbornika (LeftSidebar)  */
 
-export interface Items {
-  title: string;
-  icon?: ReactNode;
-  children?: Item[];
-}
-
-const items: Items[] = [
+const items = [
   {
     title: "Unos rasporeda",
     icon: <IoSchool size={30} />,
     children: [
       {
         title: "Uvezi",
+        path: "/import",
       },
     ],
   },
@@ -28,6 +20,7 @@ const items: Items[] = [
     children: [
       {
         title: "Predmeti / učionice",
+        path: "/",
       },
     ],
   },
@@ -37,7 +30,10 @@ const items: Items[] = [
     children: [
       {
         title: "Grupacija",
-        children: [{ title: "Razreda" }, { title: "Perioda" }],
+        children: [
+          { title: "Razreda", path: "/" },
+          { title: "Perioda", path: "/" },
+        ],
       },
     ],
   },

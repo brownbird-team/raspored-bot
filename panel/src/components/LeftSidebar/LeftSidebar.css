@@ -1,10 +1,11 @@
 .left-sidebar {
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   width: 6rem;
   background-color: var(--background-primary);
+  border-right: 0.25rem solid var(--background-secondary);
   padding: 1.5rem;
   transition: all 0.5s ease;
   overflow-y: unset;
@@ -49,7 +50,7 @@
 
 .item-tooltip {
   position: absolute;
-  background-color: var(--background-primary);
+  background-color: var(--background-secondary);
   padding: 1rem 1.5rem;
   transform: translate(8rem, 0rem);
   width: 7rem;
