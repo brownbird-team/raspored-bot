@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
 import { IoSchool, BsTable, IoSettings, BiLogOut } from "react-icons/all";
+import routes from "./Routes.json";
 
 /*  Ovdje se definira struktura izbornika i podizbornika (LeftSidebar)  */
 
@@ -10,7 +10,7 @@ const items = [
     children: [
       {
         title: "Uvezi",
-        path: "/import",
+        path: routes.schedule.import.path,
       },
     ],
   },
@@ -20,7 +20,7 @@ const items = [
     children: [
       {
         title: "Predmeti / učionice",
-        path: "/",
+        path: routes.changes.subject_classroom.path,
       },
     ],
   },
@@ -31,8 +31,8 @@ const items = [
       {
         title: "Grupacija",
         children: [
-          { title: "Razreda", path: "/" },
-          { title: "Perioda", path: "/" },
+          { title: "Razreda", path: routes.filter.class.path },
+          { title: "Perioda", path: routes.filter.period.path },
         ],
       },
     ],
@@ -40,6 +40,7 @@ const items = [
   {
     title: "Odjava",
     icon: <BiLogOut size={30} />,
+    path: routes.logout.path,
   },
 ];
 

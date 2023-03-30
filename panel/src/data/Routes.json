@@ -1,5 +1,35 @@
 {
-  "import-schedule": {
-    "path": "/import-schedule"
+  "schedule": {
+    "import": {
+      "path": "/schedule/import"
+    },
+    "manual": {
+      "path": "/schedule/manual"
+    }
+  },
+
+  "changes": {
+    "subject_classroom": {
+      "path": "/changes/subject-classroom"
+    },
+    "period": {
+      "path": "/changes/period"
+    },
+    "message": {
+      "path": "/changes/message"
+    }
+  },
+
+  "filter": {
+    "class": {
+      "path": "/filter/class"
+    },
+    "period": {
+      "path": "/filter/period"
+    }
+  },
+
+  "logout": {
+    "path": "/logout"
   }
 }
