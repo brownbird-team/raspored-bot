@@ -1,0 +1,25 @@
+.input-field {
+  display: flex;
+}
+
+.input-field input {
+  outline: none;
+  border: 0;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+  padding-left: 1rem;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.input-field button {
+  background-color: var(--common);
+  padding: 0.6rem;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  transition: opacity 0.25s;
+}
+
+.input-field button:hover {
+  opacity: 0.8;
+}

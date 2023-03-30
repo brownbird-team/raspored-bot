@@ -29,7 +29,7 @@ const items = [
     icon: <IoSettings size={30} />,
     children: [
       {
-        title: "Grupacija",
+        title: "Filteri",
         children: [
           { title: "Razreda", path: routes.filter.class.path },
           { title: "Perioda", path: routes.filter.period.path },
