@@ -1,58 +1,106 @@
 .filter-main {
-  width: 60vw;
-  height: 30rem;
-  display: flex;
-  background-color: var(--background-secondary);
-  border-radius: 0.25rem;
+    width: 60vw;
+    height: 30rem;
+    display: flex;
+    background-color: var(--background-secondary);
+    border-radius: 0.25rem;
 }
 
 .filter-left {
-  display: flex;
-  flex-direction: column;
-  width: 60%;
-  height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    height: 100%;
 }
 
 .filter-heading {
-  width: 100%;
-  height: 30%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1rem;
-  gap: 1rem;
+    width: 100%;
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    gap: 1rem;
 }
 
 .filter-selected {
-  width: 100%;
-  height: 70%;
-  overflow-y: auto;
-  border-top: 0.25rem solid var(--background-primary);
+    width: 100%;
+    height: 70%;
+    overflow-y: auto;
+    border-top: 0.25rem solid var(--background-primary);
 }
 
 .filter-available {
-  width: 40%;
-  height: 100%;
-  overflow-y: auto;
-  border-left: 0.25rem solid var(--background-primary);
+    width: 40%;
+    height: 100%;
+    overflow-y: auto;
+    border-left: 0.25rem solid var(--background-primary);
 }
 
 .filter-item {
-  position: relative;
-  width: 100%;
-  height: 4rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.2s;
+    position: relative;
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s;
 }
 
 .filter-item:hover {
-  background-color: var(--common);
+    background-color: var(--common);
 }
 
 .filter-remove-icon {
-  position: absolute;
-  right: 0;
-  cursor: pointer;
+    position: absolute;
+    right: 0;
+}
+
+@media only screen and (max-width: 870px) {
+    .filter-main {
+        flex-direction: column;
+    }
+
+    .filter-left {
+        width: 100%;
+        height: 65%;
+    }
+
+    .filter-available {
+        width: 100%;
+        height: 35%;
+        border-top: 0.25rem solid var(--background-primary);
+        border-left: none;
+    }
+}
+
+/* Filter List */
+
+.filter-list-main {
+    width: 60vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4rem;
+    background-color: var(--background-secondary);
+    border-radius: 0.25rem;
+}
+
+.filter-list-header {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+}
+
+.filter-list-item {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 100%;
+}
+
+.filter-list-item:hover {
+    background-color: var(--common);
 }
