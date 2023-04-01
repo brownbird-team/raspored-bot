@@ -14,9 +14,9 @@ const LeftSidebarItem = ({ item }) => {
                         {item.icon}
                         <span>{item.title}</span>
                         {open ? (
-                            <MdOutlineKeyboardArrowDown size={30} className="arrow down" />
-                        ) : (
                             <MdOutlineKeyboardArrowDown size={30} className="arrow up" />
+                        ) : (
+                            <MdOutlineKeyboardArrowDown size={30} className="arrow down" />
                         )}
                     </button>
                     <span className="item-tooltip">{item.title}</span>

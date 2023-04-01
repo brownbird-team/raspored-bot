@@ -1,6 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import ClassFilterReducer from "../features/ClassFilter";
+import classFilterReducer from "../features/classFilter";
+import classesReducer from "../features/classes";
 
 export const store = configureStore({
-    reducer: { ClassFilter: ClassFilterReducer },
+    reducer: {
+        classFilter: classFilterReducer,
+        classes: classesReducer,
+    },
 });

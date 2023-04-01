@@ -30,11 +30,19 @@
     border-top: 0.25rem solid var(--background-primary);
 }
 
+.filter-selected > span {
+    padding: 1rem;
+}
+
 .filter-available {
     width: 40%;
     height: 100%;
-    overflow-y: auto;
     border-left: 0.25rem solid var(--background-primary);
+}
+
+.filter-available .available-classes {
+    height: 85%;
+    overflow-y: auto;
 }
 
 .filter-item {
@@ -47,13 +55,14 @@
     transition: background-color 0.2s;
 }
 
-.filter-item:hover {
+.filter-item.use-hover:hover {
     background-color: var(--common);
 }
 
-.filter-remove-icon {
+.filter-icon {
     position: absolute;
-    right: 0;
+    right: 1rem;
+    cursor: pointer;
 }
 
 @media only screen and (max-width: 870px) {
@@ -63,12 +72,20 @@
 
     .filter-left {
         width: 100%;
-        height: 65%;
+        height: 66%;
+    }
+
+    .filter-heading {
+        height: 50%;
+    }
+
+    .filter-selected {
+        height: 50%;
     }
 
     .filter-available {
         width: 100%;
-        height: 35%;
+        height: 33%;
         border-top: 0.25rem solid var(--background-primary);
         border-left: none;
     }
@@ -93,12 +110,14 @@
 }
 
 .filter-list-item {
+    position: relative;
     height: 4rem;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     width: 100%;
+    transition: background-color 0.2s;
 }
 
 .filter-list-item:hover {

@@ -2,18 +2,22 @@ import React, { useState } from "react";
 import "./ClassFilter.css";
 import MainLayout from "../../layouts/MainLayout";
 import InputField from "../../components/InputField";
-import classes from "../../__tests__/classes.json";
+import FilterAvailableCard from "../../components/Filter/FilterAvailableCard";
+import ClassList from "./ClassList";
 import { IoIosClose } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
-import { setClassFilter } from "../../features/ClassFilter";
-import { validateFilterName } from "./utils/handlers";
+import { setClassFilter } from "../../features/classFilter";
+import { validateFilterName } from "./utils/validateInput";
 
 const ClassFilter = () => {
+    // Dohvati sve razrede
+    const classes = useSelector((state) => state.classes.value);
+
+    // Dohvati sve filtere razreda
+    const storedFilters = useSelector((state) => state.classFilter.value);
+
     const [availableClasses, setAvailableClasses] = useState(classes);
     const [selectedClasses, setSelectedClasses] = useState([]);
-
-    // Dohvaća sve filtere razreda
-    const classFilters = useSelector((state) => state.ClassFilter.value);
 
     const dispatch = useDispatch();
 
@@ -33,7 +37,7 @@ const ClassFilter = () => {
             const newSelectedClasses = [...selectedClasses].filter(({ id }) => id !== findClass.id);
             const newAvailableClasses = [...availableClasses, findClass];
 
-            // Soritraj po Class IDu
+            // Soritraj po class id
             newAvailableClasses.sort((a, b) => a.id - b.id);
 
             setAvailableClasses(newAvailableClasses);
@@ -42,11 +46,12 @@ const ClassFilter = () => {
     };
 
     const handleValidateFilterName = (value) => {
-        const name = validateFilterName(value, selectedClasses);
-        if (!name) return;
-        const newFilterClass = { [name]: selectedClasses };
-
-        useAppDispatch(setClassFilter(newFilterClass));
+        const newFilter = { filterName: value, values: selectedClasses };
+        if (validateFilterName(newFilter, storedFilters)) {
+            dispatch(setClassFilter(newFilter));
+            setSelectedClasses([]);
+            setAvailableClasses(classes);
+        }
     };
 
     return (
@@ -64,29 +69,42 @@ const ClassFilter = () => {
                         />
                     </div>
                     <div className="filter-selected">
-                        {selectedClasses.length > 0
-                            ? selectedClasses.map(({ id, label }) => (
-                                  <div key={id}>
-                                      <div className="filter-item">
-                                          <span>{label}</span>
-                                          <IoIosClose
-                                              className="filter-remove-icon"
-                                              size={40}
-                                              color="red"
-                                              onClick={() => handleRemoveSelectedClass(id)}
-                                          />
-                                      </div>
-                                  </div>
-                              ))
-                            : null}
+                        <span>Odabrani razredi</span>
+                        {selectedClasses.length > 0 ? (
+                            selectedClasses.map(({ id, label }) => (
+                                <div key={id}>
+                                    <div className="filter-item use-hover">
+                                        <span>{label}</span>
+                                        <IoIosClose
+                                            className="filter-icon"
+                                            size={40}
+                                            color="red"
+                                            onClick={() => handleRemoveSelectedClass(id)}
+                                        />
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="filter-item">
+                                <span>Nema odabranih razreda</span>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="filter-available">
-                    {availableClasses.map(({ id, label }) => (
-                        <button key={id} className="filter-item" onClick={() => handleRemoveAvailableClass(id)}>
-                            <span>{label}</span>
-                        </button>
-                    ))}
+                    <div className="filter-item">
+                        <span>Mogući razredi</span>
+                    </div>
+                    <div className="available-classes">
+                        {availableClasses.map(({ id, label }) => (
+                            <FilterAvailableCard
+                                key={id}
+                                label={label}
+                                onClick={() => handleRemoveAvailableClass(id)}
+                                className="filter-item use-hover"
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
 
@@ -94,6 +112,9 @@ const ClassFilter = () => {
                 <div className="filter-list-header">
                     <span>Popis svih filtera razreda</span>
                 </div>
+                {storedFilters.map((storedFilter) => (
+                    <ClassList key={storedFilter.filterName} filter={storedFilter} />
+                ))}
             </div>
         </MainLayout>
     );

@@ -1,14 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { classesSlice } from "./classes";
 
 const initialState = {
-    value: null,
+    value: [{ filterName: "default", values: classesSlice.getInitialState().value }],
 };
 
 export const classFilterSlice = createSlice({
     name: "classFilter",
     initialState: initialState,
     reducers: {
-        setClassFilter: (state, action) => {},
+        setClassFilter: (state, action) => {
+            state.value.push(action.payload);
+        },
     },
 });
 

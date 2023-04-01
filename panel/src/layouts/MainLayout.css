@@ -1,7 +1,8 @@
 .main-layout {
     min-height: 100vh;
-    padding-top: 1rem;
+    padding: 2rem 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: var(--background-primary);
 }
