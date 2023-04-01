@@ -12,9 +12,13 @@ export const classFilterSlice = createSlice({
         setClassFilter: (state, action) => {
             state.value.push(action.payload);
         },
+        removeClassFilter: (state, action) => {
+            const newFilters = state.value.filter(({ filterName }) => filterName !== action.payload);
+            state.value = newFilters;
+        },
     },
 });
 
-export const { setClassFilter } = classFilterSlice.actions;
+export const { setClassFilter, removeClassFilter } = classFilterSlice.actions;
 
 export default classFilterSlice.reducer;

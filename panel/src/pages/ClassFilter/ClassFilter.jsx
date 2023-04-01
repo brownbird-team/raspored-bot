@@ -112,9 +112,15 @@ const ClassFilter = () => {
                 <div className="filter-list-header">
                     <span>Popis svih filtera razreda</span>
                 </div>
-                {storedFilters.map((storedFilter) => (
-                    <ClassList key={storedFilter.filterName} filter={storedFilter} />
-                ))}
+                {storedFilters.length ? (
+                    storedFilters.map((storedFilter) => (
+                        <ClassList key={storedFilter.filterName} filter={storedFilter} />
+                    ))
+                ) : (
+                    <div className="filter-item">
+                        <span>Nema definiranih filtera razreda</span>
+                    </div>
+                )}
             </div>
         </MainLayout>
     );
