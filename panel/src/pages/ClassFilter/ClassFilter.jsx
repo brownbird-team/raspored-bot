@@ -75,7 +75,9 @@ const ClassFilter = () => {
 
     return (
         <MainLayout>
-            <h4>Filteri razreda</h4>
+            <div className="badge text-bg-secondary">
+                <h4>Filteri razreda</h4>
+            </div>
             <div className="filter-main">
                 <div className="filter-left">
                     <div className="filter-heading">

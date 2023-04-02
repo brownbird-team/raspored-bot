@@ -4,6 +4,7 @@
     display: flex;
     background-color: var(--background-secondary);
     border-radius: 0.25rem;
+    margin-top: 2rem;
 }
 
 .filter-left {
