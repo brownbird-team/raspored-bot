@@ -1,5 +1,9 @@
 .content {
-  padding-left: 6rem;
-  background-color: var(--background-primary);
-  height: 100vh;
+    padding-left: 6rem;
+    background-color: var(--background-primary);
+    height: 100vh;
+}
+
+.selected {
+    background-color: var(--common);
 }

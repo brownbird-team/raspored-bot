@@ -12,14 +12,15 @@
     color: var(--text-primary);
 }
 
-.input-field button {
+.input-field .change-btn {
     background-color: var(--common);
     padding: 0.6rem;
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
     transition: opacity 0.25s;
+    margin-right: 0.5rem;
 }
 
-.input-field button:hover {
+.input-field .change-btn:hover {
     opacity: 0.8;
 }

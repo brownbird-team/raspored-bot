@@ -109,24 +109,28 @@
     align-items: center;
 }
 
-.filter-list-item {
+.filter-list-parent {
     position: relative;
     height: 4rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     width: 100%;
     transition: background-color 0.2s;
 }
 
-.filter-list-item:hover {
+.filter-list-parent button:hover {
     background-color: var(--common);
 }
 
-.filter-list-actions {
-    position: absolute;
-    left: 1rem;
+.filter-list-parent button {
+    height: 100%;
+    width: 20%;
+    transition: background-color 0.2s;
+}
+
+.filter-list-label {
+    width: 60%;
     display: flex;
     justify-content: center;
     align-items: center;

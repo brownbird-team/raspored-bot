@@ -1,25 +1,32 @@
 import React, { useState } from "react";
 import "./ClassFilter.css";
+import "./InputField.css";
 import MainLayout from "../../layouts/MainLayout";
-import InputField from "../../components/InputField";
 import FilterAvailableCard from "../../components/Filter/FilterAvailableCard";
 import ClassList from "./ClassList";
-import { IoIosClose } from "react-icons/io";
+import ClassSelected from "./ClassSelected";
 import { useSelector, useDispatch } from "react-redux";
-import { setClassFilter } from "../../features/classFilter";
-import { validateFilterName } from "./utils/validateInput";
+import { setClassFilter, updateClassFilter } from "../../features/classFilter";
+import { validateNewFilter, validateExistFilter } from "./utils/validateInput";
 
 const ClassFilter = () => {
+    const dispatch = useDispatch();
+
     // Dohvati sve razrede
-    const classes = useSelector((state) => state.classes.value);
+    const allClasses = useSelector((state) => state.classes.value);
 
     // Dohvati sve filtere razreda
-    const storedFilters = useSelector((state) => state.classFilter.value);
+    const storedFilters = useSelector((state) => state.classFilter.filters);
 
-    const [availableClasses, setAvailableClasses] = useState(classes);
+    const [availableClasses, setAvailableClasses] = useState(allClasses);
     const [selectedClasses, setSelectedClasses] = useState([]);
+    const [filterName, setFilterName] = useState("");
 
-    const dispatch = useDispatch();
+    // Definiraj za postojeće filtere uniqueId
+    const [uniqueId, setUniqueId] = useState(null);
+
+    // Definiraj tip actiona
+    const [action, setAction] = useState("create");
 
     const handleRemoveAvailableClass = (classId) => {
         const findClass = availableClasses.find(({ id }) => id === classId);
@@ -45,13 +52,25 @@ const ClassFilter = () => {
         }
     };
 
-    const handleValidateFilterName = (value) => {
-        const newFilter = { filterName: value, values: selectedClasses };
-        if (validateFilterName(newFilter, storedFilters)) {
-            dispatch(setClassFilter(newFilter));
-            setSelectedClasses([]);
-            setAvailableClasses(classes);
+    const handleValidateFilter = () => {
+        const newFilter = { filterName: filterName, classes: selectedClasses };
+        switch (action) {
+            case "create":
+                if (validateNewFilter(newFilter, storedFilters)) dispatch(setClassFilter(newFilter));
+                break;
+            case "edit":
+                if (validateExistFilter({ ...newFilter, uniqueId: uniqueId }, storedFilters))
+                    dispatch(updateClassFilter({ ...newFilter, uniqueId: uniqueId }));
+                break;
         }
+        resetToDefault();
+    };
+
+    const resetToDefault = () => {
+        setAvailableClasses(allClasses);
+        setFilterName("");
+        setSelectedClasses([]);
+        setAction("create");
     };
 
     return (
@@ -61,28 +80,28 @@ const ClassFilter = () => {
                 <div className="filter-left">
                     <div className="filter-heading">
                         <span>Naziv filtera</span>
-                        <InputField
-                            type="text"
-                            name="Dodaj"
-                            placeholder="Naziv filtera"
-                            onClick={(value) => handleValidateFilterName(value)}
-                        />
+                        <div className="input-field">
+                            <input
+                                type="text"
+                                placeholder="Naziv filtera"
+                                value={filterName}
+                                onChange={(e) => setFilterName(e.target.value)}
+                            />
+                            <button type="button" className="change-btn" onClick={() => handleValidateFilter()}>
+                                {action === "edit" ? "Promijeni" : "Kreiraj"}
+                            </button>
+                            {action === "edit" ? (
+                                <button type="button" className="btn btn-danger" onClick={() => resetToDefault()}>
+                                    Zatvori
+                                </button>
+                            ) : null}
+                        </div>
                     </div>
                     <div className="filter-selected">
                         <span>Odabrani razredi</span>
                         {selectedClasses.length > 0 ? (
                             selectedClasses.map(({ id, label }) => (
-                                <div key={id}>
-                                    <div className="filter-item use-hover">
-                                        <span>{label}</span>
-                                        <IoIosClose
-                                            className="filter-icon"
-                                            size={40}
-                                            color="red"
-                                            onClick={() => handleRemoveSelectedClass(id)}
-                                        />
-                                    </div>
-                                </div>
+                                <ClassSelected key={id} label={label} onClick={() => handleRemoveSelectedClass(id)} />
                             ))
                         ) : (
                             <div className="filter-item">
@@ -113,8 +132,20 @@ const ClassFilter = () => {
                     <span>Popis svih filtera razreda</span>
                 </div>
                 {storedFilters.length ? (
-                    storedFilters.map((storedFilter) => (
-                        <ClassList key={storedFilter.filterName} filter={storedFilter} />
+                    storedFilters.map(({ filterName, uniqueId, classes }) => (
+                        <ClassList
+                            key={filterName}
+                            filter={{ filterName, uniqueId, classes }}
+                            onClick={() => {
+                                setAvailableClasses(
+                                    allClasses.filter((obj1) => !classes.some((obj2) => obj2.id === obj1.id))
+                                );
+                                setFilterName(filterName);
+                                setSelectedClasses(classes);
+                                setUniqueId(uniqueId);
+                                setAction("edit");
+                            }}
+                        />
                     ))
                 ) : (
                     <div className="filter-item">
