@@ -2,6 +2,9 @@ import React, { useRef, useState } from "react";
 import "./ScheduleImport.css";
 import MainLayout from "../../layouts/MainLayout";
 
+// Definiraj Page Items za Header
+const pageItems = ["Uvezi raspored sati"];
+
 const ScheduleImport = () => {
     const [file, setFile] = useState(null);
     const fileInputRef = useRef(null);
@@ -19,10 +22,7 @@ const ScheduleImport = () => {
     };
 
     return (
-        <MainLayout>
-            <div className="badge text-bg-secondary">
-                <h4>Uvezi raspored sati</h4>
-            </div>
+        <MainLayout pageItems={pageItems}>
             <div className="import-main">
                 <div className="import-steps">
                     <h5>Koraci:</h5>

@@ -9,6 +9,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { setClassFilter, updateClassFilter } from "../../features/classFilter";
 import { validateNewFilter, validateExistFilter } from "./utils/validateInput";
 
+// Definiraj Page Items za Header
+const pageItems = ["Filteri razreda"];
+
 const ClassFilter = () => {
     const dispatch = useDispatch();
 
@@ -74,10 +77,7 @@ const ClassFilter = () => {
     };
 
     return (
-        <MainLayout>
-            <div className="badge text-bg-secondary">
-                <h4>Filteri razreda</h4>
-            </div>
+        <MainLayout pageItems={pageItems}>
             <div className="filter-main">
                 <div className="filter-left">
                     <div className="filter-heading">

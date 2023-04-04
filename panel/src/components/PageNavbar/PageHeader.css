@@ -1,0 +1,14 @@
+.page-header {
+    width: 100%;
+    height: 4rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--background-secondary);
+}
+
+.page-header div {
+    cursor: pointer;
+}
