@@ -13,9 +13,9 @@ const LeftSidebar = () => {
             <div className="left-sidebar-heading">
                 <h4>Panel</h4>
                 {active ? (
-                    <IoIosClose color="white" size={50} onClick={() => setActive(false)} className="sidebar-icon" />
+                    <IoIosClose size={50} onClick={() => setActive(false)} className="sidebar-icon" />
                 ) : (
-                    <RxHamburgerMenu color="white" size={30} onClick={() => setActive(true)} className="sidebar-icon" />
+                    <RxHamburgerMenu size={30} onClick={() => setActive(true)} className="sidebar-icon" />
                 )}
             </div>
             <h6 className="sidebar-admin">{admin}</h6>

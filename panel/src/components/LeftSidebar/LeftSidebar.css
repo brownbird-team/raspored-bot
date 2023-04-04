@@ -5,10 +5,11 @@
     left: 0;
     width: 6rem;
     background-color: var(--background-primary);
+    color: var(--text-primary);
     border-right: 0.25rem solid var(--background-secondary);
     padding: 1.5rem;
-    transition: all 0.5s ease;
     overflow-y: unset;
+    z-index: 1;
 }
 
 .left-sidebar .left-sidebar-heading h4,

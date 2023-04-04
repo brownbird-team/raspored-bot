@@ -1,4 +1,5 @@
 .page-header {
+    position: relative;
     width: 100%;
     height: 4rem;
     padding: 1rem;
@@ -7,8 +8,15 @@
     align-items: center;
     gap: 1rem;
     background-color: var(--background-secondary);
+    color: var(--text-primary);
+    z-index: 0;
 }
 
 .page-header div {
     cursor: pointer;
+}
+
+.theme-icon {
+    position: absolute;
+    right: 1rem;
 }
