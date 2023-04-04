@@ -1,6 +1,6 @@
 import React from "react";
 import "./MainLayout.css";
-import PageHeader from "../components/PageNavbar";
+import PageHeader from "../components/PageHeader";
 
 const MainLayout = ({ children, pageItems }) => {
     return (
