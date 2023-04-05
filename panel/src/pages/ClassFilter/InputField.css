@@ -9,6 +9,7 @@
     border-bottom-left-radius: 0.25rem;
     padding-left: 1rem;
     background-color: var(--background-primary);
+    border: 0.1rem solid var(--common);
     color: var(--text-primary);
 }
 
@@ -19,6 +20,7 @@
     border-bottom-right-radius: 0.25rem;
     transition: opacity 0.25s;
     margin-right: 0.5rem;
+    color: white;
 }
 
 .input-field .change-btn:hover {

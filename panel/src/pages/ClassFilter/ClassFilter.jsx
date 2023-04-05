@@ -79,28 +79,32 @@ const ClassFilter = () => {
     return (
         <MainLayout pageItems={pageItems}>
             <div className="filter-main">
-                <div className="filter-left">
-                    <div className="filter-heading">
+                <div className="filter-header">
+                    <div className="filter-section-label">
                         <span>Naziv filtera</span>
-                        <div className="input-field">
-                            <input
-                                type="text"
-                                placeholder="Naziv filtera"
-                                value={filterName}
-                                onChange={(e) => setFilterName(e.target.value)}
-                            />
-                            <button type="button" className="change-btn" onClick={() => handleValidateFilter()}>
-                                {action === "edit" ? "Promijeni" : "Kreiraj"}
-                            </button>
-                            {action === "edit" ? (
-                                <button type="button" className="btn btn-danger" onClick={() => resetToDefault()}>
-                                    Zatvori
-                                </button>
-                            ) : null}
-                        </div>
                     </div>
+                    <div className="input-field">
+                        <input
+                            type="text"
+                            placeholder="Naziv filtera"
+                            value={filterName}
+                            onChange={(e) => setFilterName(e.target.value)}
+                        />
+                        <button type="button" className="change-btn" onClick={() => handleValidateFilter()}>
+                            {action === "edit" ? "Promijeni" : "Kreiraj"}
+                        </button>
+                        {action === "edit" ? (
+                            <button type="button" className="btn btn-danger" onClick={() => resetToDefault()}>
+                                Zatvori
+                            </button>
+                        ) : null}
+                    </div>
+                </div>
+                <div className="filter-bottom">
                     <div className="filter-selected">
-                        <span>Odabrani razredi</span>
+                        <div className="filter-section-label">
+                            <span>Odabrani razredi</span>
+                        </div>
                         {selectedClasses.length > 0 ? (
                             selectedClasses.map(({ id, label }) => (
                                 <ClassSelected key={id} label={label} onClick={() => handleRemoveSelectedClass(id)} />
@@ -111,20 +115,20 @@ const ClassFilter = () => {
                             </div>
                         )}
                     </div>
-                </div>
-                <div className="filter-available">
-                    <div className="filter-item">
-                        <span>Mogući razredi</span>
-                    </div>
-                    <div className="available-classes">
-                        {availableClasses.map(({ id, label }) => (
-                            <FilterAvailableCard
-                                key={id}
-                                label={label}
-                                onClick={() => handleRemoveAvailableClass(id)}
-                                className="filter-item use-hover"
-                            />
-                        ))}
+                    <div className="filter-available">
+                        <div className="filter-section-label">
+                            <span>Mogući razredi</span>
+                        </div>
+                        <div className="available-classes">
+                            {availableClasses.map(({ id, label }) => (
+                                <FilterAvailableCard
+                                    key={id}
+                                    label={label}
+                                    onClick={() => handleRemoveAvailableClass(id)}
+                                    className="filter-item use-hover"
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

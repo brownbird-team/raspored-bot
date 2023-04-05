@@ -1,35 +1,41 @@
 .filter-main {
     width: 60vw;
-    height: 30rem;
+    /* height: 30rem; */
     display: flex;
-    background-color: var(--background-secondary);
+    /* background-color: var(--background-primary); */
+    flex-direction: column;
     border-radius: 0.25rem;
     margin-top: 2rem;
     color: var(--text-primary);
+    gap: 2rem;
 }
 
-.filter-left {
-    display: flex;
-    flex-direction: column;
-    width: 60%;
-    height: 100%;
-}
-
-.filter-heading {
+.filter-header {
     width: 100%;
-    height: 30%;
+    /* height: 30%; */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 1rem;
+    align-items: center;
+    padding: 0 0 1rem 0;
     gap: 1rem;
+    box-shadow: 0px 0px 10px 1px var(--box-shadow);
+    background-color: var(--background-primary);
+}
+
+.filter-bottom {
+    display: flex;
+    width: 100%;
+    /* height: 70%; */
+    gap: 2rem;
 }
 
 .filter-selected {
-    width: 100%;
-    height: 70%;
+    width: 50%;
+    height: 20rem;
     overflow-y: auto;
-    border-top: 0.25rem solid var(--background-primary);
+    box-shadow: 0px 0px 10px 1px var(--box-shadow);
+    background-color: var(--background-primary);
 }
 
 .filter-selected > span {
@@ -37,13 +43,14 @@
 }
 
 .filter-available {
-    width: 40%;
-    height: 100%;
-    border-left: 0.25rem solid var(--background-primary);
+    width: 50%;
+    height: 20rem;
+    box-shadow: 0px 0px 10px 1px var(--box-shadow);
+    background-color: var(--background-primary);
 }
 
 .filter-available .available-classes {
-    height: 85%;
+    height: 80%;
     overflow-y: auto;
 }
 
@@ -59,6 +66,17 @@
 
 .filter-item.use-hover:hover {
     background-color: var(--common);
+    color: white;
+}
+
+.filter-section-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-secondary);
+    color: white;
+    height: 4rem;
+    width: 100%;
 }
 
 .filter-icon {
@@ -72,24 +90,27 @@
         flex-direction: column;
     }
 
-    .filter-left {
+    .filter-bottom {
+        flex-direction: column;
+        height: 100%;
+    }
+
+    /*     .filter-left {
         width: 100%;
         height: 66%;
-    }
+    } */
 
-    .filter-heading {
+    /*         .filter-header {
         height: 50%;
-    }
+    } */
 
     .filter-selected {
-        height: 50%;
+        width: 100%;
+        /*  height: 50%; */
     }
 
     .filter-available {
         width: 100%;
-        height: 33%;
-        border-top: 0.25rem solid var(--background-primary);
-        border-left: none;
     }
 }
 
@@ -101,24 +122,29 @@
     flex-direction: column;
     align-items: center;
     margin-top: 4rem;
-    background-color: var(--background-secondary);
     border-radius: 0.25rem;
     color: var(--text-primary);
 }
 
 .filter-list-header {
-    height: 4rem;
-    display: flex;
-    align-items: center;
-}
-
-.filter-list-parent {
-    position: relative;
+    width: 100%;
     height: 4rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--background-secondary);
+    color: white;
+}
+
+.filter-list-parent {
+    position: relative;
     width: 100%;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-primary);
+    box-shadow: 0px 4px 10px 1px var(--box-shadow);
     transition: background-color 0.2s;
 }
 

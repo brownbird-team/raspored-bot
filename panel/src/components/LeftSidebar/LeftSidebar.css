@@ -6,7 +6,7 @@
     width: 6rem;
     background-color: var(--background-primary);
     color: var(--text-primary);
-    border-right: 0.25rem solid var(--background-secondary);
+    /* border-right: 0.25rem solid var(--background-secondary); */
     padding: 1.5rem;
     overflow-y: unset;
     z-index: 1;

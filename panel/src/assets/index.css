@@ -7,16 +7,18 @@
 
 :root {
     --background-primary: #ffffff;
-    --background-secondary: #e3e2e2;
+    --background-secondary: #6200ee;
     --text-primary: #121212;
-    --common: #1e90ff;
+    --common: #6200ee;
+    --box-shadow: #ddd;
 }
 
 [data-theme="dark"] {
-    --background-primary: #1f1b24;
-    --background-secondary: #17131b;
+    --background-primary: #1d1d1d;
+    --background-secondary: #020e5d;
     --text-primary: #ffffff;
-    --common: #1e90ff;
+    --common: #020e5d;
+    --box-shadow: #121212;
 }
 
 body {
