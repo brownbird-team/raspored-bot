@@ -1,28 +1,45 @@
 .input-field {
+    width: 100%;
     display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
 }
 
 .input-field input {
+    width: 50%;
     outline: none;
     border: 0;
-    border-top-left-radius: 0.25rem;
-    border-bottom-left-radius: 0.25rem;
+    border-radius: 0.25rem;
     padding-left: 1rem;
+    border: 1px solid var(--button-secondary);
+    border-left: 5px solid var(--button-primary);
     background-color: var(--background-primary);
-    border: 0.1rem solid var(--common);
     color: var(--text-primary);
 }
 
-.input-field .change-btn {
-    background-color: var(--common);
+.input-field .input-buttons button {
+    width: 7rem;
     padding: 0.6rem;
-    border-top-right-radius: 0.25rem;
-    border-bottom-right-radius: 0.25rem;
+    border-radius: 0.25rem;
     transition: opacity 0.25s;
-    margin-right: 0.5rem;
-    color: white;
 }
 
-.input-field .change-btn:hover {
+.input-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.input-field .change-btn {
+    background-color: var(--button-primary);
+    color: var(--button-text-primary);
+}
+
+.input-field .cancel-btn {
+    background-color: var(--button-secondary);
+    color: var(--button-text-secondary);
+}
+
+.input-field .change-btn:hover,
+.input-field .cancel-btn:hover {
     opacity: 0.8;
 }

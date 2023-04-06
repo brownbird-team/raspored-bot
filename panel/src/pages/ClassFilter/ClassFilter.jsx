@@ -90,14 +90,16 @@ const ClassFilter = () => {
                             value={filterName}
                             onChange={(e) => setFilterName(e.target.value)}
                         />
-                        <button type="button" className="change-btn" onClick={() => handleValidateFilter()}>
-                            {action === "edit" ? "Promijeni" : "Kreiraj"}
-                        </button>
-                        {action === "edit" ? (
-                            <button type="button" className="btn btn-danger" onClick={() => resetToDefault()}>
-                                Zatvori
+                        <div className="input-buttons">
+                            {action === "edit" ? (
+                                <button type="button" className="cancel-btn" onClick={() => resetToDefault()}>
+                                    Zatvori
+                                </button>
+                            ) : null}
+                            <button type="button" className="change-btn" onClick={() => handleValidateFilter()}>
+                                {action === "edit" ? "Promijeni" : "Kreiraj"}
                             </button>
-                        ) : null}
+                        </div>
                     </div>
                 </div>
                 <div className="filter-bottom">
@@ -105,15 +107,21 @@ const ClassFilter = () => {
                         <div className="filter-section-label">
                             <span>Odabrani razredi</span>
                         </div>
-                        {selectedClasses.length > 0 ? (
-                            selectedClasses.map(({ id, label }) => (
-                                <ClassSelected key={id} label={label} onClick={() => handleRemoveSelectedClass(id)} />
-                            ))
-                        ) : (
-                            <div className="filter-item">
-                                <span>Nema odabranih razreda</span>
-                            </div>
-                        )}
+                        <div className="selected-classes">
+                            {selectedClasses.length > 0 ? (
+                                selectedClasses.map(({ id, label }) => (
+                                    <ClassSelected
+                                        key={id}
+                                        label={label}
+                                        onClick={() => handleRemoveSelectedClass(id)}
+                                    />
+                                ))
+                            ) : (
+                                <div className="filter-item">
+                                    <span>Nema odabranih razreda</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <div className="filter-available">
                         <div className="filter-section-label">

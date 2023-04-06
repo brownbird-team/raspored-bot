@@ -3,26 +3,66 @@
     margin: 0;
     box-sizing: border-box;
     transition: all 0.5s ease;
+
+    /* Defined fonts for application */
+    font-family: "Roboto", sans-serif;
 }
 
 :root {
+    /* Defined colors for background */
     --background-primary: #ffffff;
-    --background-secondary: #6200ee;
-    --text-primary: #121212;
-    --common: #6200ee;
-    --box-shadow: #ddd;
+
+    /* Defined colors for component */
+    --component-primary: #f3f5f7;
+    --component-header: #2f5292;
+
+    /* Defined colors for border */
+    --border-primary: #e1e3e4;
+
+    /* Defined colors for text */
+    --text-primary: #414349;
+
+    /* Defined colors for on hover */
+    --on-hover: #e5e5e7;
+
+    /* Defined colors for button */
+    --button-primary: #2f5292;
+    --button-secondary: #d8dadd;
+    --button-text-primary: #f3f5f7;
+    --button-text-secondary: #414349;
+
+    /* Defined colors for box shadow */
+    --box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 [data-theme="dark"] {
-    --background-primary: #1d1d1d;
-    --background-secondary: #020e5d;
-    --text-primary: #ffffff;
-    --common: #020e5d;
-    --box-shadow: #121212;
+    /* Defined colors for background */
+    --background-primary: #111317;
+
+    /* Defined colors for component */
+    --component-primary: #1d2129;
+    --component-header: #315b9f;
+
+    /* Defined colors for border */
+    --border-primary: #3f4145;
+
+    /* Defined colors for text */
+    --text-primary: #f3f5f7;
+
+    /* Defined colors for on hover */
+    --on-hover: #15181d;
+
+    /* Defined colors for button */
+    --button-primary: #8ab6e9;
+    --button-secondary: #454654;
+    --button-text-primary: #111317;
+    --button-text-secondary: #f3f5f7;
+
+    /* Defined colors for box shadow */
+    --box-shadow: rgba(0, 0, 0, 0.32) 0px 1px 4px;
 }
 
 body {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     color: var(--text-primary) !important;
 }
 

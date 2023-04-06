@@ -7,9 +7,10 @@
     justify-content: flex-start;
     align-items: center;
     gap: 1rem;
-    background-color: var(--background-secondary);
-    color: white;
     z-index: 0;
+    background-color: var(--background-primary);
+    border-bottom: 1px solid var(--border-primary);
+    color: var(--text-primary);
 }
 
 .page-header div {

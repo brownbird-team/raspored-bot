@@ -1,41 +1,43 @@
 .filter-main {
     width: 60vw;
-    /* height: 30rem; */
     display: flex;
-    /* background-color: var(--background-primary); */
     flex-direction: column;
     border-radius: 0.25rem;
     margin-top: 2rem;
-    color: var(--text-primary);
     gap: 2rem;
+    color: var(--text-primary);
 }
 
 .filter-header {
     width: 100%;
-    /* height: 30%; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 0 0 1rem 0;
     gap: 1rem;
-    box-shadow: 0px 0px 10px 1px var(--box-shadow);
-    background-color: var(--background-primary);
+    border-radius: 0.4rem;
+    box-shadow: var(--box-shadow);
+    background-color: var(--component-primary);
 }
 
 .filter-bottom {
     display: flex;
     width: 100%;
-    /* height: 70%; */
     gap: 2rem;
 }
 
 .filter-selected {
     width: 50%;
     height: 20rem;
+    border-radius: 0.4rem;
+    box-shadow: var(--box-shadow);
+    background-color: var(--component-primary);
+}
+
+.filter-selected .selected-classes {
+    height: 80%;
     overflow-y: auto;
-    box-shadow: 0px 0px 10px 1px var(--box-shadow);
-    background-color: var(--background-primary);
 }
 
 .filter-selected > span {
@@ -45,8 +47,9 @@
 .filter-available {
     width: 50%;
     height: 20rem;
-    box-shadow: 0px 0px 10px 1px var(--box-shadow);
-    background-color: var(--background-primary);
+    border-radius: 0.4rem;
+    box-shadow: var(--box-shadow);
+    background-color: var(--component-primary);
 }
 
 .filter-available .available-classes {
@@ -65,18 +68,19 @@
 }
 
 .filter-item.use-hover:hover {
-    background-color: var(--common);
-    color: white;
+    background-color: var(--on-hover);
 }
 
 .filter-section-label {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--background-secondary);
-    color: white;
     height: 4rem;
     width: 100%;
+    border-top-left-radius: 0.4rem;
+    border-top-right-radius: 0.4rem;
+    background-color: var(--component-header);
+    color: white;
 }
 
 .filter-icon {
@@ -95,18 +99,8 @@
         height: 100%;
     }
 
-    /*     .filter-left {
-        width: 100%;
-        height: 66%;
-    } */
-
-    /*         .filter-header {
-        height: 50%;
-    } */
-
     .filter-selected {
         width: 100%;
-        /*  height: 50%; */
     }
 
     .filter-available {
@@ -121,8 +115,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 4rem;
-    border-radius: 0.25rem;
+    margin-top: 2rem;
+    border-radius: 0.4rem;
     color: var(--text-primary);
 }
 
@@ -132,7 +126,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--background-secondary);
+    border-top-left-radius: 0.4rem;
+    border-top-right-radius: 0.4rem;
+    background-color: var(--component-header);
     color: white;
 }
 
@@ -143,9 +139,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--background-primary);
-    box-shadow: 0px 4px 10px 1px var(--box-shadow);
     transition: background-color 0.2s;
+    background-color: var(--component-primary);
+    box-shadow: var(--box-shadow);
+}
+
+.filter-list-parent:last-child {
+    border-bottom-left-radius: 0.4rem;
+    border-bottom-right-radius: 0.4rem;
+}
+
+.filter-list-parent:last-child button:hover {
+    border-bottom-left-radius: 0.4rem;
+    border-bottom-right-radius: 0.4rem;
 }
 
 .filter-list-parent button:hover {
