@@ -4,10 +4,11 @@ import "./InputField.css";
 import MainLayout from "../../layouts/MainLayout";
 import FilterAvailableCard from "../../components/Filter/FilterAvailableCard";
 import ClassList from "./ClassList";
-import ClassSelected from "./ClassSelected";
+import FilterItemSelected from "../../components/Filter/FilterItemSelected";
 import { useSelector, useDispatch } from "react-redux";
 import { setClassFilter, updateClassFilter } from "../../features/classFilter";
 import { validateNewFilter, validateExistFilter } from "./utils/validateInput";
+import { IoIosClose } from "react-icons/io";
 
 // Definiraj Page Items za Header
 const pageItems = ["Filteri razreda"];
@@ -107,14 +108,18 @@ const ClassFilter = () => {
                         <div className="filter-section-label">
                             <span>Odabrani razredi</span>
                         </div>
-                        <div className="selected-classes">
+                        <div className="selected-group">
                             {selectedClasses.length > 0 ? (
                                 selectedClasses.map(({ id, label }) => (
-                                    <ClassSelected
-                                        key={id}
-                                        label={label}
-                                        onClick={() => handleRemoveSelectedClass(id)}
-                                    />
+                                    <FilterItemSelected key={id}>
+                                        <span>{label}</span>
+                                        <IoIosClose
+                                            className="filter-icon"
+                                            size={40}
+                                            color="red"
+                                            onClick={() => handleRemoveSelectedClass(id)}
+                                        />
+                                    </FilterItemSelected>
                                 ))
                             ) : (
                                 <div className="filter-item">
@@ -123,19 +128,27 @@ const ClassFilter = () => {
                             )}
                         </div>
                     </div>
+
                     <div className="filter-available">
                         <div className="filter-section-label">
                             <span>Mogući razredi</span>
                         </div>
-                        <div className="available-classes">
-                            {availableClasses.map(({ id, label }) => (
-                                <FilterAvailableCard
-                                    key={id}
-                                    label={label}
-                                    onClick={() => handleRemoveAvailableClass(id)}
-                                    className="filter-item use-hover"
-                                />
-                            ))}
+                        <div className="available-group">
+                            {availableClasses.length > 0 ? (
+                                availableClasses.map(({ id, label }) => (
+                                    <FilterAvailableCard
+                                        key={id}
+                                        onClick={() => handleRemoveAvailableClass(id)}
+                                        className="filter-item use-hover"
+                                    >
+                                        <span>{label}</span>
+                                    </FilterAvailableCard>
+                                ))
+                            ) : (
+                                <div className="filter-item">
+                                    <span>Nema mogućih razreda</span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

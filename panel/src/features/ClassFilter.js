@@ -1,17 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { classesSlice } from "./classes";
-
-const generateUniqueId = (length = 8) => {
-    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-        result += charset.charAt(Math.floor(Math.random() * charset.length));
-    }
-    return result;
-};
+import { generateId } from "../services/generateId";
 
 const initialState = {
-    filters: [{ filterName: "default", classes: classesSlice.getInitialState().value, uniqueId: generateUniqueId() }],
+    filters: [{ filterName: "default", classes: classesSlice.getInitialState().value, uniqueId: generateId() }],
 };
 
 export const classFilterSlice = createSlice({
@@ -19,7 +11,7 @@ export const classFilterSlice = createSlice({
     initialState: initialState,
     reducers: {
         setClassFilter: (state, action) => {
-            const newFilter = { ...action.payload, uniqueId: generateUniqueId() };
+            const newFilter = { ...action.payload, uniqueId: generateId() };
             state.filters.push(newFilter);
         },
         updateClassFilter: (state, action) => {

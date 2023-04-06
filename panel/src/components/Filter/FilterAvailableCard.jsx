@@ -1,9 +1,9 @@
 import React from "react";
 
-const FilterAvailableCard = ({ label, className, onClick }) => {
+const FilterAvailableCard = ({ children, className, onClick }) => {
     return (
         <button className={className} onClick={() => onClick()}>
-            <span>{label}</span>
+            {children}
         </button>
     );
 };
