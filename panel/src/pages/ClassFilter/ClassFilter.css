@@ -65,6 +65,12 @@
     justify-content: center;
     align-items: center;
     transition: background-color 0.2s;
+    background-color: var(--component-primary);
+}
+
+.filter-item:last-child {
+    border-bottom-left-radius: 0.4rem;
+    border-bottom-right-radius: 0.4rem;
 }
 
 .filter-item.use-hover:hover {

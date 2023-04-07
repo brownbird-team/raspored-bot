@@ -3,10 +3,10 @@ import "./ClassFilter.css";
 import "./InputField.css";
 import MainLayout from "../../layouts/MainLayout";
 import FilterAvailableCard from "../../components/Filter/FilterAvailableCard";
-import ClassList from "./ClassList";
+import FilterList from "../../components/Filter/FilterList";
 import FilterItemSelected from "../../components/Filter/FilterItemSelected";
 import { useSelector, useDispatch } from "react-redux";
-import { setClassFilter, updateClassFilter } from "../../features/classFilter";
+import { setClassFilter, updateClassFilter, removeClassFilter } from "../../features/classFilter";
 import { validateNewFilter, validateExistFilter } from "./utils/validateInput";
 import { IoIosClose } from "react-icons/io";
 
@@ -67,13 +67,14 @@ const ClassFilter = () => {
                     dispatch(updateClassFilter({ ...newFilter, uniqueId: uniqueId }));
                 break;
         }
-        resetToDefault();
+        resetToInitialState();
     };
 
-    const resetToDefault = () => {
+    const resetToInitialState = () => {
         setAvailableClasses(allClasses);
         setFilterName("");
         setSelectedClasses([]);
+        setUniqueId(null);
         setAction("create");
     };
 
@@ -90,10 +91,11 @@ const ClassFilter = () => {
                             placeholder="Naziv filtera"
                             value={filterName}
                             onChange={(e) => setFilterName(e.target.value)}
+                            className="custom-input-box"
                         />
                         <div className="input-buttons">
                             {action === "edit" ? (
-                                <button type="button" className="cancel-btn" onClick={() => resetToDefault()}>
+                                <button type="button" className="cancel-btn" onClick={() => resetToInitialState()}>
                                     Zatvori
                                 </button>
                             ) : null}
@@ -160,10 +162,14 @@ const ClassFilter = () => {
                 </div>
                 {storedFilters.length ? (
                     storedFilters.map(({ filterName, uniqueId, classes }) => (
-                        <ClassList
+                        <FilterList
                             key={filterName}
                             filter={{ filterName, uniqueId, classes }}
-                            onClick={() => {
+                            onDelete={() => {
+                                dispatch(removeClassFilter(filterName));
+                                resetToInitialState();
+                            }}
+                            onEdit={() => {
                                 setAvailableClasses(
                                     allClasses.filter((obj1) => !classes.some((obj2) => obj2.id === obj1.id))
                                 );

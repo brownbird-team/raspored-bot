@@ -11,8 +11,7 @@ export const classFilterSlice = createSlice({
     initialState: initialState,
     reducers: {
         setClassFilter: (state, action) => {
-            const newFilter = { ...action.payload, uniqueId: generateId() };
-            state.filters.push(newFilter);
+            state.filters.push({ ...action.payload, uniqueId: generateId() });
         },
         updateClassFilter: (state, action) => {
             const targetFilter = state.filters.find(({ uniqueId }) => uniqueId === action.payload.uniqueId);
@@ -22,8 +21,7 @@ export const classFilterSlice = createSlice({
             }
         },
         removeClassFilter: (state, action) => {
-            const newFilters = state.filters.filter(({ filterName }) => filterName !== action.payload);
-            state.filters = newFilters;
+            state.filters = state.filters.filter(({ filterName }) => filterName !== action.payload);
         },
     },
 });
