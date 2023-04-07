@@ -1,0 +1,12 @@
+.alert-main {
+    width: 100%;
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0 1rem;
+    border-radius: 0.25rem;
+    background-color: var(--component-primary);
+    color: var(--text-primary);
+}

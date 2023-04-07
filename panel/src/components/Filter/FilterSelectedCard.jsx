@@ -1,6 +1,6 @@
 import React from "react";
 
-const FilterItemSelected = ({ children }) => {
+const FilterSelectedCard = ({ children }) => {
     return (
         <div>
             <div className="filter-item use-hover">{children}</div>
@@ -8,4 +8,4 @@ const FilterItemSelected = ({ children }) => {
     );
 };
 
-export default FilterItemSelected;
+export default FilterSelectedCard;

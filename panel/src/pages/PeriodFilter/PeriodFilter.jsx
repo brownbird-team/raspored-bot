@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import "./PeriodFilter.css";
 import MainLayout from "../../layouts/MainLayout";
-import FilterItemSelected from "../../components/Filter/FilterItemSelected";
+import FilterSelectedCard from "../../components/Filter/FilterSelectedCard";
 import FilterAvailableCard from "../../components/Filter/FilterAvailableCard";
 import FilterList from "../../components/Filter/FilterList";
+import Alert from "../../components/Alert";
 import { useSelector, useDispatch } from "react-redux";
 import { addPeriodFilter, updatePeriodFilter, removePeriodFilter } from "../../features/periodFilter";
 import { formatPeriod } from "./utils/formatPeriod";
+import { validateFilter } from "../../services/validateFilter";
+import statusCodes from "../../data/constants/messageFilter";
 import { IoIosClose } from "react-icons/io";
 
 // Definiraj Page Items za Header
@@ -15,16 +17,17 @@ const pageItems = ["Filteri perioda"];
 const PeriodFilter = () => {
     const dispatch = useDispatch();
 
-    // Dohvati sve periode
+    // Dohvaća sve spremljene periode
     const allPeriods = useSelector((state) => state.periods.value);
+    // Dohvaća sve spremljene filtere perioda
+    const storedFilters = useSelector((state) => state.periodFilter.filters);
 
+    const [alert, setAlert] = useState(null);
     const [availablePeriods, setAvailablePeriods] = useState(allPeriods);
     const [selectedPeriods, setSelectedPeriods] = useState([]);
     const [filterName, setFilterName] = useState("");
     const [filterAction, setFilterAction] = useState("create");
     const [filterUniqueId, setFilterUniqueId] = useState(null);
-
-    const storedFilters = useSelector((state) => state.periodFilter.filters);
 
     // Handler koji dodaje novi period u listu odabranih perioda
     const handleAddSelectedPeriod = (id) => {
@@ -62,19 +65,79 @@ const PeriodFilter = () => {
         );
     };
 
-    // Handler koji dodaje novi filter odabranih perioda
+    // Handler koji dodaje odabrane periode u novi filter
     const handleInsertFilter = () => {
         const newFilter = { filterName: filterName, periods: selectedPeriods };
-        switch (filterAction) {
-            case "create":
-                dispatch(addPeriodFilter(newFilter));
+        switch (
+            filterAction === "create"
+                ? validateFilter(newFilter, storedFilters)
+                : validateFilter(newFilter, storedFilters, true)
+        ) {
+            case statusCodes.EMPTY_FILTERNAME:
+                setAlert({ message: statusCodes.EMPTY_FILTERNAME, type: "danger" });
                 break;
-            case "edit":
+            case statusCodes.EMPTY_PERIODS:
+                setAlert({ message: statusCodes.EMPTY_PERIODS, type: "danger" });
+                break;
+            case statusCodes.EXIST_FILTERNAME:
+                setAlert({ message: statusCodes.EXIST_FILTERNAME, type: "danger" });
+                break;
+            case statusCodes.FILTER_CREATED:
+                setAlert({
+                    message: (
+                        <>
+                            {statusCodes.FILTER_CREATED} <b className="highlight">{filterName}</b>
+                        </>
+                    ),
+                    type: "success",
+                });
+                dispatch(addPeriodFilter(newFilter));
+                resetToInitialState();
+                break;
+            case statusCodes.FILTER_CHANGED:
+                setAlert({
+                    message: (
+                        <>
+                            {statusCodes.FILTER_CHANGED} <b className="highlight">{filterName}</b>
+                        </>
+                    ),
+                    type: "success",
+                });
                 dispatch(updatePeriodFilter({ ...newFilter, uniqueId: filterUniqueId }));
+                resetToInitialState();
                 break;
         }
+    };
 
+    // Handler koji briše odabrani postojeći period
+    const handlePeriodOnDelete = (filterName) => {
+        // Briše filter perioda iz stora
+        dispatch(removePeriodFilter(filterName));
+        // Šalje poruku korisniku
+        setAlert({
+            message: (
+                <>
+                    {statusCodes.SUCCESSFULLY_DELETED} <b className="highlight">{filterName}</b>
+                </>
+            ),
+            type: "success",
+        });
+        // Vraća vrijednosti stateova na početno stanje
         resetToInitialState();
+    };
+
+    // Handler koji se pokreće nakon što se odabere opcija edit perioda
+    const handlePeriodOnEdit = (filterName, uniqueId, periods) => {
+        // Postavlja sve dostupne periode
+        setAvailablePeriods(allPeriods.filter((obj1) => !periods.some((obj2) => obj2.id === obj1.id)));
+        // Postavlja sve odabrane periode
+        setSelectedPeriods(periods);
+        // Postavlja naziv filtera
+        setFilterName(filterName);
+        // Postavlja id filtera
+        setFilterUniqueId(uniqueId);
+        // Postavlja vrstu radnje
+        setFilterAction("edit");
     };
 
     // Funkcija koja resetira sve stateove na početne vrijednosti
@@ -89,6 +152,12 @@ const PeriodFilter = () => {
     return (
         <MainLayout pageItems={pageItems}>
             <div className="filter-main">
+                {alert ? (
+                    <Alert type={alert.type} onClose={() => setAlert(null)}>
+                        {alert.message}
+                    </Alert>
+                ) : null}
+
                 <div className="filter-header">
                     <div className="filter-section-label">
                         <span>Naziv filtera</span>
@@ -122,7 +191,7 @@ const PeriodFilter = () => {
                         <div className="selected-group">
                             {selectedPeriods.length > 0 ? (
                                 selectedPeriods.map(({ id, name, startTime, endTime }) => (
-                                    <FilterItemSelected key={id}>
+                                    <FilterSelectedCard key={id}>
                                         <div className="filter-period-item">
                                             <input
                                                 type="text"
@@ -139,7 +208,7 @@ const PeriodFilter = () => {
                                                 onClick={() => handleRemoveSelectedPeriod(id)}
                                             />
                                         </div>
-                                    </FilterItemSelected>
+                                    </FilterSelectedCard>
                                 ))
                             ) : (
                                 <div className="filter-item">
@@ -151,7 +220,7 @@ const PeriodFilter = () => {
 
                     <div className="filter-available">
                         <div className="filter-section-label">
-                            <span>Mogući periodi</span>
+                            <span>Dostupni periodi</span>
                         </div>
                         <div className="available-group">
                             {availablePeriods.length > 0 ? (
@@ -169,7 +238,7 @@ const PeriodFilter = () => {
                                 ))
                             ) : (
                                 <div className="filter-item">
-                                    <span>Nema mogućih perioda</span>
+                                    <span>Nema dostupnih perioda</span>
                                 </div>
                             )}
                         </div>
@@ -186,19 +255,8 @@ const PeriodFilter = () => {
                         <FilterList
                             key={filterName}
                             filter={{ filterName, uniqueId, periods }}
-                            onDelete={() => {
-                                dispatch(removePeriodFilter(filterName));
-                                resetToInitialState();
-                            }}
-                            onEdit={() => {
-                                setAvailablePeriods(
-                                    allPeriods.filter((obj1) => !periods.some((obj2) => obj2.id === obj1.id))
-                                );
-                                setFilterName(filterName);
-                                setSelectedPeriods(periods);
-                                setFilterUniqueId(uniqueId);
-                                setFilterAction("edit");
-                            }}
+                            onDelete={() => handlePeriodOnDelete(filterName)}
+                            onEdit={() => handlePeriodOnEdit(filterName, uniqueId, periods)}
                         />
                     ))
                 ) : (

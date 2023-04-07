@@ -10,7 +10,7 @@ export const classFilterSlice = createSlice({
     name: "classFilter",
     initialState: initialState,
     reducers: {
-        setClassFilter: (state, action) => {
+        addClassFilter: (state, action) => {
             state.filters.push({ ...action.payload, uniqueId: generateId() });
         },
         updateClassFilter: (state, action) => {
@@ -26,6 +26,6 @@ export const classFilterSlice = createSlice({
     },
 });
 
-export const { setClassFilter, updateClassFilter, removeClassFilter } = classFilterSlice.actions;
+export const { addClassFilter, updateClassFilter, removeClassFilter } = classFilterSlice.actions;
 
 export default classFilterSlice.reducer;

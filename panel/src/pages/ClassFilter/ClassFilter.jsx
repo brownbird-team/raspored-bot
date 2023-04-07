@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import "./ClassFilter.css";
 import "./InputField.css";
 import MainLayout from "../../layouts/MainLayout";
 import FilterAvailableCard from "../../components/Filter/FilterAvailableCard";
 import FilterList from "../../components/Filter/FilterList";
-import FilterItemSelected from "../../components/Filter/FilterItemSelected";
+import Alert from "../../components/Alert";
+import FilterSelectedCard from "../../components/Filter/FilterSelectedCard";
 import { useSelector, useDispatch } from "react-redux";
-import { setClassFilter, updateClassFilter, removeClassFilter } from "../../features/classFilter";
-import { validateNewFilter, validateExistFilter } from "./utils/validateInput";
+import { addClassFilter, updateClassFilter, removeClassFilter } from "../../features/classFilter";
+import { validateFilter } from "../../services/validateFilter";
+import statusCodes from "../../data/constants/messageFilter";
 import { IoIosClose } from "react-icons/io";
 
 // Definiraj Page Items za Header
@@ -16,23 +17,20 @@ const pageItems = ["Filteri razreda"];
 const ClassFilter = () => {
     const dispatch = useDispatch();
 
-    // Dohvati sve razrede
+    // Dohvaća sve spremljene razrede
     const allClasses = useSelector((state) => state.classes.value);
-
-    // Dohvati sve filtere razreda
+    // Dohvaća sve spremljene filtere razreda
     const storedFilters = useSelector((state) => state.classFilter.filters);
 
+    const [alert, setAlert] = useState(null);
     const [availableClasses, setAvailableClasses] = useState(allClasses);
     const [selectedClasses, setSelectedClasses] = useState([]);
     const [filterName, setFilterName] = useState("");
+    const [filterUniqueId, setFilterUniqueId] = useState(null);
+    const [filterAction, setFilterAction] = useState("create");
 
-    // Definiraj za postojeće filtere uniqueId
-    const [uniqueId, setUniqueId] = useState(null);
-
-    // Definiraj tip actiona
-    const [action, setAction] = useState("create");
-
-    const handleRemoveAvailableClass = (classId) => {
+    // Handler koji dodaje novi razred u listu odabranih razreda
+    const handleAddSelectedClass = (classId) => {
         const findClass = availableClasses.find(({ id }) => id === classId);
         if (findClass) {
             const newAvailableClasses = [...availableClasses].filter(({ id }) => id !== findClass.id);
@@ -42,6 +40,7 @@ const ClassFilter = () => {
         }
     };
 
+    // Handler koji briše odabrani razred iz liste odabranih razreda
     const handleRemoveSelectedClass = (classId) => {
         const findClass = selectedClasses.find(({ id }) => id === classId);
         if (findClass) {
@@ -56,31 +55,99 @@ const ClassFilter = () => {
         }
     };
 
-    const handleValidateFilter = () => {
+    // Handler koji dodaje odabrane periode u novi filter
+    const handleInsertFilter = () => {
         const newFilter = { filterName: filterName, classes: selectedClasses };
-        switch (action) {
-            case "create":
-                if (validateNewFilter(newFilter, storedFilters)) dispatch(setClassFilter(newFilter));
+
+        switch (
+            filterAction === "create"
+                ? validateFilter(newFilter, storedFilters)
+                : validateFilter(newFilter, storedFilters, true)
+        ) {
+            case statusCodes.EMPTY_FILTERNAME:
+                setAlert({ message: statusCodes.EMPTY_FILTERNAME, type: "danger" });
                 break;
-            case "edit":
-                if (validateExistFilter({ ...newFilter, uniqueId: uniqueId }, storedFilters))
-                    dispatch(updateClassFilter({ ...newFilter, uniqueId: uniqueId }));
+            case statusCodes.EMPTY_CLASSES:
+                setAlert({ message: statusCodes.EMPTY_CLASSES, type: "danger" });
+                break;
+            case statusCodes.EXIST_FILTERNAME:
+                setAlert({ message: statusCodes.EXIST_FILTERNAME, type: "danger" });
+                break;
+            case statusCodes.FILTER_CREATED:
+                setAlert({
+                    message: (
+                        <>
+                            {statusCodes.FILTER_CREATED} <b className="highlight">{filterName}</b>
+                        </>
+                    ),
+                    type: "success",
+                });
+                dispatch(addClassFilter(newFilter));
+                resetToInitialState();
+                break;
+            case statusCodes.FILTER_CHANGED:
+                setAlert({
+                    message: (
+                        <>
+                            {statusCodes.FILTER_CHANGED} <b className="highlight">{filterName}</b>
+                        </>
+                    ),
+                    type: "success",
+                });
+                dispatch(updateClassFilter({ ...newFilter, uniqueId: filterUniqueId }));
+                resetToInitialState();
                 break;
         }
+    };
+
+    // Handler koji briše odabrani postojeći razred
+    const handleClassOnDelete = (filterName) => {
+        // Briše filter razreda iz stora
+        dispatch(removeClassFilter(filterName));
+        // Šalje poruku korisniku
+        setAlert({
+            message: (
+                <>
+                    {statusCodes.SUCCESSFULLY_DELETED} <b className="highlight">{filterName}</b>
+                </>
+            ),
+            type: "success",
+        });
+        // Vraća vrijednosti stateova na početno stanje
         resetToInitialState();
+    };
+
+    // Handler koji se pokreće nakon što se odabere opcija edit razreda
+    const handleClassOnEdit = (filterName, uniqueId, classes) => {
+        // Postavlja sve dostupne razrede
+        setAvailableClasses(allClasses.filter((obj1) => !classes.some((obj2) => obj2.id === obj1.id)));
+        // Postavlja sve odabrane razrede
+        setSelectedClasses(classes);
+        // Postavlja naziv filtera
+        setFilterName(filterName);
+        // Postavlja id filtera
+        setFilterUniqueId(uniqueId);
+        // Postavlja vrstu radnje
+        setFilterAction("edit");
     };
 
     const resetToInitialState = () => {
         setAvailableClasses(allClasses);
         setFilterName("");
         setSelectedClasses([]);
-        setUniqueId(null);
-        setAction("create");
+        setFilterUniqueId(null);
+        setFilterAction("create");
     };
 
     return (
         <MainLayout pageItems={pageItems}>
             <div className="filter-main">
+                {alert ? (
+                    <Alert type={alert.type} onClose={() => setAlert(null)}>
+                        {alert.message}
+                    </Alert>
+                ) : null}
+
                 <div className="filter-header">
                     <div className="filter-section-label">
                         <span>Naziv filtera</span>
@@ -94,13 +161,13 @@ const ClassFilter = () => {
                             className="custom-input-box"
                         />
                         <div className="input-buttons">
-                            {action === "edit" ? (
+                            {filterAction === "edit" ? (
                                 <button type="button" className="cancel-btn" onClick={() => resetToInitialState()}>
                                     Zatvori
                                 </button>
                             ) : null}
-                            <button type="button" className="change-btn" onClick={() => handleValidateFilter()}>
-                                {action === "edit" ? "Promijeni" : "Kreiraj"}
+                            <button type="button" className="change-btn" onClick={() => handleInsertFilter()}>
+                                {filterAction === "edit" ? "Promijeni" : "Kreiraj"}
                             </button>
                         </div>
                     </div>
@@ -113,7 +180,7 @@ const ClassFilter = () => {
                         <div className="selected-group">
                             {selectedClasses.length > 0 ? (
                                 selectedClasses.map(({ id, label }) => (
-                                    <FilterItemSelected key={id}>
+                                    <FilterSelectedCard key={id}>
                                         <span>{label}</span>
                                         <IoIosClose
                                             className="filter-icon"
@@ -121,7 +188,7 @@ const ClassFilter = () => {
                                             color="red"
                                             onClick={() => handleRemoveSelectedClass(id)}
                                         />
-                                    </FilterItemSelected>
+                                    </FilterSelectedCard>
                                 ))
                             ) : (
                                 <div className="filter-item">
@@ -133,14 +200,14 @@ const ClassFilter = () => {
 
                     <div className="filter-available">
                         <div className="filter-section-label">
-                            <span>Mogući razredi</span>
+                            <span>Dostupni razredi</span>
                         </div>
                         <div className="available-group">
                             {availableClasses.length > 0 ? (
                                 availableClasses.map(({ id, label }) => (
                                     <FilterAvailableCard
                                         key={id}
-                                        onClick={() => handleRemoveAvailableClass(id)}
+                                        onClick={() => handleAddSelectedClass(id)}
                                         className="filter-item use-hover"
                                     >
                                         <span>{label}</span>
@@ -148,7 +215,7 @@ const ClassFilter = () => {
                                 ))
                             ) : (
                                 <div className="filter-item">
-                                    <span>Nema mogućih razreda</span>
+                                    <span>Nema dostupnih razreda</span>
                                 </div>
                             )}
                         </div>
@@ -165,19 +232,8 @@ const ClassFilter = () => {
                         <FilterList
                             key={filterName}
                             filter={{ filterName, uniqueId, classes }}
-                            onDelete={() => {
-                                dispatch(removeClassFilter(filterName));
-                                resetToInitialState();
-                            }}
-                            onEdit={() => {
-                                setAvailableClasses(
-                                    allClasses.filter((obj1) => !classes.some((obj2) => obj2.id === obj1.id))
-                                );
-                                setFilterName(filterName);
-                                setSelectedClasses(classes);
-                                setUniqueId(uniqueId);
-                                setAction("edit");
-                            }}
+                            onDelete={() => handleClassOnDelete(filterName)}
+                            onEdit={() => handleClassOnEdit(filterName, uniqueId, classes)}
                         />
                     ))
                 ) : (

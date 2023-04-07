@@ -1,5 +1,6 @@
 import React from "react";
-import "./assets/App.css";
+import "./assets/style/App.css";
+import "./assets/style/filters.css";
 import LeftSidebar from "./components/LeftSidebar";
 import { Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";

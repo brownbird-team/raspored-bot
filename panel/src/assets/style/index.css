@@ -84,3 +84,11 @@ button {
     background-color: var(--background-primary);
     color: var(--text-primary);
 }
+
+.icon {
+    cursor: pointer;
+}
+
+.highlight {
+    color: var(--button-primary);
+}
