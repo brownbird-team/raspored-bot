@@ -27,12 +27,17 @@
 
     /* Defined colors for button */
     --button-primary: #2f5292;
+    --button-primary-hover: #365b9f;
     --button-secondary: #d8dadd;
+    --button-secondary-hover: #dfe6ed;
     --button-text-primary: #f3f5f7;
     --button-text-secondary: #414349;
 
     /* Defined colors for box shadow */
     --box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+    /* Defined colors for table */
+    --table-heading: #dbdcde;
 }
 
 [data-theme="dark"] {
@@ -54,12 +59,17 @@
 
     /* Defined colors for button */
     --button-primary: #8ab6e9;
+    --button-primary-hover: #94c1f5;
     --button-secondary: #454654;
+    --button-secondary-hover: #545565;
     --button-text-primary: #111317;
     --button-text-secondary: #f3f5f7;
 
     /* Defined colors for box shadow */
     --box-shadow: rgba(0, 0, 0, 0.32) 0px 1px 4px;
+
+    /* Defined colors for table */
+    --table-heading: #252a33;
 }
 
 body {
@@ -87,6 +97,10 @@ button {
 
 .icon {
     cursor: pointer;
+}
+
+.icon.up {
+    transform: rotate(180deg);
 }
 
 .highlight {
