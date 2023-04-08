@@ -1,6 +1,9 @@
 // Uključi funkciju koja pretvara objekt stilova u inline stilove
 const convertToInlineStyles = require('./convertToInlineStyles.js');
 
+// Status: Gotov
+
+
 /* Email Template -- registracija
  *
  * Kao argument funkciji potrebno je dati objekt sa sljedećim svojstvima:
@@ -26,6 +29,8 @@ module.exports = (arguments) => {
             colors.buttonBackground = "#ffdf2b";
             // Boja teksta u footer-u
             colors.footerColor = "#595959";
+            //boja teksta u paragrafu
+            colors.text= "#000000";
             break;
 
         // Definiraj boje za tamnu temu
@@ -38,6 +43,8 @@ module.exports = (arguments) => {
             colors.buttonBackground = "#ffdf2b";
             // Boja teksta u footer-u
             colors.footerColor = "#ddd";
+            //boja teksta u paragrafu
+            colors.text= "#ffffff";
             break;
     }
 
@@ -54,7 +61,7 @@ module.exports = (arguments) => {
         },{
             selectors: [ 'p' ],
             style: `
-                color: inherit;
+                color: ${colors.text};
                 margin: 25px 0px;
                 max-width: 1000px;
             `,
@@ -95,8 +102,8 @@ module.exports = (arguments) => {
                 </p>
                 <p>
                     Kako bi potvrdili da ste Vi zatražili krairanje računa molimo kliknite na tipku (poveznicu) ispod.
-                    Poveznica će Vas odmah odvesti i prijaviti na kontrolnu ploču Raspored Bota, gdje možete odabrati
-                    za koji razred želite primati izmjene i ugoditi još neke postavke. Ako Vi niste zatražili kreiranje
+                    Poveznica će Vas odmah odvesti i prijaviti na kontrolnu ploču Raspored Bota, gdje možete podesiti postavke 
+                    vašeg računa. Ako Vi niste zatražili kreiranje
                     računa slobodno ignorirajte ovaj email.
                 </p>
                 <p>

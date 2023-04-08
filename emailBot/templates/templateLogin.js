@@ -1,6 +1,9 @@
 // Uključi funkciju koja pretvara objekt stilova u inline stilove
 const convertToInlineStyles = require('./convertToInlineStyles.js');
 
+// Status: Gotov
+
+
 /* Email Template -- prijava
  *
  * Kao argument funkciji potrebno je dati objekt sa sljedećim svojstvima:
@@ -26,6 +29,8 @@ module.exports = (arguments) => {
             colors.buttonBackground = "#ffdf2b";
             // Boja teksta u footer-u
             colors.footerColor = "#595959";
+            //boja teksta u paragrafu
+            colors.text= "#000000";
             break;
 
         // Definiraj boje za tamnu temu
@@ -38,6 +43,8 @@ module.exports = (arguments) => {
             colors.buttonBackground = "#ffdf2b";
             // Boja teksta u footer-u
             colors.footerColor = "#ddd";
+            //boja teksta u paragrafu
+            colors.text= "#ffffff";
             break;
     }
 
@@ -54,7 +61,7 @@ module.exports = (arguments) => {
         },{
             selectors: [ 'p' ],
             style: `
-                color: inherit;
+            color: ${colors.text};
                 margin: 25px 0px;
                 max-width: 1000px;
             `,
@@ -95,7 +102,7 @@ module.exports = (arguments) => {
                 <p>
                     Putem dolje navedene poveznice možete se prijaviti samo jednom, sljedeći puta kada ćete
                     se opet željeti prijaviti morat ćete zatražiti novu, na web sučelju Raspored Bota. Ako
-                    vi niste zatražili poveznicu slobodno ignorirajte ovaj email.
+                    Vi niste zatražili poveznicu slobodno ignorirajte ovaj email.
                 </p>
                 <p>
                     Poveznica vrijedi ograničeno vrijeme nakon čega ćete morati generirati novu, vaša vrijedi do: <br>

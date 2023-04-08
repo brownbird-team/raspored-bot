@@ -72,13 +72,14 @@ module.exports = (arguments) => {
 
     const styles = [
         {
-            selectors: [ 'caption' ],
+            selectors: [ '.naslov' ],
             style: `
                 color: ${colors.bodyColor};
                 font-weight: bold;
                 font-size: 16px;
                 padding-bottom: 10px;
-                text-align: left;
+                text-align: center;
+                
             `,
         },{
             selectors: [ 'body' ],
@@ -160,9 +161,9 @@ module.exports = (arguments) => {
             </head>
             <body>
                 <table>
-                    <caption>
+                    <div class="naslov">
                         <b>${arguments.tableHeading}<br>${(arguments.shift == 'prijepodne') ? 'PRIJEPODNE' : 'POSLIJEPODNE'}</b>
-                    </caption>
+                    </div>
                     <tr class="table-heading">
                         <th>Sat</th>
                         <th>Izmjena</th>

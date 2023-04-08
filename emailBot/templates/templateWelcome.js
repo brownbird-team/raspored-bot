@@ -1,6 +1,9 @@
 // Uključi funkciju koja pretvara objekt stilova u inline stilove
 const convertToInlineStyles = require('./convertToInlineStyles.js');
 
+// Status: Gotov
+
+
 /* Email Template -- dobrodošlica
  *
  * Kao argument funkciji potrebno je dati objekt sa sljedećim svojstvima:
@@ -22,6 +25,8 @@ module.exports = (arguments) => {
             colors.bodyBackground = "#FFFFFF";
             // Boja teksta u footer-u
             colors.footerColor = "#595959";
+            //boja teksta u paragrafu
+            colors.text= "#000000";
             break;
 
         // Definiraj boje za tamnu temu
@@ -31,6 +36,8 @@ module.exports = (arguments) => {
             colors.bodyBackground = "#202225";
             // Boja teksta u footer-u
             colors.footerColor = "#ddd";
+            //boja teksta u paragrafu
+            colors.text= "#ffffff";
             break;
     }
 
@@ -47,7 +54,7 @@ module.exports = (arguments) => {
         },{
             selectors: [ 'p' ],
             style: `
-                color: inherit;
+                color: ${colors.text};
                 margin: 25px 0px;
                 max-width: 1000px;
             `,
@@ -75,9 +82,8 @@ module.exports = (arguments) => {
                     uspješno ste potvrdili svoju pretplatu na Raspored Bota.
                 </p>
                 <p>
-                    Ne zaboravite odabrati razred na kontrolnoj ploči jer u suprotnom nećete primati izmjene
-                    u rasporedu. U bilo kojem trenutku ukoliko želite možete poništiti svoju pretplatu,
-                    također putem kontrolne ploče i time obrisati sve podatke o Vama iz naše baze podataka.
+                    U bilo kojem trenutku možete poništiti svoju pretplatu
+                    putem kontrolne ploče i time obrisati sve podatke o Vama iz naše baze podataka.
                 </p>
                 <p>
                     Za sva dodatna pitanja ili prijave greške možete nas kontaktirati na naš email <b>${arguments.supportMail}</b>.
