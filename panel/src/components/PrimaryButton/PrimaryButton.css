@@ -1,0 +1,12 @@
+.primary-button {
+    width: fit-content;
+    min-width: 10rem;
+    padding: 1rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: var(--button-primary);
+    color: var(--button-text-primary);
+}
+
+.primary-button:hover {
+    background-color: var(--button-primary-hover);
+}
