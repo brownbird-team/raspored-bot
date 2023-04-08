@@ -1,35 +1,35 @@
 {
-  "schedule": {
-    "import": {
-      "path": "/schedule/import"
+    "schedule": {
+        "import": {
+            "path": "/schedule/import"
+        },
+        "manual": {
+            "path": "/schedule/manual"
+        }
     },
-    "manual": {
-      "path": "/schedule/manual"
-    }
-  },
 
-  "changes": {
-    "subject_classroom": {
-      "path": "/changes/subject-classroom"
+    "changes": {
+        "subject_classroom": {
+            "path": "/changes/subject-classroom"
+        },
+        "period": {
+            "path": "/changes/period"
+        },
+        "message": {
+            "path": "/changes/message"
+        }
     },
-    "period": {
-      "path": "/changes/period"
-    },
-    "message": {
-      "path": "/changes/message"
-    }
-  },
 
-  "filter": {
-    "class": {
-      "path": "/filter/class"
+    "filter": {
+        "class": {
+            "path": "/settings/filter-class"
+        },
+        "period": {
+            "path": "/settings/filter-period"
+        }
     },
-    "period": {
-      "path": "/filter/period"
-    }
-  },
 
-  "logout": {
-    "path": "/logout"
-  }
+    "logout": {
+        "path": "/logout"
+    }
 }
