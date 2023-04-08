@@ -34,13 +34,15 @@ const ScheduleImport = () => {
 
     // Handler koji se pokreće kada korisnik pokuša uvesti raspored
     const handleSubmitClick = () => {
-        // Dohvaća ekstenziju datoteke
-        const fileExtension = file.name.split(".").pop();
+        if (file) {
+            // Dohvaća ekstenziju datoteke
+            const fileExtension = file.name.split(".").pop();
 
-        // Provjerava je li datoteka xml
-        if (fileExtension !== "xml") return setAlert({ type: "danger", message: alertMessages.NO_FILE_XML });
-        if (file) return setAlert({ type: "success", message: alertMessages.FILE_UPLOADED });
-        else return setAlert({ type: "danger", message: alertMessages.NO_FILE_UPLOADED });
+            // Provjerava je li datoteka xml
+            if (fileExtension !== "xml") return setAlert({ type: "danger", message: alertMessages.NO_FILE_XML });
+
+            return setAlert({ type: "success", message: alertMessages.FILE_UPLOADED });
+        } else return setAlert({ type: "danger", message: alertMessages.NO_FILE_UPLOADED });
     };
 
     return (
