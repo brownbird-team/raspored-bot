@@ -124,6 +124,7 @@ class Connection {
                     reject(new errors.DatabaseError('Failed to commit, this could be a problem', err));
                     return;
                 }
+                resolve();
             });
         });
     }
