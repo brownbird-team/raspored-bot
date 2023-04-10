@@ -18,14 +18,15 @@
   },
   "homepage": "https://github.com/brownbird-team/raspored-bot#readme",
   "dependencies": {
-    "@discordjs/builders": "^0.13.0",
-    "@discordjs/rest": "^0.4.1",
-    "discord-api-types": "^0.31.2",
-    "discord.js": "^13.6.0",
+    "@discordjs/builders": "^1.6.1",
+    "@discordjs/rest": "^1.7.0",
+    "discord-api-types": "^0.37.37",
+    "discord.js": "^14.9.0",
     "express": "^4.17.3",
     "mysql": "^2.18.1",
     "nodemailer": "^6.7.3",
     "nodemon": "^2.0.15",
-    "puppeteer": "^14.1.1"
+    "puppeteer": "^14.1.1",
+    "xml-js": "^1.6.11"
   }
 }
