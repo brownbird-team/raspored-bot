@@ -156,3 +156,16 @@ class ScraperError extends Error {
     }
 }
 exports.ScraperError = ScraperError;
+
+
+// -------------------------- XML import error ------------------------- //
+
+class importError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'importError';
+        this.httpErrorCode = 400;
+        this.nonFatal = true;
+    }
+}
+exports.importError = importError;
