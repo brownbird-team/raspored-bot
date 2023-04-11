@@ -1,202 +1,231 @@
 // Uključi funkciju koja pretvara objekt stilova u inline stilove
-const convertToInlineStyles = require('./convertToInlineStyles.js');
-
+const convertToInlineStyles = require("./convertToInlineStyles.js");
+const themeFunctions = require("../themeLoader.js");
 /* Email Template -- izmjene u rasporedu
  *
  * Kao argument funkciji potrebno je dati objekt sa sljedećim svojstvima:
- * 
- *    email         -- Email korisnika kojem se šalje izmjena
- *    theme         -- Tema, može biti dark ili light
- *    shift         -- Smjena prijepodne ili posljepodne
- *    tableHeading  -- Neki string koji će biti ispisan kao naslov izmjene
- *    class         -- String koji predstavlja ime razreda (npr 3.G)
- *    sat1          -- 1. sat ujutro ili -1. sat popodne
- *    sat2          -- 2. sat ujutro ili  0. sat popodne
- *    sat3          -- 3. sat ujutro ili  1. sat popodne
- *    sat4          -- 4. sat ujutro ili  2. sat popodne
- *    sat5          -- 5. sat ujutro ili  3. sat popodne
- *    sat6          -- 6. sat ujutro ili  4. sat popodne
- *    sat7          -- 7. sat ujutro ili  5. sat popodne
- *    sat8          -- 8. sat ujutro ili  6. sat popodne
- *    sat9          -- 9. sat ujutro ili  7. sat popodne
+ *
+ *    email          -- Email korisnika kojem se šalje izmjena
+ *    theme          -- Tema, može biti dark ili light
+ *    tableHeading   -- Neki string koji će biti ispisan kao naslov izmjene
+ *    periodName          -- smjena
+ *    accountType    -- Sip raluna Student ili Professor
+ *    target         -- Ime profesora ili razreda
+ *    pariod[{       -- Array
+ *    name           -- Ime perioda(sata)
+ *    lessonValue    -- Izmjena sata
+ *    classroomValue -- Izmjena učionice
+ * }]
  *    dashboardUrl  -- Link na kontrolnu ploču za izmjenu postavki
  */
-
 module.exports = (arguments) => {
-    
-    const colors = {};
+  const colors = themeFunctions.getThemePropertiesByName(arguments.theme);
 
-    switch (arguments.theme) {
-        // Definiraj boje za svjetlu temu
-        case "light":
-            // Boja poveznica
-            colors.linkColor = "#494747" //+
-            // Boja pozadine dokumenta i zadana boja teksta
-            colors.bodyColor = "#494747"; //+
-            colors.bodyBackground = "#FFFFFF"; //+
-            // Boja pozadine i teksta u zaglavlju tablice
-            colors.tableHeadingColor = "#494747";
-            colors.tableHeadingBackground = "#ffdf2b";
-            // Boja pozadine redaka tablice
-            colors.rowBackground = "#EEEEEE";
-            // Boja granice elementa
-            colors.rowBorder = "#C3C3C3";
-            // Boja pozadine i teksta retka tablice u kojem je izmjena
-            colors.notEmptyColor = "#494747";
-            colors.notEmptyBackground = "#ffdf2b";
-            // Boja teksta u footer-u
-            colors.footerColor = "#595959"; //+
-            break;
-
-        // Definiraj boje za tamnu temu
-        case "dark":
-            // Boja poveznica
-            colors.linkColor = "#ffdf2b"
-            // Boja pozadine dokumenta i zadana boja teksta
-            colors.bodyColor = "#FFFFFF";
-            colors.bodyBackground = "#202225";
-            // Boja pozadine i teksta u zaglavlju tablice
-            colors.tableHeadingColor = "#36393F";
-            colors.tableHeadingBackground = "#ffdf2b";
-            // Boja pozadine redaka tablice
-            colors.rowBackground = "#36393F";
-            // Boja granice elementa
-            colors.rowBorder = "#1f2022";
-            // Boja pozadine i teksta retka tablice u kojem je izmjena
-            colors.notEmptyColor = "#36393F";
-            colors.notEmptyBackground = "#ffdf2b";
-            // Boja teksta u footer-u
-            colors.footerColor = "#ddd";
-            break;
-    }
-
-    const styles = [
-        {
-            selectors: [ '.naslov' ],
-            style: `
-                color: ${colors.bodyColor};
-                font-weight: bold;
-                font-size: 16px;
-                padding-bottom: 10px;
-                text-align: center;
-                
-            `,
-        },{
-            selectors: [ 'body' ],
-            style: `
-                color: ${colors.bodyColor};
-                background-color: ${colors.bodyBackground};
-                padding: 50px;
+  const styles = [
+    {
+      selectors: ["body"],
+      style: `
+                background-color: ${colors.bodyBackgroundColor};
+                padding:2rem;
                 font-family: Helvetica, Arial, sans-serif;
-                font-weight: 400;
             `,
-        },{
-            selectors: [ 'a' ],
-            style: `
-                color: ${colors.linkColor};
-                font-weight: bolder;
-            `,
-        },{
-            selectors: [ 'table' ],
-            style: `
+    },{
+        selectors: [".tableHeading"],
+        style: `
+                margin: 0 auto;
+                text-align: center;
                 width: 250px;
+                box-sizing: border-box;
+
+        `,
+      },{
+        selectors: [".periodName"],
+        style: `
                 margin: auto;
-                border: none;
-                border-collapse: collapse;    
-            `,
-        },{
-            selectors: [ 'td', 'th' ],
-            style: `
-                color: inherit;
-                text-align: center;
-                padding: 5px;
-            `,
-        },{
-            selectors: [ 'tr' ],
-            style: `
-                background-color: ${colors.rowBackground};
-                border-bottom: thin solid ${colors.rowBorder};
-            `,
-        },{
-            selectors: [ '.table-heading' ],
-            style: `
-                color: ${colors.tableHeadingColor};
-                background-color: ${colors.tableHeadingBackground};
-                border: none;
-                font-weight: bold;    
-            `,
-        },{
-            selectors: [ '.not-empty' ],
-            style: `
-                color: ${colors.notEmptyColor};
-                background-color: ${colors.notEmptyBackground};
-                font-weight: bold;    
-            `,
-        },{
-            selectors: [ 'footer' ],
-            style: `
-                font-size: 12px;
-                text-align: center;
-                margin: 30px auto 0px auto;
-                width: 350px;
-            `,
-        },{
-            selectors: [ '.footer-p' ],
-            style: `
-            color: ${colors.footerColor};
-                margin-bottom: 25px;
-            `,
-        },
-    ];
-    
-    // Kreiranje HTML-a
-    let result = `
-        <!DOCTYPE html>
-        <html>
+                text-align: left;
+                width: 250px;
+                box-sizing: border-box;
+
+                `,
+      },{
+        selectors: [".target"],
+        style: `
+                margin: auto;
+                text-align: left;
+                width: 250px;
+                box-sizing: border-box;
+
+        `,
+      },{
+        selectors: ["table"],
+        style: `
+                margin: auto;
+                height:20vh;
+               
+                width: 250px;
+        `,
+      },{
+        selectors: [".footer"],
+        style: `
+                margin: auto;
+                text-align:center;
+                width:350px;
+        `,
+      },{
+        selectors: ["b"],
+        style: `
+                color:${colors.paragraphTextColor};
+        `,
+      },{
+        selectors: ["th"],
+        style: `
+                color:${colors.tableHeadingTextColor};
+                background-color:${colors.tableHeadingBackgroundColor};
+        `,
+      },{
+        selectors: [".name"],
+        style: `
+                color:${colors.tableHeadingTextColor};
+                background-color:${colors.tableHeadingBackgroundColor};
+                width:15%;
+        `,
+      },{
+        selectors: [".lessonValue"],
+        style: `
+                color:${colors.tableHeadingTextColor};
+                background-color:${colors.tableHeadingBackgroundColor};
+                width:70%;
+        `,
+      },{
+        selectors: [".classroomValue"],
+        style: `
+                color:${colors.tableHeadingTextColor};
+                background-color:${colors.tableHeadingBackgroundColor};
+                width:15%;
+        `,
+      },{
+        selectors: ["td","th"],
+        style: `
+            text-align: center;
+            padding: 5px;
+        `,
+      },{
+        selectors: [".fill"],
+        style: `
+                color:${colors.notEmptyTextColor};
+                background-color:${colors.notEmptyBackgroundColor};
+        `,
+      },{
+        selectors: [".noFill"],
+        style: `
+                color:${colors.paragraphTextColor};
+                background-color:${colors.rowBackgroundColor};
+        `,
+      },{
+        selectors: [".hour"],
+        style: `
+                color:${colors.paragraphTextColor};
+                background-color:${colors.rowBackgroundColor};
+        `,
+      },{
+        selectors: ["p"],
+        style: `
+                color:${colors.paragraphTextColor};
+                
+        `,
+      },{
+        selectors: [ 'a' ],
+        style: `
+            color: ${colors.linkTextColor};
+            font-weight: bolder;
+        `,
+      }
+  ];
+
+  let predmet = "";
+  if (arguments.accountType === "Professor") predmet = "/Razred";
+
+  let razred_professor = "";
+  (arguments.accountType === "Student") ? razred_professor = "Razred: " : razred_professor = "Profesor/ica: ";
+
+
+  // Kreiranje HTML-a
+  let result = `
+                <!DOCTYPE html>
+            <html lang="en">
             <head>
-                <meta charset="UTF-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-                <title>Izmjene u rasporedu sati za ${arguments.class}</title>
+                <meta charset="UTF-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                
             </head>
             <body>
+                <div class="tableHeading">
+                    <b>${arguments.tableHeading}</b>
+                </div>
+                <br/>
+                <div class="periodName">
+                    <b>${arguments.periodName}</b>
+                </div>
+                
+                <div class="target">
+                    <b>${razred_professor}${arguments.target}</b>
+                </div>
+             
                 <table>
-                    <div class="naslov">
-                        <b>${arguments.tableHeading}<br>${(arguments.shift == 'prijepodne') ? 'PRIJEPODNE' : 'POSLIJEPODNE'}</b>
-                    </div>
-                    <tr class="table-heading">
-                        <th>Sat</th>
-                        <th>Izmjena</th>
+                    <tr>
+                        
+                        <th class="name">Sat</th>
+                        
+                        <th class="lessonValue">Predmet${predmet}</th>
+                        <th class="classroomValue">Učionica</th>
+                        
                     </tr>
+            
     `;
     
-    // Dodaj jedan row u tablicu za svaki sat
-    for (let i = 1; i <= 9; i++) {
-        result += `
-                    <tr ${(arguments[`sat${i}`] == ``) ? `` : `class="not-empty"` }>
-                        <td>${(arguments.shift == 'prijepodne') ? i : i - 2 }.</td>
-                        <td>${arguments[`sat${i}`]}</td>
-                    </tr>
-        `;
-    }
-    
-    result += `
-                </table>
 
-                <footer>
-                    <p class="footer-p">
-                        E-mail poruka poslana je ${arguments.email}. Ako ne želite primati e-mail poruke od Raspored bota
-                        u budučnosti, možete promijeniti postavke Vašeg profila ili prekinuti pretplatu na svojoj
-                        <b><a href="${arguments.dashboardUrl}" target="_blank">kontrolnoj ploči</a></b>.
-                    </p>
-                    <p class="footer-p">
-                        Srdačan pozdrav, <br>
-                        &copy; BrownBird Team
-                    </p>
-                </footer>
-            </body>
-        </html>
+
+
+  console.log(arguments);
+  arguments.period.forEach((period) => {
+
+
+    let cLessonValue=period.lessonValue ==="" ? "noFill" : "fill";
+    
+    let cClassroomValue=period.classroomValue ==="" ? "noFill" : "fill";
+
+    let cName =  (cLessonValue === "fill" || cClassroomValue==="fill") ? "fill" : "hour" 
+    
+
+    result += `                </strong>
+                <tr>
+                    
+                    
+                    
+                    <td class="${cName}"><strong>${period.name}</strong></td>    
+                    <td class="${cLessonValue}"><strong>${period.lessonValue}</strong></td>
+                    <td class="${cClassroomValue}"><strong>${period.classroomValue}</strong></td>
+                </tr>
+    `;
+  });
+
+  result += `
+  </table>
+        <div class="footer">
+            <p class="footer-p">E-mail poruka poslana je ${arguments.email}. Ako ne želite primati e-mail poruke od Raspored
+                bota
+                u budučnosti, možete promijeniti postavke Vašeg profila ili prekinuti pretplatu na svojoj
+                <b><a href="${arguments.dashboardUrl}" target="_blank">kontrolnoj ploči</a></b>.
+            </p>
+            <p class="footer-p">
+                Srdačan pozdrav, <br>
+                &copy; BrownBird Team
+            </p>
+        </div>
+    </body>
+</html>
     `;
 
-    return convertToInlineStyles(result, styles);
-}
+  return convertToInlineStyles(result, styles);
+};

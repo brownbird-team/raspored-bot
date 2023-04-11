@@ -1,5 +1,5 @@
 /*
-    Ovaj file sadržava boje koje se mjenjaju kroz različite teme
+    Ovaj file sadrži boje koje se mjenjaju kroz različite teme
     i omogućuje kreiranje novih tema
 */
 
@@ -36,7 +36,7 @@ AllThemes.push({
 //----------------------------------------------------------//
 
 AllThemes.push({
-    themeName:                      "Light",   // Ime teme
+    themeName:                      "Light",     // Ime teme
     bodyBackgroundColor:            "#FFFFFF",   // Boja pozadine Bodya      
     buttonTextColor:                "#494747",   // Boja teksta         
     buttonBackgroundColor:          "#ffdf2b",   // Boja pozadine tipke(poveznice)   
@@ -46,8 +46,8 @@ AllThemes.push({
     tableHeadingTextColor:          "#494747",   // Boja teksta u naslovu tablice s izmejna            [Za sad se koristi kasnije možda neće]
     tableHeadingBackgroundColor:    "#ffdf2b",   // Boja pozadine u naslovu tablice s izmjenama        [Za sad se koristi kasnije možda neće]
     rowBackgroundColor:             "#EEEEEE",   // Boja pozadine redaka tablice                       [Za sad se koristi kasnije možda neće]
-    rowBorderColor:                 "C3C3C3",   // Boja bordera svakog polja u tablici s izmjenama    [Za sad se koristi kasnije možda neće]
-    notEmptyTextColor:              "494747",   // Boja teksta u poljima koja imaju izmjenu           [Za sad se koristi kasnije možda neće]
+    rowBorderColor:                 "C3C3C3",    // Boja bordera svakog polja u tablici s izmjenama    [Za sad se koristi kasnije možda neće]
+    notEmptyTextColor:              "494747",    // Boja teksta u poljima koja imaju izmjenu           [Za sad se koristi kasnije možda neće]
     notEmptyBackgroundColor:        "#ffdf2b",   // Boja polja koja imaju izmjenu                      [Za sad se koristi kasnije možda neće]
 });
 
@@ -57,11 +57,11 @@ AllThemes.push({
 //----------------------------------------------------------//
 
 AllThemes.push({
-    themeName:                      "Dark",   // Ime teme
+    themeName:                      "Dark",      // Ime teme
     bodyBackgroundColor:            "#202225",   // Boja pozadine Bodya      
     buttonTextColor:                "#36393F",   // Boja teksta         
     buttonBackgroundColor:          "#ffdf2b",   // Boja pozadine tipke(poveznice)   
-    footerTextColor:                "#ddd",   // Boja teksta u footeru         
+    footerTextColor:                "#ddd",      // Boja teksta u footeru         
     paragraphTextColor:             "#FFFFFF",   // Boja teksta u paragrahu  
     linkTextColor:                  "#ffdf2b",   // Boja teksta u poveznici [Nije ista kao u buttonBackgroundColor]
     tableHeadingTextColor:          "#36393F",   // Boja teksta u naslovu tablice s izmejna            [Za sad se koristi kasnije možda neće]
@@ -71,6 +71,28 @@ AllThemes.push({
     notEmptyTextColor:              "#36393F",   // Boja teksta u poljima koja imaju izmjenu           [Za sad se koristi kasnije možda neće]
     notEmptyBackgroundColor:        "#ffdf2b",   // Boja polja koja imaju izmjenu                      [Za sad se koristi kasnije možda neće]
 });
+
+// Funkcija za dobivanje svih kreiranih tema
+const getAllThemeNames = () =>{
+
+    let result=[]; // array sa imenima svih tema
+
+    result= AllThemes.map(Theme => Theme.themeName); // Stavlja ime svake teme u Array
+
+    return result;
+}
+
+// Funkcija za dobivanje boja preko imena teme
+
+const getThemePropertiesByName = (ThemeName) =>{
+
+    let result;
+
+    result = AllThemes.find(theme => theme.themeName === ThemeName);
+
+    return result;
+}
+
 
 //----------------------------------------------------------//
 //                    POTREBNO NAPRAVITI                    //
@@ -106,4 +128,9 @@ AllThemes.push({
 
 
 // Pretraživanje tražene teme
-console.log(AllThemes.find(obj => obj.themeName==='ThemplateName'))
+// console.log(AllThemes.find(obj => obj.themeName==='ThemplateName'));
+
+//let sveTeme = getThemePropertiesByName('Light');
+
+//console.log(sveTeme);
+module.exports = {getAllThemeNames,getThemePropertiesByName};

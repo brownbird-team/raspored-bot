@@ -1,6 +1,6 @@
 // Uključi funkciju koja pretvara objekt stilova u inline stilove
 const convertToInlineStyles = require('./convertToInlineStyles.js');
-
+const themeFunctions = require('../themeLoader.js');
 /* Email Template -- zbogom
  *
  * Kao argument funkciji potrebno je dati objekt sa sljedećim svojstvima:
@@ -8,37 +8,16 @@ const convertToInlineStyles = require('./convertToInlineStyles.js');
  *    email         -- Email korisnika kojem se šalje izmjena
  *    theme         -- Tema, može biti dark ili light
  */
-
 module.exports = (arguments) => {
 
-    const colors = {};
-
-    switch (arguments.theme) {
-        // Definiraj boje za svjetlu temu
-        case "light":
-            // Boja pozadine dokumenta i zadana boja teksta
-            colors.bodyColor = "#494747";
-            colors.bodyBackground = "#FFFFFF";
-            // Boja teksta u footer-u
-            colors.footerColor = "#595959";
-            break;
-
-        // Definiraj boje za tamnu temu
-        case "dark":
-            // Boja pozadine dokumenta i zadana boja teksta
-            colors.bodyColor = "#FFFFFF";
-            colors.bodyBackground = "#202225";
-            // Boja teksta u footer-u
-            colors.footerColor = "#ddd";
-            break;
-    }
+    // Dobivanje boja u zadanoj temi 
+    const colors =  themeFunctions.getThemePropertiesByName(arguments.theme);
 
     const styles = [
         {
             selectors: [ 'body' ],
             style: `
-                color: ${colors.bodyColor};
-                background-color: ${colors.bodyBackground};
+                background-color: ${colors.bodyBackgroundColor};
                 padding: 50px;
                 font-size: 16px;
                 font-family: Helvetica, Arial, sans-serif;
@@ -46,14 +25,14 @@ module.exports = (arguments) => {
         },{
             selectors: [ 'p' ],
             style: `
-                color: inherit;
+                color: ${colors.paragraphTextColor};
                 margin: 25px 0px;
                 max-width: 1000px;
             `,
         },{
             selectors: [ 'footer' ],
             style: `
-                color: ${colors.footerColor};
+                color: ${colors.footerTextColor};
                 font-size: 12px;
             `,
         }
