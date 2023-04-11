@@ -1,8 +1,8 @@
 import React from "react";
 import "./ComponentBody.css";
 
-const ComponentBody = ({ children }) => {
-    return <div className="component-body">{children}</div>;
+const ComponentBody = ({ children, className = "" }) => {
+    return <div className={`component-body ${className}`}>{children}</div>;
 };
 
 export default ComponentBody;
