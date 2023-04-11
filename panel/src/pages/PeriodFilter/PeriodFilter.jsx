@@ -5,7 +5,7 @@ import FilterAvailableCard from "../../components/Filter/FilterAvailableCard";
 import FilterList from "../../components/Filter/FilterList";
 import Alert from "../../components/Alert";
 import { useSelector, useDispatch } from "react-redux";
-import { addPeriodFilter, updatePeriodFilter, removePeriodFilter } from "../../features/periodFilter";
+import { addPeriodFilter, updatePeriodFilter, removePeriodFilter } from "../../features/periods";
 import { formatPeriod } from "./utils/formatPeriod";
 import { validateFilter } from "../../services/validateFilter";
 import statusCodes from "../../data/constants/messageFilter";
@@ -20,7 +20,7 @@ const PeriodFilter = () => {
     // Dohvaća sve spremljene periode
     const allPeriods = useSelector((state) => state.periods.value);
     // Dohvaća sve spremljene filtere perioda
-    const storedFilters = useSelector((state) => state.periodFilter.filters);
+    const storedFilters = useSelector((state) => state.periods.filters);
 
     const [alert, setAlert] = useState(null);
     const [availablePeriods, setAvailablePeriods] = useState(allPeriods);

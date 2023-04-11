@@ -6,7 +6,7 @@ import FilterList from "../../components/Filter/FilterList";
 import Alert from "../../components/Alert";
 import FilterSelectedCard from "../../components/Filter/FilterSelectedCard";
 import { useSelector, useDispatch } from "react-redux";
-import { addClassFilter, updateClassFilter, removeClassFilter } from "../../features/classFilter";
+import { addClassFilter, updateClassFilter, removeClassFilter } from "../../features/classes";
 import { validateFilter } from "../../services/validateFilter";
 import statusCodes from "../../data/constants/messageFilter";
 import { IoIosClose } from "react-icons/io";
@@ -20,7 +20,7 @@ const ClassFilter = () => {
     // Dohvaća sve spremljene razrede
     const allClasses = useSelector((state) => state.classes.value);
     // Dohvaća sve spremljene filtere razreda
-    const storedFilters = useSelector((state) => state.classFilter.filters);
+    const storedFilters = useSelector((state) => state.classes.filters);
 
     const [alert, setAlert] = useState(null);
     const [availableClasses, setAvailableClasses] = useState(allClasses);
