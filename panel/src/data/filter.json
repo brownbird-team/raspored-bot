@@ -1,0 +1,10 @@
+ {
+    "FILTER_CREATED":         "filter-created",
+    "FILTER_CHANGED":         "filter-changed",
+    "EMPTY_FILTERNAME":       "empty-filtername",
+    "EMPTY_CLASSES":          "empty-classes",
+    "EMPTY_PERIODS":          "empty-periods",
+    "EXIST_FILTERNAME":       "exist-filtername",
+    "SUCCESSFULLY_DELETED":   "successfully-deleted"
+}
+

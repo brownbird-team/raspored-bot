@@ -4,11 +4,12 @@ import FilterSelectedCard from "../../components/Filter/FilterSelectedCard";
 import FilterAvailableCard from "../../components/Filter/FilterAvailableCard";
 import FilterList from "../../components/Filter/FilterList";
 import Alert from "../../components/Alert";
+import { NotificationSuccess, NotificationWarning } from "../../services/notification";
 import { useSelector, useDispatch } from "react-redux";
 import { addPeriodFilter, updatePeriodFilter, removePeriodFilter } from "../../features/periods";
 import { formatPeriod } from "./utils/formatPeriod";
 import { validateFilter } from "../../services/validateFilter";
-import statusCodes from "../../data/constants/messageFilter";
+import statusCodes from "../../data/filter.json";
 import { IoIosClose } from "react-icons/io";
 
 // Definiraj Page Items za Header
@@ -74,35 +75,21 @@ const PeriodFilter = () => {
                 : validateFilter(newFilter, storedFilters, true)
         ) {
             case statusCodes.EMPTY_FILTERNAME:
-                setAlert({ message: statusCodes.EMPTY_FILTERNAME, type: "danger" });
+                setAlert(new NotificationWarning(<>Polje <b className="highlight">Naziv filtera</b> ne smije biti prazno</>));
                 break;
             case statusCodes.EMPTY_PERIODS:
-                setAlert({ message: statusCodes.EMPTY_PERIODS, type: "danger" });
+                setAlert(new NotificationWarning(<>Filter <b className="highlight">{filterName}</b> mora sadržavati <b className="highlight">minimalno</b> jedan period</>));
                 break;
             case statusCodes.EXIST_FILTERNAME:
-                setAlert({ message: statusCodes.EXIST_FILTERNAME, type: "danger" });
+                setAlert(new NotificationWarning(<>Naziv filtera <b className="highlight">{filterName}</b> već postoji</>));
                 break;
             case statusCodes.FILTER_CREATED:
-                setAlert({
-                    message: (
-                        <>
-                            {statusCodes.FILTER_CREATED} <b className="highlight">{filterName}</b>
-                        </>
-                    ),
-                    type: "success",
-                });
+                setAlert(new NotificationSuccess(<>Uspješno je kreiran novi filter <b className="highlight">{filterName}</b></>));
                 dispatch(addPeriodFilter(newFilter));
                 resetToInitialState();
                 break;
             case statusCodes.FILTER_CHANGED:
-                setAlert({
-                    message: (
-                        <>
-                            {statusCodes.FILTER_CHANGED} <b className="highlight">{filterName}</b>
-                        </>
-                    ),
-                    type: "success",
-                });
+                setAlert(new NotificationSuccess(<>Uspješno je promijenjen filter <b className="highlight">{filterName}</b></>));
                 dispatch(updatePeriodFilter({ ...newFilter, uniqueId: filterUniqueId }));
                 resetToInitialState();
                 break;
@@ -114,14 +101,7 @@ const PeriodFilter = () => {
         // Briše filter perioda iz stora
         dispatch(removePeriodFilter(filterName));
         // Šalje poruku korisniku
-        setAlert({
-            message: (
-                <>
-                    {statusCodes.SUCCESSFULLY_DELETED} <b className="highlight">{filterName}</b>
-                </>
-            ),
-            type: "success",
-        });
+        setAlert(new NotificationSuccess(<>Uspješno je obirsan filter <b className="highlight">{filterName}</b></>));
         // Vraća vrijednosti stateova na početno stanje
         resetToInitialState();
     };

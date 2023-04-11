@@ -4,11 +4,12 @@ import MainLayout from "../../layouts/MainLayout";
 import FilterAvailableCard from "../../components/Filter/FilterAvailableCard";
 import FilterList from "../../components/Filter/FilterList";
 import Alert from "../../components/Alert";
+import { NotificationSuccess, NotificationWarning } from "../../services/notification";
 import FilterSelectedCard from "../../components/Filter/FilterSelectedCard";
 import { useSelector, useDispatch } from "react-redux";
 import { addClassFilter, updateClassFilter, removeClassFilter } from "../../features/classes";
 import { validateFilter } from "../../services/validateFilter";
-import statusCodes from "../../data/constants/messageFilter";
+import statusCodes from "../../data/filter.json";
 import { IoIosClose } from "react-icons/io";
 
 // Definiraj Page Items za Header
@@ -65,35 +66,21 @@ const ClassFilter = () => {
                 : validateFilter(newFilter, storedFilters, true)
         ) {
             case statusCodes.EMPTY_FILTERNAME:
-                setAlert({ message: statusCodes.EMPTY_FILTERNAME, type: "danger" });
+                setAlert(new NotificationWarning(<>Polje <b className="highlight">Naziv filtera</b> ne smije biti prazno</>));
                 break;
             case statusCodes.EMPTY_CLASSES:
-                setAlert({ message: statusCodes.EMPTY_CLASSES, type: "danger" });
+                setAlert(new NotificationWarning(<>Filter <b className="highlight">{filterName}</b> mora sadržavati <b className="highlight">minimalno</b> jedan razred</>));
                 break;
             case statusCodes.EXIST_FILTERNAME:
-                setAlert({ message: statusCodes.EXIST_FILTERNAME, type: "danger" });
+                setAlert(new NotificationWarning(<>Naziv filtera <b className="highlight">{filterName}</b> već postoji</>));
                 break;
             case statusCodes.FILTER_CREATED:
-                setAlert({
-                    message: (
-                        <>
-                            {statusCodes.FILTER_CREATED} <b className="highlight">{filterName}</b>
-                        </>
-                    ),
-                    type: "success",
-                });
+                setAlert(new NotificationSuccess(<>Uspješno je kreiran novi filter <b className="highlight">{filterName}</b></>));
                 dispatch(addClassFilter(newFilter));
                 resetToInitialState();
                 break;
             case statusCodes.FILTER_CHANGED:
-                setAlert({
-                    message: (
-                        <>
-                            {statusCodes.FILTER_CHANGED} <b className="highlight">{filterName}</b>
-                        </>
-                    ),
-                    type: "success",
-                });
+                setAlert(new NotificationSuccess(<>Uspješno je promijenjen filter <b className="highlight">{filterName}</b></>));
                 dispatch(updateClassFilter({ ...newFilter, uniqueId: filterUniqueId }));
                 resetToInitialState();
                 break;
@@ -105,14 +92,7 @@ const ClassFilter = () => {
         // Briše filter razreda iz stora
         dispatch(removeClassFilter(filterName));
         // Šalje poruku korisniku
-        setAlert({
-            message: (
-                <>
-                    {statusCodes.SUCCESSFULLY_DELETED} <b className="highlight">{filterName}</b>
-                </>
-            ),
-            type: "success",
-        });
+        setAlert(new NotificationSuccess(<>Uspješno je obirsan filter <b className="highlight">{filterName}</b></>));
         // Vraća vrijednosti stateova na početno stanje
         resetToInitialState();
     };

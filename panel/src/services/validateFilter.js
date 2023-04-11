@@ -1,4 +1,4 @@
-import statusCodes from "../data/constants/messageFilter";
+import statusCodes from "../data/filter.json";
 
 export const validateFilter = (filter, storedFilters, isExistFilter = false) => {
     // Provjerava duljinu naziva filtera

@@ -7,7 +7,7 @@ import ComponentFooter from "../../components/ComponentFooter";
 import PrimaryButton from "../../components/PrimaryButton";
 import SecondaryButton from "../../components/SecondaryButton";
 import Alert from "../../components/Alert";
-import alertMessages from "../../data/constants/importSchedule";
+import { NotificationSuccess, NotificationWarning } from "../../services/notification";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 // Definiraj Page Items za Header
@@ -39,10 +39,10 @@ const ScheduleImport = () => {
             const fileExtension = file.name.split(".").pop();
 
             // Provjerava je li datoteka xml
-            if (fileExtension !== "xml") return setAlert({ type: "danger", message: alertMessages.NO_FILE_XML });
+            if (fileExtension !== "xml") return setAlert(new NotificationWarning(<>Datoteka <b className="highlight">{file.name}</b> nije <b className="highlight">.xml</b></>));
 
-            return setAlert({ type: "success", message: alertMessages.FILE_UPLOADED });
-        } else return setAlert({ type: "danger", message: alertMessages.NO_FILE_UPLOADED });
+            return setAlert(new NotificationSuccess(<>Datoteka <b className="highlight">{file.name}</b> je uspješno prenešena</>));
+        } else return setAlert(new NotificationWarning(<>Nije odabrana niti jedna datoteka</>));
     };
 
     return (
