@@ -35,3 +35,18 @@
     display: flex;
     flex-direction: column;
 }
+
+.week-save {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 870px) {
+    .weeks-main {
+        flex-direction: column;
+    }
+
+    .weeks-main > div {
+        width: 100%;
+    }
+}

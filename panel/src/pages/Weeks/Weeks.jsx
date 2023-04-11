@@ -3,7 +3,6 @@ import "./Weeks.css";
 import MainLayout from "../../layouts/MainLayout";
 import ComponentHeader from "../../components/ComponentHeader";
 import ComponentBody from "../../components/ComponentBody";
-import ComponentFooter from "../../components/ComponentFooter";
 import PrimaryButton from "../../components/PrimaryButton";
 import { useSelector, useDispatch } from "react-redux";
 import { saveWeeksOrder } from "../../features/weeks";
@@ -15,8 +14,13 @@ const pageItems = ["Tjedni"];
 const Weeks = () => {
     const dispatch = useDispatch();
     const weeks = useSelector((state) => state.weeks.value);
-    const [availableWeeks, setAvailableWeeks] = useState(weeks);
-    const [selectedWeeks, setSelectedWeeks] = useState([]);
+    const weeksStored = useSelector((state) => state.weeks.weeksOrder);
+    const [selectedWeeks, setSelectedWeeks] = useState(weeksStored);
+    const [availableWeeks, setAvailableWeeks] = useState(
+        weeks.filter((week) => {
+            return weeksStored.findIndex((storedWeek) => storedWeek.id === week.id) === -1;
+        })
+    );
 
     // Handler koji dodaje novi tjedan u listu odabranih tjedana
     const handleAddSelectedWeek = (id) => {
@@ -62,17 +66,6 @@ const Weeks = () => {
 
     return (
         <MainLayout pageItems={pageItems}>
-            <div className="weeks-header">
-                <ComponentHeader>
-                    <span>Tjedni</span>
-                </ComponentHeader>
-                <ComponentBody className="p-4">
-                    <PrimaryButton type="button" onClick={() => dispatch(saveWeeksOrder(selectedWeeks))}>
-                        Spremi tjedne
-                    </PrimaryButton>
-                </ComponentBody>
-            </div>
-
             <div className="weeks-main">
                 <div className="weeks-selected">
                     <ComponentHeader>
@@ -117,6 +110,17 @@ const Weeks = () => {
                         )}
                     </ComponentBody>
                 </div>
+            </div>
+
+            <div className="weeks-header">
+                <ComponentHeader>
+                    <span>Tjedni</span>
+                </ComponentHeader>
+                <ComponentBody className="p-4 week-save">
+                    <PrimaryButton type="button" onClick={() => dispatch(saveWeeksOrder(selectedWeeks))}>
+                        Spremi tjedne
+                    </PrimaryButton>
+                </ComponentBody>
             </div>
         </MainLayout>
     );
