@@ -29,6 +29,10 @@
         }
     },
 
+    "weeks": {
+        "path": "/settings/weeks"
+    },
+
     "logout": {
         "path": "/logout"
     }
