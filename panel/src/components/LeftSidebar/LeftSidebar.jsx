@@ -2,7 +2,7 @@ import "./LeftSidebar.css";
 import { IoIosClose, RxHamburgerMenu } from "react-icons/all";
 import { useState } from "react";
 import LeftSidebarItem from "./LeftSidebarItem";
-import items from "../../data/LeftSidebar";
+import items from "./items";
 
 const LeftSidebar = () => {
     const [active, setActive] = useState(false);

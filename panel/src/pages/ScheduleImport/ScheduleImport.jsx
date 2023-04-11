@@ -87,7 +87,7 @@ const ScheduleImport = () => {
                         <span>Odabir rasporeda</span>
                     </ComponentHeader>
 
-                    <ComponentBody>
+                    <ComponentBody className="p-4">
                         <input
                             type="file"
                             id="schedule-import"
