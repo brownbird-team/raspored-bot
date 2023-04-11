@@ -29,6 +29,10 @@
         }
     },
 
+    "days": {
+        "path": "/settings/days"
+    },
+
     "weeks": {
         "path": "/settings/weeks"
     },

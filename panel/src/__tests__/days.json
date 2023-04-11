@@ -1,0 +1,9 @@
+[
+    { "id": 1, "name": "Monday", "dayOfWeek": null },
+    { "id": 2, "name": "Tuesday", "dayOfWeek": null },
+    { "id": 3, "name": "Wednesday", "dayOfWeek": null },
+    { "id": 4, "name": "Thursday", "dayOfWeek": null },
+    { "id": 5, "name": "Friday", "dayOfWeek": null },
+    { "id": 6, "name": "Any day", "dayOfWeek": null },
+    { "id": 7, "name": "Every day", "dayOfWeek": null }
+]

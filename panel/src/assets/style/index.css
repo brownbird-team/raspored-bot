@@ -95,6 +95,14 @@ button {
     color: var(--text-primary);
 }
 
+.custom-select {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    color: var(--text-primary);
+    background-color: var(--button-secondary);
+}
+
 .icon {
     cursor: pointer;
 }

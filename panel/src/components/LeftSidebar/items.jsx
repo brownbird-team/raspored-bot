@@ -36,6 +36,10 @@ const items = [
                 ],
             },
             {
+                title: "Dani",
+                path: routes.days.path,
+            },
+            {
                 title: "Tjedni",
                 path: routes.weeks.path,
             },
