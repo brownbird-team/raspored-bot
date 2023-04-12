@@ -103,6 +103,22 @@ button {
     background-color: var(--button-secondary);
 }
 
+.custom-datepicker {
+    outline: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    color: var(--text-primary);
+    background-color: var(--button-secondary);
+}
+
+.custom-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    color: var(--text-primary);
+    background-color: var(--border-primary);
+}
+
 .icon {
     cursor: pointer;
 }
