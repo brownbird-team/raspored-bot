@@ -190,6 +190,21 @@ class Connection {
             });
         });
     }
+
+    // Napravi backslash escape za neki string
+    static escape(...args) {
+        return mysql.escape(...args);
+    }
+
+    // Napravi escape za mysql identifier
+    static escapeId(...args) {
+        return mysql.escapeId(...args);
+    }
+
+    // Pripremi query (formatiraj ga odnosno zamjeni upitnike)
+    static format(...args) {
+        return mysql.format(...args);
+    }
 }
 
 // Kreira connection pool i provjerava postojanje nužnih tablica u bazi, te
