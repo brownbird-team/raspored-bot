@@ -1,0 +1,21 @@
+.view-changes-body {
+	width: 100%;
+	overflow-x: auto;
+}
+
+.changes-table {
+	width: 100%;
+	min-width: 600px;
+}
+
+.changes-table th,
+.changes-table td {
+	width: 6rem;
+	height: 4rem;
+	text-align: center;
+	color: var(--text-primary);
+}
+
+.view-change-item:hover {
+	background-color: var(--on-hover);
+}

@@ -1,8 +1,8 @@
 import React from "react";
 import "./ComponentHeader.css";
 
-const ComponentHeader = ({ children }) => {
-    return <div className="component-header">{children}</div>;
+const ComponentHeader = ({ children, className = "" }) => {
+    return <div className={`component-header ${className}`}>{children}</div>;
 };
 
 export default ComponentHeader;

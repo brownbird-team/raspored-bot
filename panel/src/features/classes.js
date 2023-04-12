@@ -4,7 +4,31 @@ import classes from "../__tests__/classes.json";
 
 const initialState = {
     value: classes,
-    filters: [{ filterName: "default", classes: classes, uniqueId: generateId() }],
+    filters: [
+        { filterName: "default", classes: classes, uniqueId: generateId() },
+        { filterName: "b-smjena", classes: [
+            { "id": 21, "label": "1.E" },
+            { "id": 22, "label": "1.F" },
+            { "id": 23, "label": "1.G" },
+            { "id": 24, "label": "1.M" },
+            { "id": 25, "label": "1.N" },
+            { "id": 26, "label": "2.E" },
+            { "id": 27, "label": "2.F" },
+            { "id": 28, "label": "2.G" },
+            { "id": 29, "label": "2.M" },
+            { "id": 30, "label": "2.N" },
+            { "id": 31, "label": "3.E" },
+            { "id": 32, "label": "3.F" },
+            { "id": 33, "label": "3.G" },
+            { "id": 34, "label": "3.M" },
+            { "id": 35, "label": "3.N" },
+            { "id": 36, "label": "4.E" },
+            { "id": 37, "label": "4.F" },
+            { "id": 38, "label": "4.G" },
+            { "id": 39, "label": "4.M" },
+            { "id": 40, "label": "4.N" }
+        ], uniqueId: "b-smjena"}
+    ],
 };
 
 export const classesSlice = createSlice({

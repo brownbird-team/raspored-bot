@@ -1,0 +1,33 @@
+.create-change {
+	margin-bottom: 2rem;
+}
+
+.create-change-input {
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	margin: 1rem 0;
+	color: var(--text-primary);
+}
+
+.create-change-input span {
+	min-width: 12rem;
+}
+
+.create-change-input select,
+.create-change-input input {
+	min-width: 10rem;
+}
+
+@media (max-width: 568px) {
+	.create-change-input {
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.create-change-input span,
+	.create-change-input select,
+	.create-change-input input {
+		width: 100%;
+	}
+}

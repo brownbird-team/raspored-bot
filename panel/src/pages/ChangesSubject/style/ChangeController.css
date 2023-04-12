@@ -1,0 +1,24 @@
+.change-controller-info {
+	margin-bottom: 2rem;
+}
+
+.change-controller-info .change-controller-item {
+	display: flex;
+	width: 20rem;
+	margin: 0 0 1rem 0;
+	padding: 0.5rem 1rem;
+	border-radius: 0.25rem;
+	color: var(--text-primary);
+	background-color: var(--border-primary);
+}
+
+.change-controller-info .change-item-title {
+	width: 10rem;
+}
+
+@media (max-width: 520px) {
+	.change-controller-info .change-controller-item {
+		flex-direction: column;
+		width: 100%;
+	}
+}
