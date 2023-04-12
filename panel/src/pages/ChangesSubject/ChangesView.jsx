@@ -3,12 +3,15 @@ import "./style/ChangesView.css";
 import ComponentHeader from "../../components/ComponentHeader";
 import ComponentBody from "../../components/ComponentBody";
 import { BiEdit } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setActiveChange } from "../../features/changes";
 
 const ChangesView = ({ onModifyChange }) => {
+    const dispatch = useDispatch();
     const changes = useSelector((state) => state.change.changes);
 
     const handleModifyChange = (change) => {
+        dispatch(setActiveChange(change));
         onModifyChange(change, "Promijeni");
     }
 
@@ -34,14 +37,14 @@ const ChangesView = ({ onModifyChange }) => {
                                 <tr key={index} className="view-change-item">
                                     <td>{index}</td>
                                     <td>{change.date}</td>
-                                    <td>{change.classes.filterName}</td>
-                                    <td>{change.periods.filterName}</td>
+                                    <td>{change.classFilter.filterName}</td>
+                                    <td>{change.periodFilter.filterName}</td>
                                     <td><BiEdit size={25} className="icon" onClick={() => handleModifyChange(change)} /></td>
                                 </tr>
                             ))
                         ) : (
 							<tr className="view-change-item">
-								<td colSpan="4">Nema izmjena predmeti / učionice</td>
+								<td colSpan="5">Nema izmjena predmeti / učionice</td>
 							</tr>
                         )}
                     </tbody>

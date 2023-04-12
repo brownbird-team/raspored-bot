@@ -1,0 +1,34 @@
+.change-table-main {
+	overflow-x: auto;
+}
+
+.change-table {
+	width: 100%;
+	min-width: 1120px;
+}
+
+.change-table td {
+	max-width: 0.5rem;
+	height: 2rem;
+	text-align: center;
+	border: 1px solid var(--border-primary);
+	color: var(--text-primary);
+}
+
+.table-filter {
+	color: #f3f5f7 !important;
+	background-color: var(--component-header);
+}
+
+.table-content {
+	background-color: var(--component-primary);
+}
+
+.table-content.selected {
+	background-color: var(--background-primary);
+}
+
+.change-table-footer {
+	background-color: transparent;
+	padding: 1rem 0;
+}

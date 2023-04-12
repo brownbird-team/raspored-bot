@@ -1,0 +1,34 @@
+.change-modal-header {
+	justify-content: space-between;
+	height: 5rem;
+}
+
+.change-modal {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 50%;
+	height: 30rem;
+	background-color: var(--border-primary);
+}
+
+.change-modal-header-cell-details {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.cell-detail {
+	display: flex;
+	gap: 1rem;
+}
+
+.cell-detail span {
+	width: 3rem;
+}
+
+.cell-detail:nth-child(2n) {
+	margin-top: 0.5rem;
+}

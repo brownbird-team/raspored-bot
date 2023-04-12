@@ -5,7 +5,7 @@ import ComponentBody from "../../components/ComponentBody";
 import ComponentFooter from "../../components/ComponentFooter";
 import PrimaryButton from "../../components/PrimaryButton";
 import { useSelector, useDispatch } from "react-redux";
-import { addChange } from "../../features/changes";
+import { addChange, setActiveChange } from "../../features/changes";
 
 const ChangeCreate = ({ onCreateChange }) => {
 	const dispatch = useDispatch();
@@ -29,8 +29,9 @@ const ChangeCreate = ({ onCreateChange }) => {
 	}
 
 	const handleCreateChange = () => {
-		const change = {classes: selectedClasses, periods: selectedPeriods, date: date};
+		const change = {classFilter: selectedClasses, periodFilter: selectedPeriods, date: date};
 		dispatch(addChange(change));
+        dispatch(setActiveChange(change));
         onCreateChange(change, "Kreiraj");
 	}
 
