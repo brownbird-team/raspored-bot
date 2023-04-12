@@ -1,5 +1,5 @@
 import React from "react";
-import "./ChangeController.css";
+import "./style/ChangeController.css";
 import ComponentHeader from "../../components/ComponentHeader";
 import ComponentBody from "../../components/ComponentBody";
 import ComponentFooter from "../../components/ComponentFooter";
@@ -66,8 +66,8 @@ const ChangeController = ({ change, changeLabel, onBack }) => {
                         <thead>
                             <tr>
                                 <th>ID verzije</th>
-                                <th>Datum verzije</th>
-                                <th>Vrijeme verzije</th>
+                                <th>Datum kreiranja verzije</th>
+                                <th>Vrijeme kreiranja verzije</th>
                             </tr>
                         </thead>
                         <tbody>

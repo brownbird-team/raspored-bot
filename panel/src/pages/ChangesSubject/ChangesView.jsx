@@ -1,11 +1,11 @@
 import React from "react";
-import "./ViewChanges.css";
+import "./style/ChangesView.css";
 import ComponentHeader from "../../components/ComponentHeader";
 import ComponentBody from "../../components/ComponentBody";
 import { BiEdit } from "react-icons/bi";
 import { useSelector } from "react-redux";
 
-const ViewChanges = ({ onModifyChange }) => {
+const ChangesView = ({ onModifyChange }) => {
     const changes = useSelector((state) => state.change.changes);
 
     const handleModifyChange = (change) => {
@@ -51,4 +51,4 @@ const ViewChanges = ({ onModifyChange }) => {
     );
 };
 
-export default ViewChanges;
+export default ChangesView;

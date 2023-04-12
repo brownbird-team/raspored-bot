@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
-import CreateChange from "./CreateChange";
-import ViewChanges from "./ViewChanges";
+import ChangeCreate from "./ChangeCreate";
+import ChangesView from "./ChangesView";
 import ChangeController from "./ChangeController";
 
-const pageItems = ["Odabir razreda i perioda"]
+const pageItems = ["Izmjene u predmetima / učionicama"]
 
-const SubjectClassroomChanges = () => {
+const Changes = () => {
     const [change, setChange] = useState(null);
     const [changeLabel, setChangeLabel] = useState(null);
 
@@ -21,12 +21,12 @@ const SubjectClassroomChanges = () => {
                 <ChangeController change={change} changeLabel={changeLabel} onBack={() => setChange(null)} />
             ) : (
                 <>
-                    <CreateChange onCreateChange={(change, label) => handleSetChange(change, label)} />
-                    <ViewChanges onModifyChange={(change, label) => handleSetChange(change, label)}/>
+                    <ChangeCreate onCreateChange={(change, label) => handleSetChange(change, label)} />
+                    <ChangesView onModifyChange={(change, label) => handleSetChange(change, label)}/>
                 </>
             )}
         </MainLayout>
     );
 };
 
-export default SubjectClassroomChanges;
+export default Changes;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./CreateChange.css";
+import "./style/ChangeCreate.css";
 import ComponentHeader from "../../components/ComponentHeader";
 import ComponentBody from "../../components/ComponentBody";
 import ComponentFooter from "../../components/ComponentFooter";
@@ -7,7 +7,7 @@ import PrimaryButton from "../../components/PrimaryButton";
 import { useSelector, useDispatch } from "react-redux";
 import { addChange } from "../../features/changes";
 
-const CreateChange = ({ onCreateChange }) => {
+const ChangeCreate = ({ onCreateChange }) => {
 	const dispatch = useDispatch();
     const classesAll = useSelector((state) => state.classes.filters);
     const periodsAll = useSelector((state) => state.periods.filters);
@@ -70,4 +70,4 @@ const CreateChange = ({ onCreateChange }) => {
     );
 };
 
-export default CreateChange;
+export default ChangeCreate;
