@@ -6,3 +6,7 @@
     align-items: center;
     background-color: var(--background-primary);
 }
+
+.main-layout-content {
+    width: 100%;
+}
