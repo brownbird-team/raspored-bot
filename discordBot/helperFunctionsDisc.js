@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { checkOptions } = require("../databaseQueries.js");
+const { checkOptions } = require('../database/queries/settingsTables.js')
 const baza = require("./databaseQueriesDisc.js");
 
 exports.asyncFilter = async (arr, condFunc) => {
@@ -60,7 +60,7 @@ exports.formatDateString = (dateString) => {
 
 // Pregledaj sve postavke u tablici disc_settings i kreiraj ih ako ne postoje
 exports.checkOptions = async () => {
-    return await checkOptions('disc_settings', [
+    return await checkOptions('ras_disc_setting', [
         
         { name: 'token',             value: '',                               defaultOk: false },
         { name: 'prefix',            value: '.',                              defaultOk: true  },

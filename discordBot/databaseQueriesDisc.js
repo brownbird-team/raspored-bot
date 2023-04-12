@@ -1,11 +1,13 @@
-// Dodaj potrebne funkcije iz ostalih datoteka
-const { promiseQuery } = require("./../databaseConnect.js");
-const { dajRazred, dajRazredById, getOption, setOption } = require("./../databaseQueries.js");
-
+// Dodaj funkcije komuniciranje s bazom
+const db = require('../database/connect.js')
+// Dodaj funkcije za dobivanje razreda
+const {getClassByName,getClassById,getAllClasses} = require('../database/queries/classInfo.js');
+//const { dajRazred, getClassById, getOption} = require("./../databaseQueries.js");
+const {setOption,getOption} = require('../database/queries/settingsTables.js')
 // Daj podatke za traženi server po ID-u
 exports.getServer = async (server_id) => {
     // Zatraži podatke za server
-    let result = await promiseQuery(`SELECT * FROM disc_serveri WHERE server_id = '${server_id}'`);
+    let result = await db.Connection.query(`SELECT * FROM ras_disc_server WHERE server_id = '${server_id}'`);
     // Ako server postoji u bazi nastavi
     if (result.length === 0) {
         return null;
@@ -20,10 +22,10 @@ exports.getServer = async (server_id) => {
     if (server.razred_id === null) {
         objekt.razred = null;
     } else {
-        objekt.razred = await dajRazredById(server.razred_id);
+        objekt.razred = await getClassById({class_id:server.razred_id});
     }
     // Zatraži podatke za kanale u tom serveru
-    let kanali = await promiseQuery(`SELECT * FROM disc_kanali WHERE server_id = '${server_id}'`);
+    let kanali = await db.Connection.query(`SELECT * FROM ras_disc_channel WHERE server_id = '${server_id}'`);
     // Ako je barem jedan kanal dodan za server
     if (kanali.length === 0) {
         objekt.kanali = null;
@@ -41,7 +43,7 @@ exports.getServer = async (server_id) => {
             if (kanali[i].razred_id === null) {
                 objekt.kanali[kanali[i].kanal_id].razred = null;
             } else {
-                objekt.kanali[kanali[i].kanal_id].razred = await dajRazred(kanali[i].razred_id);
+                objekt.kanali[kanali[i].kanal_id].razred = await getClassByName({name:kanali[i].razred_id});
             }
         }
     }
@@ -50,9 +52,9 @@ exports.getServer = async (server_id) => {
 }
 
 // Daj podatke za traženi kanal po ID-u
-exports.getKanal = async (kanal_id) => {
+exports.getKanal = async(kanal_id)=> {
     // Zatraži podatke za kanal
-    let result = await promiseQuery(`SELECT * FROM disc_kanali WHERE kanal_id = '${kanal_id}'`);
+    let result = await db.Connection.query(`SELECT * FROM ras_disc_channel WHERE channel_id= '${kanal_id}'`);
     // Ako kanal postoji u bazi nastavi
     if (result.length === 0) {
         return null;
@@ -71,7 +73,7 @@ exports.getKanal = async (kanal_id) => {
     if (kanal.razred_id === null) {
         objekt.razred = null;
     } else {
-        objekt.razred = await dajRazredById(kanal.razred_id);
+        objekt.razred = await getClassById({class_id: kanal.razred_id});
     }
 
     return objekt;
@@ -85,7 +87,7 @@ exports.updateServer = async (objekt) => {
         throw new Error("server not defined");
     }
     // Započni update query
-    let query = "UPDATE disc_serveri SET"
+    let query = "UPDATE ras_disc_server SET"
     // Ukoliko je više od jednog svojstva izmjenjeno
     // potrebno je dodati zarez između
     let zarez = false;
@@ -103,9 +105,9 @@ exports.updateServer = async (objekt) => {
     }
     // Ako je barem jedno svojstvo izmjenjeno
     // Izvrši Query
-    if (query !== "UPDATE disc_serveri SET") {
+    if (query !== "UPDATE ras_disc_server SET") {
         query += ` WHERE server_id = '${objekt.id}'`;
-        await promiseQuery(query);
+        await db.Connection.query(query);
         return "done";
     } else {
         return "nothing to update";
@@ -120,7 +122,7 @@ exports.updateKanal = async (objekt) => {
         throw "kanal not defined";
     }
     // Započni update query
-    let query = "UPDATE disc_kanali SET"
+    let query = "UPDATE ras_disc_channel SET"
     // Ukoliko je više od jednog svojstva izmjenjeno
     // potrebno je dodati zarez između
     let zarez = false;
@@ -153,9 +155,9 @@ exports.updateKanal = async (objekt) => {
     }
     // Ako je barem jedno svojstvo izmjenjeno
     // Izvrši Query
-    if (query !== "UPDATE disc_kanali SET") {
-        query += ` WHERE kanal_id = '${objekt.id}'`;
-        await promiseQuery(query);
+    if (query !== "UPDATE ras_disc_channel SET") {
+        query += ` WHERE channel_id= '${objekt.id}'`;
+        await db.Connection.query(query);
         return "done";
     } else {
         return "nothing to update";
@@ -164,8 +166,8 @@ exports.updateKanal = async (objekt) => {
 
 // Dodaj server u bazu
 exports.addServer = async (server_id) => {
-    const query = `INSERT INTO disc_serveri (server_id) VALUES ('${server_id}')`;
-    await promiseQuery(query);
+    const query = `INSERT INTO ras_disc_server (server_id) VALUES ('${server_id}')`;
+    await db.Connection.query(query);
     return "done";
 }
 
@@ -173,35 +175,35 @@ exports.addServer = async (server_id) => {
 exports.addKanal = async (server_id, kanal_id) => {
     let query;
     if (server_id)
-        query = `INSERT INTO disc_kanali (kanal_id, server_id) VALUES ('${kanal_id}', '${server_id}')`;
+        query = `INSERT INTO ras_disc_channel (channel_id, server_id) VALUES ('${kanal_id}', '${server_id}')`;
     else
-        query = `INSERT INTO disc_kanali (kanal_id) VALUES ('${kanal_id}')`;
-    await promiseQuery(query);
+        query = `INSERT INTO ras_disc_channel(channel_id)VALUES ('${kanal_id}')`;
+    await db.Connection.query(query);
     return "done";
 }
 
 // Ukloni server iz baze
 exports.removeServer = async (server_id) => {
     // Ukloni sve kanale u tom serveru iz baze
-    const kanalQuery = `DELETE FROM disc_kanali WHERE server_id = '${server_id}`;
+    const kanalQuery = `DELETE FROM ras_disc_channel WHERE server_id = '${server_id}`;
     // Ukloni server iz baze
-    const serverQuery = `DELETE FROM disc_serveri WHERE server_id = '${server_id}'`;
+    const serverQuery = `DELETE FROM ras_disc_server WHERE server_id = '${server_id}'`;
     // Izvrši Query
-    await promiseQuery(kanalQuery + '; ' + serverQuery);
+    await db.Connection.query(kanalQuery + '; ' + serverQuery);
     return "done";
 }
 
 // Ukloni kanal iz baze
-exports.removeKanal = async (kanal_id) => {
-    const query = `DELETE FROM disc_kanali WHERE kanal_id = '${kanal_id}'`;
-    await promiseQuery(query);
+exports.removeKanal = async(kanal_id)=> {
+    const query = `DELETE FROM ras_disc_channel WHERE channel_id= '${kanal_id}'`;
+    await db.Connection.query(query);
     return "done";
 }
 
 // Daj listu svih servera iz baze (samo njihove ID-jeve)
 exports.listServer = async () => {
-    const query = `SELECT server_id FROM disc_serveri`;
-    let result = await promiseQuery(query);
+    const query = `SELECT server_id FROM ras_disc_server`;
+    let result = await db.Connection.query(query);
     let lista = [];
     for (let i = 0; i < result.length; i++) {
         lista.push(result[i].server_id);
@@ -211,8 +213,8 @@ exports.listServer = async () => {
 
 // Daj listu svih kanala iz baze (samo njihove ID-jeve)
 exports.listKanal = async () => {
-    const query = `SELECT kanal_id FROM disc_kanali`;
-    let result = await promiseQuery(query);
+    const query = `SELECT channel_id FROM ras_disc_channel`;
+    let result = await db.Connection.query(query);
     let lista = [];
     for (let i = 0; i < result.length; i++) {
         lista.push(result[i].kanal_id);
@@ -222,12 +224,12 @@ exports.listKanal = async () => {
 
 // Vrati vrijednost optiona iz baze
 exports.getOption = async (option) => {
-    return await getOption('disc_settings', option);
+    return await getOption('ras_disc_setting', option);
 }
 
 // Postavi novu vrijednost na option i kreiraj ga ako ne postoji
 exports.setOption = async (option, value) => {
-    return await setOption('disc_settings', option, value);
+    return await setOption('ras_disc_setting', option, value);
 }
 
 // Provjeri koji je prefix za traženi kanal
@@ -236,7 +238,7 @@ exports.getPrefix = async (server_id, kanal_id) => {
     // Ako je argument kanal definiran, i ako kanal postoji u bazi, te ako je za
     // njega postavljen prefix vrati taj prefix
     if (kanal_id != null) {
-        result = await promiseQuery(`SELECT prefix FROM disc_kanali WHERE kanal_id = '${kanal_id}'`);
+        result = await db.Connection.query(`SELECT prefix FROM ras_disc_channel WHERE channel_id= '${kanal_id}'`);
         if (result.length !== 0)
             if (result[0].prefix) {
                 return result[0].prefix
@@ -245,7 +247,7 @@ exports.getPrefix = async (server_id, kanal_id) => {
     // Ako je argument server definiran, i ako server postoji u bazi, te ako je za
     // njega postavljen prefix vrati taj prefix
     if (server_id != null) {
-        result = await promiseQuery(`SELECT prefix FROM disc_serveri WHERE server_id = '${server_id}'`);
+        result = await db.Connection.query(`SELECT prefix FROM ras_disc_server WHERE server_id = '${server_id}'`);
         if (result.length !== 0)
             if (result[0].prefix) {
                 return result[0].prefix;

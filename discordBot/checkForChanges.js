@@ -1,6 +1,5 @@
 const { normalEmbed, formatDateString, asyncFilter } = require('./helperFunctionsDisc.js');
 const baza = require('./databaseQueriesDisc.js');
-const izmjene = require('./../databaseQueries.js');
 const discord = require('./main.js');
 
 // Provjeri ima li izmjena za sve korisnike u bazi i pošalji im
