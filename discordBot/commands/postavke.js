@@ -18,15 +18,11 @@ module.exports = {
             embed = await normalEmbed(`Prikaz postavki za korisnika ${message.author.tag}`, null);
             embed.addFields({
                 name: 'Razred',
-                value: '```' + (kanal.razred ? kanal.razred.ime : 'Nije definiran') + '```'
-            });
-            embed.addFields({
-                name: 'Šalji sve izmjene',
-                value: '```' + (kanal.salji_sve ? 'DA' : 'NE') + '```'
+                value: '```' + (kanal.razred ? kanal.razred.name : 'Nije definiran') + '```'
             });
             embed.addFields({
                 name: 'Šalji mi izmjene',
-                value: '```' + (!kanal.mute ? 'DA' : 'NE') + '```'
+                value: '```' + (kanal.mute ? 'DA' : 'NE') + '```'
             });
             embed.addFields({
                 name: 'Prefix',

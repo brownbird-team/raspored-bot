@@ -1,7 +1,7 @@
 const { normalEmbed, errorEmbed } = require("../helperFunctionsDisc.js");
-const { prepareForSQL, onlyASCII } = require('./../../databaseQueries.js');
+const { prepareForSQL, onlyASCII } = require('../../database/queries/general.js');
 const baza = require('./../databaseQueriesDisc.js');
-const general = require('./../../databaseQueries.js');
+const general = require('../../database/queries/classInfo.js');
 
 module.exports = {
     name: 'server',
@@ -38,7 +38,7 @@ module.exports = {
             if (razredName === undefined) {
                 razred = null;
             } else {
-                razred = await general.dajRazredByName(razredName);
+                razred = await general.getClassByName({name:razredName});
             }
 
             if (options.length !== 1) {
@@ -49,11 +49,12 @@ module.exports = {
                 if (razred) {
                     await baza.updateServer({
                         id: message.guildId,
-                        razred: razred.id
+                        razred: razred.class_id,
+                        master_id: razred.master_id,
                     });
                     embed = await normalEmbed(
                         'Mijenjam zadani razred',
-                        `Postavljam **${razred.ime}** kao zadani razred za server ${message.guild.name}`
+                        `Postavljam **${razred.name}** kao zadani razred za server ${message.guild.name}`
                     );
                 } else {
                     embed = await errorEmbed(
@@ -98,7 +99,6 @@ module.exports = {
                     name: `Kanal #${kanalInfo.name}`,
                     value: '```' +
                         `Razred = ${(kanalBaza.razred ? kanalBaza.razred.ime : 'Nije definiran')}\n` +
-                        'Šalji sve izmjene = ' + (kanalBaza.salji_sve ? 'DA' : 'NE') + '\n' +
                         'Šalji izmjene u ovaj kanal = ' + (!kanalBaza.mute ? 'DA' : 'NE') + '\n' +
                         `Prefix = ` + (kanalBaza.prefix ? kanalBaza.prefix : `Jednak kao u serveru "${prefix}"`) + '```\n'
                 });
@@ -113,9 +113,10 @@ module.exports = {
         } else {
             const server = await baza.getServer(message.guildId);
             embed = await normalEmbed(`Ispis postavki za server ${message.guild.name}`, null);
+            
             embed.addFields({
                 name: 'Razred',
-                value: '```'+ (server.razred ? server.razred.ime : 'Nije definiran') + '```'
+                value: '```'+ (server.razred ? server.razred.name : 'Nije definiran') + '```'
             },{
                 name: 'Prefix u ovom serveru',
                 value: '```' + (server.prefix ? server.prefix : `Prefix Raspored Bota "${prefix}"`) + '```'

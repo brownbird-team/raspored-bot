@@ -1,7 +1,9 @@
-// Dodaj potrebne datoteke
+// Dodaj potrebne datotekei_izmjene
 const baza = require('./../databaseQueriesDisc.js');
-const general = require('./../../databaseQueries.js');
+const general = require('../../database/queries/classInfo.js');
 const { errorEmbed, normalEmbed } = require("../helperFunctionsDisc.js");
+const { prepareForSQL, onlyASCII } = require('../../database/queries/general.js');
+
 
 module.exports = {
     // Postavi ime naredbe na kanal
@@ -78,53 +80,23 @@ module.exports = {
                     "Naredba nije pravilno definirana\nUpišite `" + prefix + "kanal razred broj.slovo` (npr: 2.G)"
                 );
             } else {
-                const razred = await general.dajRazredByName(razredName);
+                const razred = await general.getClassByName({name:razredName});
+                console.log(razred,Infinity);
                 if (razred) {
-                    const zadnja = await general.dajZadnju(razred.id);
+                    
                     await baza.updateKanal({
                         id: message.channelId,
-                        razred: razred.id,
-                        zadnja_poslana: zadnja.id
+                        razred: razred.class_id,
+                        master_id: razred.master_id,
                     });
                     embed = await normalEmbed(
                         'Mijenjam zadani razred',
-                        `Postavljam **${razred.ime}** kao zadani razred za kanal ${message.channel.name}`
+                        `Postavljam **${razred.name}** kao zadani razred za kanal ${message.channel.name}`
                     );
                 // Inače pošalji grešku
                 } else {
                     embed = await errorEmbed(`Traženi razred** ${razredName} **nije pronađen`);
                 }
-            }
-        }
-
-        // Ako je podkomanda sve
-        else if (command === 'sve' && kanal) {
-            const value = options[0];
-            // I argument je da, izmjeni podatke za kanal u bazi
-            if (value === 'da' && options.length === 1) {
-                await baza.updateKanal({
-                    id: message.channelId,
-                    salji_sve: true
-                });
-                embed = await normalEmbed(
-                    'Izmjena postavki za slanje izmjena',
-                    'Od sada ćete primati **SVE** izmjene, bez obzira jesu li sva polja prazna za vaš razred'
-                );
-            // I argument je ne, izmjeni podatke za kanal u bazi
-            } else  if (value === 'ne' && options.length === 1) {
-                await baza.updateKanal({
-                    id: message.channelId,
-                    salji_sve: false
-                });
-                embed = await normalEmbed(
-                    'Izmjena postavki za slanje izmjena',
-                    'Od sada ćete primati izmjene **SAMO** ako se nešto promjenilo za vaš razred'
-                );
-            // Inače pošalji grešku
-            } else {
-                embed = await errorEmbed(
-                    "Naredba nije pravilno definirana\nUpišite `" + prefix + "kanal sve da/ne`"
-                );
             }
         }
 
@@ -143,13 +115,9 @@ module.exports = {
                 );
             // I argument je ne, izmjeni podatke za kanal u bazi
             } else  if (value === 'ne' && options.length === 1) {
-                let zadnja_poslana = null;
-                if (kanal.razred)
-                    zadnja_poslana = await general.dajZadnju(kanal.razred.id);
                 await baza.updateKanal({
                     id: message.channelId,
                     mute: false,
-                    zadnja_poslana: zadnja_poslana.id
                 });
                 embed = await normalEmbed(
                     'Izmjena postavki za slanje izmjena',
@@ -171,13 +139,13 @@ module.exports = {
             // Ako ima manje od jednog argumenta pošalji grešku
             } else if (options.length < 1) {
                 embed = await errorEmbed("Prefix nije definiran");
-            } else if (!general.onlyASCII(options[0])) {
+            } else if (!onlyASCII(options[0])) {
                 embed = await errorEmbed("Prefix sadrži nevaljane znakove, provjerite sadrži li prefix samo ASCII znakove");
             // Inače izmjeni podatke za prefix kanala u bazi
             } else {
                 baza.updateKanal({
                     id: message.channelId,
-                    prefix: general.prepareForSQL(options[0])
+                    prefix: prepareForSQL(options[0])
                 });
                 embed = await normalEmbed(
                     `Izmjena prefixa za kanal #${message.channel.name}`,
@@ -192,11 +160,7 @@ module.exports = {
             embed = await normalEmbed(`Prikaz postavki za kanal #${message.channel.name}`);
             embed.addFields({
                 name: 'Razred',
-                value: '```' + (kanal.razred ? kanal.razred.ime : 'Nije definiran') + '```'
-            });
-            embed.addFields({
-                name: 'Šalji sve izmjene',
-                value: '```' + (kanal.salji_sve ? 'DA' : 'NE') + '```'
+                value: '```' + (kanal.razred ? kanal.razred.name : 'Nije definiran') + '```'
             });
             embed.addFields({
                 name: 'Šalji izmjene u ovaj kanal',

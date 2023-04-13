@@ -1,5 +1,5 @@
 const { errorEmbed, normalEmbed } = require('./../helperFunctionsDisc.js');
-const { prepareForSQL, onlyASCII } = require('./../../databaseQueries.js');
+const { prepareForSQL, onlyASCII } = require('../../database/queries/general.js');
 const baza = require('./../databaseQueriesDisc.js');
 
 module.exports = {

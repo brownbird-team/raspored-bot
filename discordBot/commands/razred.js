@@ -1,6 +1,6 @@
 const { normalEmbed, errorEmbed } = require("../helperFunctionsDisc.js");
 const baza = require("../databaseQueriesDisc.js");
-const general = require('./../../databaseQueries.js');
+const general = require('../../database/queries/classInfo.js');
 
 module.exports = {
     name: 'razred',
@@ -23,17 +23,17 @@ module.exports = {
                     "Naredba nije pravilno definirana\nUpišite `" + prefix + "razred broj.slovo` (npr: 2.G)"
                 );
             } else {
-                const razred = await general.dajRazredByName(razredName);
+                const razred = await general.getClassByName({name:razredName});
                 if (razred) {
-                    const zadnja = await general.dajZadnju(razred.id);
+
                     await baza.updateKanal({
                         id: message.author.id,
-                        razred: razred.id,
-                        zadnja_poslana: zadnja.id
+                        razred: razred.class_id,
+                        master_id: razred.master_id,
                     });
                     embed = await normalEmbed(
                         'Mijenjam zadani razred',
-                        `Postavljam **${razred.ime}** kao zadani razred za korisnika ${message.author.tag}`
+                        `Postavljam **${razred.name}** kao zadani razred za korisnika ${message.author.tag}`
                     );
                 } else {
                     embed = await errorEmbed(

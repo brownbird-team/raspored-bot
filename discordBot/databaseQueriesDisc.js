@@ -19,10 +19,10 @@ exports.getServer = async (server_id) => {
         prefix: server.prefix
     }
     // Ako je zadan razred za server zatraži podatke o razredu
-    if (server.razred_id === null) {
+    if (server.class_id === null) {
         objekt.razred = null;
     } else {
-        objekt.razred = await getClassById({class_id:server.razred_id});
+        objekt.razred = await getClassById({class_id:server.class_id});
     }
     // Zatraži podatke za kanale u tom serveru
     let kanali = await db.Connection.query(`SELECT * FROM ras_disc_channel WHERE server_id = '${server_id}'`);
@@ -30,24 +30,23 @@ exports.getServer = async (server_id) => {
     if (kanali.length === 0) {
         objekt.kanali = null;
     } else {
+       // console.log(kanali);
         objekt.kanali = {};
         // Dodaj podatke za kanal u objekt
         for (let i = 0; i < kanali.length; i++) {
-            objekt.kanali[kanali[i].kanal_id] = {
+            objekt.kanali[kanali[i].channel_id] = {
                 prefix: kanali[i].prefix,
-                zadnja_poslana: kanali[i].zadnja_poslana,
-                mute: (kanali[i].salji_izmjene === 1) ? true : false,
-                salji_sve: (kanali[i].salji_sve === 1) ? true : false
+                mute: (kanali[i].mute === 1),
             }
             // Ako je zadan razred za kanal zatraži podatke o razredu
             if (kanali[i].razred_id === null) {
-                objekt.kanali[kanali[i].kanal_id].razred = null;
+                objekt.kanali[kanali[i].channel_id].razred = null;
             } else {
-                objekt.kanali[kanali[i].kanal_id].razred = await getClassByName({name:kanali[i].razred_id});
+                objekt.kanali[kanali[i].channel_id].razred = await getClassByName({name:kanali[i].razred_id});
             }
         }
     }
-
+   // console.log(objekt);
     return objekt;
 }
 
@@ -62,18 +61,16 @@ exports.getKanal = async(kanal_id)=> {
     let kanal = result[0];
     // Kreiraj objekt sa podacima za kanal
     let objekt = {
-        id: kanal.kanal_id,
+        id: kanal.channel_id,
         server: kanal.server_id,
         prefix: kanal.prefix,
-        zadnja_poslana: kanal.zadnja_poslana,
-        mute: (kanal.salji_izmjene === 1) ? false : true,
-        salji_sve: (kanal.salji_sve === 1) ? true : false
+        mute: (kanal.mute === 1),
     }
     // Ako je zadan razred za kanal zatraži podatke o razredu
-    if (kanal.razred_id === null) {
+    if (kanal.class_id === null) {
         objekt.razred = null;
     } else {
-        objekt.razred = await getClassById({class_id: kanal.razred_id});
+        objekt.razred = await getClassById({class_id: kanal.class_id});
     }
 
     return objekt;
@@ -100,7 +97,12 @@ exports.updateServer = async (objekt) => {
     }
     if ("razred" in objekt) {
         if (zarez) query += ",";
-        query += ` razred_id = ${objekt.razred}`;
+        query += ` class_id = ${objekt.razred}`;
+        zarez = true;
+    }
+    if ("master_id" in objekt) {
+        if (zarez) query += ",";
+        query += ` master_id = ${objekt.master_id}`;
         zarez = true;
     }
     // Ako je barem jedno svojstvo izmjenjeno
@@ -135,22 +137,17 @@ exports.updateKanal = async (objekt) => {
     }
     if ("razred" in objekt) {
         if (zarez) query += ",";
-        query += ` razred_id = ${objekt.razred}`;
-        zarez = true;
-    }
-    if ("zadnja_poslana" in objekt) {
-        if (zarez) query += ",";
-        query += ` zadnja_poslana = ${objekt.zadnja_poslana}`;
+        query += ` class_id = ${objekt.razred}`;
         zarez = true;
     }
     if ("mute" in objekt) {
         if (zarez) query += ",";
-        query += ` salji_izmjene = ${!objekt.mute}`;
+        query += ` mute = ${objekt.mute}`;
         zarez = true;
     }
-    if ("salji_sve" in objekt) {
+    if ("master_id" in objekt) {
         if (zarez) query += ",";
-        query += ` salji_sve = ${objekt.salji_sve}`;
+        query += ` master_id = ${objekt.master_id}`;
         zarez = true;
     }
     // Ako je barem jedno svojstvo izmjenjeno
@@ -177,7 +174,7 @@ exports.addKanal = async (server_id, kanal_id) => {
     if (server_id)
         query = `INSERT INTO ras_disc_channel (channel_id, server_id) VALUES ('${kanal_id}', '${server_id}')`;
     else
-        query = `INSERT INTO ras_disc_channel(channel_id)VALUES ('${kanal_id}')`;
+        query = `INSERT INTO ras_disc_channel (channel_id) VALUES ('${kanal_id}')`;
     await db.Connection.query(query);
     return "done";
 }
