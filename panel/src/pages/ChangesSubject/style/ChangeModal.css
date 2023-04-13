@@ -4,13 +4,16 @@
 }
 
 .change-modal {
-	position: absolute;
+	position: fixed;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	width: 50%;
 	height: 30rem;
-	background-color: var(--border-primary);
+	border-radius: 0.25rem;
+	border: 2px solid var(--border-primary);
+	background-color: var(--background-primary);
+	/* background-color: var(--border-primary); */
 }
 
 .change-modal-header-cell-details {

@@ -1,7 +1,12 @@
 .content {
     padding-left: 6rem;
-    background-color: var(--background-primary);
+    width: 100%;
     height: 100vh;
+    background-color: var(--background-primary);
+}
+
+.content.active {
+    padding-left: 18rem;
 }
 
 .selected {

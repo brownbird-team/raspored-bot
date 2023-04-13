@@ -37,10 +37,11 @@
     display: flex;
     justify-content: center;
     padding: 0.5rem;
+    transition: none;
 }
 
 .left-sidebar-parent:hover {
-    background-color: var(--background-secondary);
+    background-color: var(--border-primary);
     border-radius: 0.5rem;
 }
 
@@ -50,7 +51,7 @@
 
 .item-tooltip {
     position: absolute;
-    background-color: var(--background-secondary);
+    background-color: var(--border-primary);
     padding: 1rem 1.5rem;
     transform: translate(8rem, 0rem);
     width: 7rem;
@@ -74,6 +75,10 @@
 .left-sidebar.active {
     width: 18rem;
     overflow-y: auto;
+}
+
+.left-sidebar.active.small-screen {
+    width: 100%;
 }
 
 .left-sidebar.active .left-sidebar-heading h4,

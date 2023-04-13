@@ -1,9 +1,9 @@
 .filter-main {
-    width: 60vw;
+    width: 95%;
     display: flex;
     flex-direction: column;
+    margin: 2rem auto 0 auto; 
     border-radius: 0.25rem;
-    margin-top: 2rem;
     gap: 2rem;
     color: var(--text-primary);
 }
@@ -16,13 +16,14 @@
     align-items: center;
     padding: 0 0 1rem 0;
     gap: 1rem;
-    border-radius: 0.4rem;
+    border-radius: 0.25rem;
     box-shadow: var(--box-shadow);
     background-color: var(--component-primary);
 }
 
 .filter-bottom {
     display: flex;
+    flex-direction: row-reverse;
     width: 100%;
     gap: 2rem;
 }
@@ -30,7 +31,7 @@
 .filter-selected {
     width: 50%;
     height: 20rem;
-    border-radius: 0.4rem;
+    border-radius: 0.25rem;
     box-shadow: var(--box-shadow);
     background-color: var(--component-primary);
 }
@@ -47,7 +48,7 @@
 .filter-available {
     width: 50%;
     height: 20rem;
-    border-radius: 0.4rem;
+    border-radius: 0.25rem;
     box-shadow: var(--box-shadow);
     background-color: var(--component-primary);
 }
@@ -112,12 +113,12 @@
 /* Filter List */
 
 .filter-list-main {
-    width: 60vw;
+    width: 95%;
+    margin: 2rem auto 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 2rem;
-    border-radius: 0.4rem;
+    border-radius: 0.25rem;
     color: var(--text-primary);
 }
 
