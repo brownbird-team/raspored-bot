@@ -81,7 +81,7 @@ module.exports = {
                 );
             } else {
                 const razred = await general.getClassByName({name:razredName});
-                console.log(razred,Infinity);
+                //console.log(razred,Infinity);
                 if (razred) {
                     
                     await baza.updateKanal({
