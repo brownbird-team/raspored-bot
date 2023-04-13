@@ -1,21 +1,35 @@
+import React, { useState } from "react";
 import "./LeftSidebar.css";
 import { IoIosClose, RxHamburgerMenu } from "react-icons/all";
-import { useState } from "react";
 import LeftSidebarItem from "./LeftSidebarItem";
 import items from "./items";
+import { useSelector, useDispatch } from "react-redux";
+import { setOpen, setClose } from "../../features/leftSidebar";
 
-const LeftSidebar = () => {
-    const [active, setActive] = useState(false);
+const LeftSidebar = ({ smallScreen = "" }) => {
+    const dispatch = useDispatch();
+    const isOpen = useSelector((state) => state.leftSidebar.value);
     const [admin, setAdmin] = useState("admin"); // Promijeniti kasnije
 
+    const handleOnOpen = () => dispatch(setOpen());
+    
+    const handleOnClose = () => dispatch(setClose());
+
     return (
-        <div className={active ? "left-sidebar active" : "left-sidebar"}>
+        <div
+            className={
+                isOpen && smallScreen === ""
+                    ? "left-sidebar active"
+                    : isOpen && smallScreen !== ""
+                    ? `left-sidebar active ${smallScreen}`
+                    : "left-sidebar"
+            }>
             <div className="left-sidebar-heading">
                 <h4>Panel</h4>
-                {active ? (
-                    <IoIosClose size={50} onClick={() => setActive(false)} className="sidebar-icon" />
+                {isOpen ? (
+                    <IoIosClose size={50} onClick={handleOnClose} className="sidebar-icon" />
                 ) : (
-                    <RxHamburgerMenu size={30} onClick={() => setActive(true)} className="sidebar-icon" />
+                    <RxHamburgerMenu size={30} onClick={handleOnOpen} className="sidebar-icon" />
                 )}
             </div>
             <h6 className="sidebar-admin">{admin}</h6>

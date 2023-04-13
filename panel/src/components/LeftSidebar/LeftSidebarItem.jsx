@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setClose } from "../../features/leftSidebar";
 
 const LeftSidebarItem = ({ item }) => {
-    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [open, setOpen] = useState(false);
+
+    const handleOnClickItem = () => {
+        if (window.innerWidth <= 730) dispatch(setClose());
+        navigate(item.path);
+    }
 
     if (item.children) {
         return (
@@ -33,7 +41,7 @@ const LeftSidebarItem = ({ item }) => {
         return (
             <div className="left-sidebar-item">
                 <div className="left-sidebar-parent">
-                    <button type="button" onClick={() => navigate(item.path)}>
+                    <button type="button" onClick={handleOnClickItem}>
                         {item.icon}
                         <span>{item.title}</span>
                     </button>

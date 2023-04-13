@@ -3,9 +3,12 @@ import "./Weeks.css";
 import MainLayout from "../../layouts/MainLayout";
 import ComponentHeader from "../../components/ComponentHeader";
 import ComponentBody from "../../components/ComponentBody";
+import ComponentFooter from "../../components/ComponentFooter";
 import PrimaryButton from "../../components/PrimaryButton";
+import Alert from "../../components/Alert";
 import { useSelector, useDispatch } from "react-redux";
 import { saveWeeksOrder } from "../../features/weeks";
+import { NotificationSuccess, NotificationWarning } from "../../services/notification";
 import { IoIosClose } from "react-icons/io";
 import { MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
 
@@ -21,6 +24,7 @@ const Weeks = () => {
             return weeksStored.findIndex((storedWeek) => storedWeek.id === week.id) === -1;
         })
     );
+    const [alert, setAlert] = useState(null);
 
     // Handler koji dodaje novi tjedan u listu odabranih tjedana
     const handleAddSelectedWeek = (id) => {
@@ -64,64 +68,76 @@ const Weeks = () => {
         setSelectedWeeks(newSelectedWeeks);
     };
 
+    const handleSaveWeeksOrder = () => {
+        if (selectedWeeks.length > 0) {
+            dispatch(saveWeeksOrder(selectedWeeks));
+            setAlert(new NotificationSuccess(<>Uspješno je spremljen novi poredak tjedana</>));
+        } else {
+            setAlert(new NotificationWarning(<>Novi poredak tjedana zathjeva <b className="highlight">minimalno jedan</b> odabrani tjedan</>))
+        }
+        
+    }
+
     return (
         <MainLayout pageItems={pageItems}>
             <div className="weeks-main">
-                <div className="weeks-selected">
-                    <ComponentHeader>
-                        <span>Odabrani tjedni</span>
-                    </ComponentHeader>
-                    <ComponentBody>
-                        {selectedWeeks.length > 0 ? (
-                            selectedWeeks.map(({ id, name }) => (
-                                <button key={id} className="week-item">
-                                    <div className="week-item-arrows">
-                                        <MdOutlineKeyboardArrowUp
-                                            size={25}
-                                            onClick={() => handleMoveSelectedWeek(id, -1)}
-                                        />
-                                        <MdOutlineKeyboardArrowDown
-                                            size={25}
-                                            onClick={() => handleMoveSelectedWeek(id, 1)}
-                                        />
-                                    </div>
-                                    <span>{name}</span>
-                                    <IoIosClose size={40} color="red" onClick={() => handleRemoveSelectedWeek(id)} />
-                                </button>
-                            ))
-                        ) : (
-                            <div className="week-item">Nema odabranih tjedana</div>
-                        )}
-                    </ComponentBody>
-                </div>
-                <div className="weeks-available">
-                    <ComponentHeader>
-                        <span>Dostupni tjedni</span>
-                    </ComponentHeader>
-                    <ComponentBody>
-                        {availableWeeks.length > 0 ? (
-                            availableWeeks.map(({ id, name }) => (
-                                <button key={id} className="week-item" onClick={() => handleAddSelectedWeek(id)}>
-                                    <span>{name}</span>
-                                </button>
-                            ))
-                        ) : (
-                            <div className="week-item">Nema dostupnih tjedana</div>
-                        )}
-                    </ComponentBody>
-                </div>
+                {alert ? (
+                    <Alert type={alert.type} onClose={() => setAlert(null)}>
+                        {alert.message}
+                    </Alert>
+                ) : null}
+                <div className="weeks-wrapper">
+                    <div className="weeks-selected">
+                        <ComponentHeader>
+                            <span>Odabrani tjedni</span>
+                        </ComponentHeader>
+                        <ComponentBody className="weeks-section">
+                            {selectedWeeks.length > 0 ? (
+                                selectedWeeks.map(({ id, name }) => (
+                                    <button key={id} className="week-item">
+                                        <div className="week-item-arrows">
+                                            <MdOutlineKeyboardArrowUp
+                                                size={25}
+                                                onClick={() => handleMoveSelectedWeek(id, -1)}
+                                            />
+                                            <MdOutlineKeyboardArrowDown
+                                                size={25}
+                                                onClick={() => handleMoveSelectedWeek(id, 1)}
+                                            />
+                                        </div>
+                                        <span>{name}</span>
+                                        <IoIosClose size={40} color="red" onClick={() => handleRemoveSelectedWeek(id)} />
+                                    </button>
+                                ))
+                            ) : (
+                                <div className="week-item">Nema odabranih tjedana</div>
+                            )}
+                        </ComponentBody>
+                    </div>
+                    <div className="weeks-available">
+                        <ComponentHeader>
+                            <span>Dostupni tjedni</span>
+                        </ComponentHeader>
+                        <ComponentBody className="weeks-section">
+                            {availableWeeks.length > 0 ? (
+                                availableWeeks.map(({ id, name }) => (
+                                    <button key={id} className="week-item" onClick={() => handleAddSelectedWeek(id)}>
+                                        <span>{name}</span>
+                                    </button>
+                                ))
+                            ) : (
+                                <div className="week-item">Nema dostupnih tjedana</div>
+                            )}
+                        </ComponentBody>
+                    </div>
+                </div> 
             </div>
 
-            <div className="weeks-header">
-                <ComponentHeader>
-                    <span>Tjedni</span>
-                </ComponentHeader>
-                <ComponentBody className="p-4 week-save">
-                    <PrimaryButton type="button" onClick={() => dispatch(saveWeeksOrder(selectedWeeks))}>
-                        Spremi tjedne
-                    </PrimaryButton>
-                </ComponentBody>
-            </div>
+            <ComponentFooter className="weeks-footer">
+                <PrimaryButton type="button" onClick={handleSaveWeeksOrder}>
+                    Spremi tjedne
+                </PrimaryButton>
+            </ComponentFooter>
         </MainLayout>
     );
 };

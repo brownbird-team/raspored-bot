@@ -48,37 +48,40 @@ const Days = () => {
 
     return (
         <MainLayout pageItems={pageItems}>
-            {alert ? (
-                <Alert type={alert.type} onClose={() => setAlert(null)}>
-                    {alert.message}
-                </Alert>
-            ) : null}
             <div className="days-main">
-                <ComponentHeader>
-                    <span>Dani u tjednu</span>
-                </ComponentHeader>
-                <ComponentBody className="days-body">
-                    <div className="days">
-                        {days.map(({ id, name }) => (
-                            <div key={id} className="day-item">
-                                <span>{name}</span>
-                                <select onChange={(e) => handleUpdateDayOfWeek(id, e.target.value)} className="custom-select">
-                                    <option value="null">Ne koristi se</option>
-                                    <option value="mon">Ponedjeljak</option>
-                                    <option value="tue">Utorak</option>
-                                    <option value="wed">Srijeda</option>
-                                    <option value="thu">Četvrtak</option>
-                                    <option value="fri">Petak</option>
-                                    <option value="sat">Subota</option>
-                                    <option value="sun">Nedjelja</option>
-                                </select>
-                            </div>
-                        ))}
-                    </div>
-                    <PrimaryButton type="button" onClick={handleSaveDaysOfWeek}>
-                        Spremi dane
-                    </PrimaryButton>
-                </ComponentBody>
+                {alert ? (
+                    <Alert type={alert.type} onClose={() => setAlert(null)}>
+                        {alert.message}
+                    </Alert>
+                ) : null}
+
+                <div>
+                    <ComponentHeader>
+                        <span>Dani u tjednu</span>
+                    </ComponentHeader>
+                    <ComponentBody className="days-body">
+                        <div className="days">
+                            {days.map(({ id, name }) => (
+                                <div key={id} className="day-item">
+                                    <span>{name}</span>
+                                    <select onChange={(e) => handleUpdateDayOfWeek(id, e.target.value)} className="custom-select">
+                                        <option value="null">Ne koristi se</option>
+                                        <option value="mon">Ponedjeljak</option>
+                                        <option value="tue">Utorak</option>
+                                        <option value="wed">Srijeda</option>
+                                        <option value="thu">Četvrtak</option>
+                                        <option value="fri">Petak</option>
+                                        <option value="sat">Subota</option>
+                                        <option value="sun">Nedjelja</option>
+                                    </select>
+                                </div>
+                            ))}
+                        </div>
+                        <PrimaryButton type="button" onClick={handleSaveDaysOfWeek}>
+                            Spremi dane
+                        </PrimaryButton>
+                    </ComponentBody>
+                </div>
             </div>
         </MainLayout>
     );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./assets/style/App.css";
 import "./assets/style/filters.css";
 import LeftSidebar from "./components/LeftSidebar";
@@ -15,11 +15,27 @@ import Logout from "./pages/Logout";
 
 const App = () => {
     const theme = useSelector((state) => state.theme.value);
+    const isLeftSidebarOpen = useSelector((state) => state.leftSidebar.value);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener("resize", handleWindowResize);
+
+        return () => {
+            window.removeEventListener("resize", handleWindowResize);
+        };
+    });
 
     return (
         <div className="App" data-theme={theme}>
-            <LeftSidebar />
-            <div className="content">
+            <LeftSidebar 
+                smallScreen={ windowWidth > 450 ? "" : "small-screen"}
+            />
+            <div className={isLeftSidebarOpen && windowWidth > 730 ? "content active" : "content"}>
                 <Routes>
                     <Route path={routes.schedule.import.path} element={<ScheduleImport />} />
                     <Route path={routes.changes.subject_classroom.path} element={<Changes />} />
