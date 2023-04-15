@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require("cors");
 const api = require('./api/main.js');
 const staticNotFound = require('./middleware/staticNotFound.js');
 const loadConfig = require('./../loadConfig');
@@ -8,6 +9,8 @@ const helpers = require('./helperFunctionsWeb.js');
 const config = loadConfig.getData();
 // Kreiraj app objekt
 const app = express();
+
+app.use(cors());
 
 // Dodaj rutu za api (komunikacija klijenta sa serverom)
 app.use('/api', api);
