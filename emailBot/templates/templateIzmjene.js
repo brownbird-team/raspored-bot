@@ -31,13 +31,13 @@ module.exports = (arguments) => {
 
     const styles = [
         {
-            selectors: [ 'caption' ],
+            selectors: [ '.capdiv' ],
             style: `
                 color: ${colors.paragraphTextColor};
                 font-weight: bold;
                 font-size: 16px;
                 padding-bottom: 10px;
-                text-align: left;
+                text-align: center;
             `,
         },{
             selectors: [ 'body' ],
@@ -91,7 +91,7 @@ module.exports = (arguments) => {
                 font-weight: bold;    
             `,
         },{
-            selectors: [ 'footer' ],
+            selectors: [ '.footer' ],
             style: `
                 font-size: 12px;
                 text-align: center;
@@ -101,8 +101,9 @@ module.exports = (arguments) => {
         },{
             selectors: [ '.footer-p' ],
             style: `
-            color: ${colors.footerTextColor};
+                color: ${colors.footerTextColor};
                 margin-bottom: 25px;
+                text-align: center;
             `,
         },
     ];
@@ -119,9 +120,9 @@ module.exports = (arguments) => {
             </head>
             <body>
                 <table>
-                    <caption>
+                    <div class="capdiv">
                         <b>${arguments.tableHeading}<br>${(arguments.shift == 'prijepodne') ? 'PRIJEPODNE' : 'POSLIJEPODNE'}</b>
-                    </caption>
+                    </div>
                     <tr class="table-heading">
                         <th>Sat</th>
                         <th>Izmjena</th>
@@ -141,7 +142,7 @@ module.exports = (arguments) => {
     result += `
                 </table>
 
-                <footer>
+                <div class="footer">
                     <p class="footer-p">
                         E-mail poruka poslana je ${arguments.email}. Ako ne želite primati e-mail poruke od Raspored bota
                         u budučnosti, možete promijeniti postavke Vašeg profila ili prekinuti pretplatu na svojoj
@@ -151,7 +152,7 @@ module.exports = (arguments) => {
                         Srdačan pozdrav, <br>
                         &copy; BrownBird Team
                     </p>
-                </footer>
+                </div>
             </body>
         </html>
     `;
