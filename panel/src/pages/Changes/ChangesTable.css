@@ -1,0 +1,52 @@
+.change-table-main {
+	overflow-x: auto;
+}
+
+.change-table {
+	width: 100%;
+	min-width: 1120px;
+}
+
+.change-table th {
+	height: 2rem;
+	text-align: center;
+}
+
+.change-table td {
+	width: 6rem;
+	height: 2rem;
+	text-align: center;
+	border: 1px solid var(--border-primary);
+	color: var(--text-primary);
+}
+
+.table-heading {
+	color: #f3f5f7 !important;
+	background-color: var(--component-header);
+}
+
+.table-content {
+	background-color: var(--component-primary);
+}
+
+.table-content-inserted {
+	background-color: var(--component-header);
+}
+
+.table-data-input {
+	width: 100%;
+	border: none;
+	outline: none;
+	padding: 0.25rem;
+	text-align: center;
+	background-color: transparent;
+	color: var(--text-primary);
+}
+
+.table-data-input:focus {
+	background-color: var(--component-header);
+}
+
+.change-table-footer {
+	background-color: transparent;
+}

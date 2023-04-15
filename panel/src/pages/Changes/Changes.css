@@ -1,0 +1,19 @@
+.changes-main {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+.changes-input-group {
+	width: 100%;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+	padding: 1rem;
+	color: var(--text-primary);
+}
+
+.changes-input-group input {
+	height: 3rem;
+}

@@ -5,9 +5,9 @@ import * as Component from "../../components";
 import CreateClass from "./utils/CreateClass";
 import { NotificationSuccess, NotificationWarning } from "../../services/Notification";
 import { useClasses } from "../../store/hooks";
+import { addClasses } from "../../features/classes";
 import { useDispatch } from "react-redux"; 
 import { MdDelete } from "react-icons/md"
-import { addClasses } from "../../features/classes";
 import API_HOST from "../../data/api";
 
 const Classes = () => {
@@ -23,7 +23,7 @@ const Classes = () => {
     const classes = useClasses();
  
     useEffect(() => {
-        const fetchClassesAll = async() => {
+        const getClassesAll = async() => {
             const res = await fetch(`${API_HOST}/api/general/classes/active`, {
                 headers: {
                     "Content-Type": "application/json",
@@ -36,7 +36,7 @@ const Classes = () => {
             dispatch(addClasses(classes))
         }
 
-        fetchClassesAll();
+        getClassesAll();
     }, [updateTrigger])
 
     const handleAddClassName = (value) => setNewClass(newClass.setName(value));
@@ -96,7 +96,7 @@ const Classes = () => {
             });
 
             const result = await res.json();
-            console.log(result);
+
             switch(result.status) {
                 case "error": {
                     setAlert(new NotificationWarning(<>Došlo je do pogreške prilikom brisanja novog razreda</>));

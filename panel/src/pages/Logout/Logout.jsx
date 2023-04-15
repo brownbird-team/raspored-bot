@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { setLogout } from "../../features/login";
 
 const Logout = () => {
+    
     const dispatch = useDispatch();
 
     const handleSetLogout = () => {

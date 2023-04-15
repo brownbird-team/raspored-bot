@@ -5,6 +5,7 @@ import leftSidebarReducer from "../features/leftSidebar";
 import classesReducer from "../features/classes";
 import periodsReducer from "../features/periods";
 import changeReducer from "../features/changes";
+import shiftsReducer from "../features/shifts";
 
 export const store = configureStore({
     reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
         classes: classesReducer,
         periods: periodsReducer,
         change: changeReducer,
+        shifts: shiftsReducer,
     },
 });
