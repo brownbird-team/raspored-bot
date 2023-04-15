@@ -29,7 +29,7 @@ module.exports = {
                     await baza.updateKanal({
                         id: message.author.id,
                         razred: razred.id,
-                        zadnja_poslana: zadnja.id
+                        zadnja_poslana: (zadnja) ? zadnja.id : null
                     });
                     embed = await normalEmbed(
                         'Mijenjam zadani razred',

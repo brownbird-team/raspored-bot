@@ -21,7 +21,7 @@ exports.check = async () => {
         if (channelData.mute || !channelData.razred) { continue; }
 
         // Povuci array novih izmjena za odabrani razred od zadnje poslane
-        let noveIzmjene = await izmjene.dajIzmjene(channelData.razred.id, channelData.zadnja_poslana);
+        let noveIzmjene = await izmjene.dajIzmjene(channelData.razred.id, channelData.zadnja_poslana ?? 0);
         const zadanjaIzmjena = noveIzmjene[0];
 
         // Filtriraj nove izmjene tako da ako je korisnik odabrao da ne želi primati sve
@@ -35,7 +35,7 @@ exports.check = async () => {
             const izmjenaPrijeOve = await izmjene.dajPovijest(channelData.razred.id, 2, izmjena.id);
             // Ako je izmjena prije ove u istoj tablici i nije prazna, znači da je izmjena uklonjena
             // stoga ju pošalji kako bi obavjestio da ipak nema izmjene
-            if (izmjena.naslov === izmjenaPrijeOve.izmjena.naslov && !izmjenaPrijeOve.izmjena.sve_null) {
+            if (izmjenaPrijeOve.izmjena && izmjena.naslov === izmjenaPrijeOve.izmjena.naslov && !izmjenaPrijeOve.izmjena.sve_null) {
                 return true;
             }
             // U suprotnom izbaci izmjenu iz arraya

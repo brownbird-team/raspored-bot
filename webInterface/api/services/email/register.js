@@ -92,7 +92,7 @@ module.exports = async (dataObject) => {
         if (razredData) {
             newAccount.razredId = razredData.id;
             const zadnjaIzmjena = await dbPrim.dajZadnju(razredData.id);
-            newAccount.zadnjaPoslana = zadnjaIzmjena.id;
+            newAccount.zadnjaPoslana = (zadnjaIzmjena) ? zadnjaIzmjena.id : null;
         } else {
             throw new errors.NotFoundError('Requested class does not exist');
         }

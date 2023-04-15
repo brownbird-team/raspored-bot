@@ -1,5 +1,6 @@
 const db = require('./../../../../databaseQueries.js');
 const errors = require('./../../../../errors.js');
+const notify = require('./../../../../notifyPeople.js');
 
 module.exports = async (dataObject) => {
 
@@ -23,5 +24,8 @@ module.exports = async (dataObject) => {
         }
     }
 
+    // Spremi novu izmjenu u bazu
     await db.setChange(dataObject);
+    // Pozovi notify funkciju da obavjesti ostale o izmjenama
+    await notify.uzbuna();
 }

@@ -70,6 +70,16 @@ module.exports = {
         let trenutnoRikverc = 1;
         let izmjenaObjekt = await general.dajPovijest(razred.id, trenutnoRikverc);
 
+        // Ako u bazi nema ni jedne izmjene za dani razred, vradi prikladnu poruku
+        if (izmjenaObjekt.broj === 0) {
+            embed = await normalEmbed('Nema izmjena', `U bazi raspored bota trenutno nema niti jedne izmjene za** ${razred.ime} **razred`);
+            await message.reply({
+                embeds: [ embed ],
+                allowedMentions: { repliedUser: false }
+            });
+            return;
+        }
+
         if (options.length > 0 && /^[0-9]+$/.test(options[options.length - 1])) {
             page = parseInt(options[options.length - 1]);
             if (page <= izmjenaObjekt.broj && page > 0) {

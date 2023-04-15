@@ -130,7 +130,16 @@ exports.dajPovijest = (razred_id, kolikoURikverc, idIzmjene) => {
             // Izvuci tražene podatke iz rezultata Queryja
             let ukupanBroj = result[0][0];
             let trazenaIzmjena = result[1][0];
-            
+
+            // Ako za dani razred ne postoji ni jedna izmjena
+            // vrati broj 0 i izmjena null
+            if (ukupanBroj.ukupan_broj === 0) {
+                resolve({
+                    broj: 0, izmjena: null
+                });
+                return;
+            }
+
             // Kreiraj objekt koji je krajnji rezultat
             let objekt = {
                 broj: ukupanBroj.ukupan_broj,
@@ -167,7 +176,46 @@ exports.dajPovijest = (razred_id, kolikoURikverc, idIzmjene) => {
 }
 
 // Kreiraj funkciju koja vraća zadnju izmjenu za traženi razred
-exports.dajZadnju = (razred_id) => {
+exports.dajZadnju = async (razredId) => {
+    // Povuci zadnju izmjenu za razred
+    const result = await promiseQuery(`
+        SELECT
+            ir.razred_id,
+            ir.tablica_id,
+            ir.datum,
+            ir.sat1, ir.sat2, ir.sat3, ir.sat4, ir.sat5, ir.sat6, ir.sat7, ir.sat8, ir.sat9,
+            ir.id, it.naslov, it.prijepodne
+        FROM izmjene_razred ir
+        INNER JOIN izmjene_tablica it
+            ON ir.tablica_id = it.id
+        WHERE ir.razred_id = ?
+        ORDER BY ir.id DESC
+        LIMIT 1
+    `, [ razredId ]);
+    // Ako za razred nema izmjena vrati null
+    if (result.length === 0)
+        return null;
+    // Napravi objekt izmjene
+    const izmjena = {
+        id: result[0].id,
+        naslov: result[0].naslov,
+        ujutro: result[0].prijepodne,
+        datum: result[0].datum,
+    }
+    // Dodaj polja za sate i provjeri jesu li svi sati prazni
+    sve_null = true
+    for(let i = 1; i < 10; i++) {
+        izmjena[`sat${i}`] = result[0][`sat${i}`];
+
+        if(sve_null && izmjena[`sat${i}`] != "")
+            sve_null = false;
+    }   
+    // Vrati podatke
+    return izmjena;
+}
+
+// Kreiraj funkciju koja vraća zadnju izmjenu za traženi razred
+exports.dajZadnju_old = (razred_id) => {
     return new Promise((resolve, reject) => {
         // Povuci zadnju izmjenu za razred
         query(`
@@ -231,7 +279,6 @@ exports.insertChangeTable = async (data) => {
 // Izmjeni već postojeću tablicu izmjena
 exports.updateChangeTable = async (data) => {
     const updateObject = {};
-    console.log('----------- TEST -------------');
 
     if (typeof(data.heading) === 'string')
         updateObject.naslov = data.heading;
