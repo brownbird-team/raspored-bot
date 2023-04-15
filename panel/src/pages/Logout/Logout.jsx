@@ -7,8 +7,6 @@ import PrimaryButton from "../../components/PrimaryButton";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../features/login";
 
-const pageItems = ["Odjava"];
-
 const Logout = () => {
     const dispatch = useDispatch();
 
@@ -16,7 +14,7 @@ const Logout = () => {
         dispatch(setLogout());
     }
 
-    return <MainLayout pageItems={pageItems}>
+    return <MainLayout pageItems={["Odjava"]}>
         <div className="logout-main">
             <ComponentHeader>
                 <span>Želite li se odjaviti ?</span>

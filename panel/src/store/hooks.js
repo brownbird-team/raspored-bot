@@ -11,3 +11,7 @@ export const useTheme = () => {
 export const useLeftsidebar = () => {
 	return useSelector((state) => state.leftSidebar.value);
 }
+
+export const useClasses = () => {
+	return useSelector((state) => state.classes.value);
+}

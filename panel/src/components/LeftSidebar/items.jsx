@@ -7,12 +7,7 @@ const items = [
     {
         title: "Unos izmjena",
         icon: <BsTable size={30} />,
-        children: [
-            {
-                title: "Predmeti",
-                path: routes.changes.path,
-            },
-        ],
+        path: routes.changes.path,
     },
     {
         title: "Postavke",

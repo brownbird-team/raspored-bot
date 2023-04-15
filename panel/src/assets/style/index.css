@@ -119,8 +119,29 @@ button {
     background-color: var(--border-primary);
 }
 
+.custom-table {
+	width: 100%;
+	min-width: 600px;
+}
+
+.custom-table th,
+.custom-table td {
+	width: 6rem;
+	height: 4rem;
+	text-align: center;
+	color: var(--text-primary);
+}
+
+.custom-table tr:hover {
+    background-color: var(--on-hover);
+}
+
 .icon {
     cursor: pointer;
+}
+
+.delete:hover {
+    color: brown;
 }
 
 .icon.up {

@@ -11,3 +11,7 @@
 .main-layout-content {
     width: 100%;
 }
+
+.layout-space {
+    padding: 2rem;
+}

@@ -3,12 +3,13 @@ import "./LeftSidebar.css";
 import { IoIosClose, RxHamburgerMenu } from "react-icons/all";
 import LeftSidebarItem from "./LeftSidebarItem";
 import items from "./items";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useLeftsidebar } from "../../store/hooks"; 
 import { setOpen, setClose } from "../../features/leftSidebar";
 
 const LeftSidebar = ({ smallScreen = "" }) => {
     const dispatch = useDispatch();
-    const isOpen = useSelector((state) => state.leftSidebar.value);
+    const isOpen = useLeftsidebar();
     const [admin, setAdmin] = useState("admin"); // Promijeniti kasnije
 
     const handleOnOpen = () => dispatch(setOpen());
