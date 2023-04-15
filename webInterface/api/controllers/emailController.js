@@ -7,123 +7,95 @@ const updateService = require('./../services/email/update.js');
 const logoutService = require('./../services/email/logout.js');
 
 exports.delete = async (req, res, next) => {
-    try {
-        await deleteService({
-            token: req.accessToken
-        });
+    await deleteService({
+        token: req.accessToken
+    });
 
-        res.status(200).json({
-            status: 'ok',
-            code: 200,
-            description: 'Account deleted successfully',
-        });
-    } catch (err) {
-        next(err);
-    }
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Account deleted successfully',
+    });
 }
 
 exports.get = async (req, res, next) => {
-    try {
-        const userData = await getService({
-            token: req.accessToken
-        });
+    const userData = await getService({
+        token: req.accessToken
+    });
 
-        userData.status = 'ok';
-        userData.code = 200;
-        userData.description = 'User data successfully fetched from database';
+    userData.status = 'ok';
+    userData.code = 200;
+    userData.description = 'User data successfully fetched from database';
 
-        res.status(200).json(userData);
-    } catch (err) {
-        next(err);
-    }
+    res.status(200).json(userData);
 }
 
 exports.login = async (req, res, next) => {
-    try {
-        await loginService({
-            email: req.body.email
-        });
+    await loginService({
+        email: req.body.email
+    });
 
-        res.status(200).json({
-            status: 'ok',
-            code: 200,
-            description: 'Successfully sent login email'
-        });
-    } catch (err) {
-        next(err);
-    }
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Successfully sent login email'
+    });
 }
 
 exports.permanent = async (req, res, next) => {
-    try {
-        const tokenData = await permanentService({
-            tempToken: req.tempAccessToken
-        });
+    const tokenData = await permanentService({
+        tempToken: req.tempAccessToken
+    });
 
-        res.status(200).json({
-            status: 'ok',
-            code: 200,
-            description: 'Permanent token generated successfully',
-            token: tokenData.token,
-        });
-    } catch (err) {
-        next(err);
-    }
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Permanent token generated successfully',
+        token: tokenData.token,
+    });
 }
 
 exports.register = async (req, res, next) => {
-    try {
-        await registerService({
-            email: req.body.email,
-            class: req.body.class,
-            all: req.body.all,
-            theme: req.body.theme,
-            mute: req.body.mute,
-        });
+    await registerService({
+        email: req.body.email,
+        class: req.body.class,
+        all: req.body.all,
+        theme: req.body.theme,
+        mute: req.body.mute,
+    });
 
-        res.status(200).json({
-            status: 'ok',
-            code: 200,
-            description: 'Registration email sent successfully',
-        });
-    } catch (err) {
-        next(err);
-    }
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Registration email sent successfully',
+    });
 }
 
 exports.update = async (req, res, next) => {
-    try {
-        await updateService({
-            token: req.accessToken,
-            class: req.body.class,
-            all: req.body.all,
-            theme: req.body.theme,
-            mute: req.body.mute,
-        });
+    await updateService({
+        token: req.accessToken,
+        class: req.body.class,
+        all: req.body.all,
+        theme: req.body.theme,
+        mute: req.body.mute,
+    });
 
-        res.status(200).json({
-            status: 'ok',
-            code: 200,
-            description: 'Account data updated successfully',
-        });
-    } catch (err) {
-        next(err);
-    }
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Account data updated successfully',
+    });
 }
 
 exports.logout = async (req, res, next) => {
-    try {
-        await logoutService({
-            token: req.accessToken
-        });
+    await logoutService({
+        token: req.accessToken
+    });
 
-        res.status(200).json({
-            status: 'ok',
-            code: 200,
-            description: 'Logout was successful, this token is no more',
-        });
-    } catch (err) {
-        next(err);
-    }
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Logout was successful, this token is no more',
+    });
 }
 

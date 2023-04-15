@@ -1,5 +1,11 @@
 const { checkOptions } = require("../databaseQueries.js");
 
+// Sljedeća funkcija koristi se kako bi uhvatila greške koje
+// nastaju prilikom izvršavanja kontrolera
+exports.use = (func) => (req, res, next) => {
+    Promise.resolve(func(req, res, next)).catch(next);
+}
+
 // Print somenthing to console with web prefix
 exports.webLog = async (logThis) => {
     console.log('[\u001b[32mWeb\033[00m] ' + logThis);

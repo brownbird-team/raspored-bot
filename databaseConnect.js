@@ -34,9 +34,9 @@ exports.createConnection = createConnection;
 // Funkcija vraća promise koji šalje upit mysql serveru, kao argumente
 // funkciji je potrebno dati connection prema mysql serveru i string sa
 // SQL upitom
-const pureQuery = (connection, query) => {
+const pureQuery = (connection, ...args) => {
     return new Promise((resolve, reject) => {
-        connection.query(query, (err, res) => {
+        connection.query(...args, (err, res) => {
             if (err) {
                 reject(new errors.DatabaseError('Failed to run query on given connection', err));
                 return;
@@ -74,7 +74,7 @@ exports.query = query;
 
 // Funkcija vraća promise koji kreira connection prema mysql serveru i izvršava
 // upit koji je dobila kao argument
-const promiseQuery = (query) => {
+const promiseQuery = (...args) => {
     return new Promise((resolve, reject) => {
         if (!pool) {
             reject(new errors.DatabaseError('Database needs to be initialized before it can be used, run databaseInit'));
@@ -87,7 +87,7 @@ const promiseQuery = (query) => {
                 return;
             }
 
-            con.query(query, (err, rows, fields) => {
+            con.query(...args, (err, rows, fields) => {
                 con.release();
                 if (err) {
                     reject(new errors.DatabaseError('Failed to run promiseQuery', err));

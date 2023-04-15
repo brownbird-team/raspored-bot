@@ -1,45 +1,87 @@
-const classesService = require('./../services/general/classes.js');
-const activeClassesService = require('./../services/general/activeClasses.js');
+const allClassesService = require('../services/classes/all.js');
+const activeClassesService = require('../services/classes/active.js');
+const deleteClassService = require('../services/classes/delete.js');
+const insertClassService = require('../services/classes/insert.js');
+const allShiftsService = require('../services/classes/shifts.js');
+const shiftClassesService = require('../services/classes/shift.js');
 const inviteLinkService = require('./../services/general/inviteLink.js');
 
 exports.classes = async (req, res, next) => {
-    try {
-        const result = await classesService();
+    const result = await allClassesService();
 
-        result.status = 'ok';
-        result.code = 200;
-        result.description = 'Classes successfully fetched from database';
+    result.status = 'ok';
+    result.code = 200;
+    result.description = 'Classes successfully fetched from database';
 
-        res.status(200).json(result);
-    } catch (err) {
-        next(err);
-    }
+    res.status(200).json(result);
 }
 
 exports.activeClasses = async (req, res, next) => {
-    try {
-        const result = await activeClassesService();
+    const result = await activeClassesService();
 
-        result.status = 'ok';
-        result.code = 200;
-        result.description = 'Classes successfully fetched from database';
+    result.status = 'ok';
+    result.code = 200;
+    result.description = 'Classes successfully fetched from database';
 
-        res.status(200).json(result);
-    } catch (err) {
-        next(err);
-    }
+    res.status(200).json(result);
+}
+
+exports.deleteClass = async (req, res, next) => {
+    await deleteClassService({
+        id: req.query.id
+    });
+
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Class successfully deleted from database',
+    });
+}
+
+exports.insertClass = async (req, res, next) => {
+    const newId = await insertClassService({
+        name: req.body.name,
+        shift: req.body.shift,
+    });
+
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Class successfully inserted into database testtest',
+        insertedClassId: newId
+    });
+}
+
+exports.allShifts = async (req, res, next) => {
+    const shifts = await allShiftsService();
+
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Shifts successfully inserted into database',
+        shifts: shifts,
+    });
+}
+
+exports.shift = async (req, res, next) => {
+    const classes = await shiftClassesService({
+        shift: req.query.name,
+    });
+
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Classes successfully fetched from database',
+        classes: classes,
+    });
 }
 
 exports.inviteLink = async (req, res, next) => {
-    try {
-        const result = await inviteLinkService();
+    const result = await inviteLinkService();
 
-        result.status = 'ok';
-        result.code = 200;
-        result.description = 'Discord bot invite link successfully fetched from database';
+    result.status = 'ok';
+    result.code = 200;
+    result.description = 'Discord bot invite link successfully fetched from database';
 
-        res.status(200).json(result);
-    } catch (err) {
-        next(err);
-    }
+    res.status(200).json(result);
 }

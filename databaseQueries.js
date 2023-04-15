@@ -1,6 +1,7 @@
 // Funkcije za povlačenje izmjena iz baze podataka
-
 const { query, promiseQuery } = require('./databaseConnect.js');
+// Error klase
+const errors = require('./errors.js');
 
 // Stavi backslash ispred svih znakova koji bi mogli poremetiti
 // SQL upit
@@ -19,6 +20,12 @@ exports.prepareForSQL = (input) => {
 // Provjerava sastoji li se string dan funkciji od isključivo
 // ASCII znakova
 exports.onlyASCII = str => /^[\x00-\x7F]+$/.test(str);
+
+
+
+// -------------------------------------------------------------------------- //
+//                            Funkcije za izmjene                             //
+// -------------------------------------------------------------------------- //
 
 // Kreiraj funkciju koja vraća listu izmjena koje su
 // se dogodile od tražene izmjene za traženi razred
@@ -202,6 +209,233 @@ exports.dajZadnju = (razred_id) => {
     });
 }
 
+// Upiši novu tablicu izmjene
+exports.insertChangeTable = async (data) => {
+    const result = await promiseQuery(`
+        SELECT COUNT(DISTINCT(smjena)) AS shiftExists
+        FROM general_razred
+        WHERE aktivan = TRUE AND smjena = ?
+    `, [ data.shift ]);
+
+    if (!result[0].shiftExists)
+        throw new errors.ValidationError('Given shift does not exist');
+    
+    await promiseQuery(
+        'INSERT INTO izmjene_tablica (naslov, smjena, prijepodne) ?',
+        [[[ data.heading, data.shift, !!data.morning ]]]
+    );
+}
+
+// Izmjeni već postojeću tablicu izmjena
+exports.updateChangeTable = async (data) => {
+    const updateObject = {};
+
+    if (typeof(data.heading) === 'string')
+        updateObject.naslov = data.heading;
+    if (typeof(data.shift) === 'string')
+        updateObject.smjena = data.shift;
+    if (typeof(data.morning) === 'boolean')
+        updateObject.prijepodne = data.morning;
+
+    await promiseQuery(
+        'UPDATE izmjene_tablica SET ? WHERE id = ?'
+        [ updateObject, data.id ]
+    );
+}
+
+// Dobavi sve tablice izmjena
+exports.getChangeTables = async () => {
+    const result = await promiseQuery(`
+        SELECT id, naslov AS heading, smjena AS shift, prijepodne AS morning
+        FROM izmjene_tablica
+        ORDER BY id DESC
+    `);
+
+    return result.map((tab) => {
+        tab.morning = !!tab.morning;
+        return tab;
+    });
+}
+
+// Dohvati trenutnu izmjenu tablice izmjene
+exports.getChange = async (tableId) => {
+    // Dobavi tablicu
+    const info = await promiseQuery(`
+        SELECT id, naslov AS header, smjena AS shift, prijepodne AS morning
+        FROM izmjene_tablica
+        WHERE id = ?
+    `, [ tableId ]);
+    // Dobavi zadnju verziju sadržaja tablice
+    const changes = await promiseQuery(`
+        SELECT ir.id, ir.datum AS changeDate, ir.razred_id AS classId,
+            gr.ime AS className, gr.smjena AS classShift, ir.sat1, ir.sat2, 
+            ir.sat3, ir.sat4, ir.sat5, ir.sat6, ir.sat7, ir.sat8, ir.sat9
+        FROM izmjene_razred ir
+        INNER JOIN (
+            SELECT tablica_id, razred_id, MAX(id) AS id
+            FROM izmjene_razred
+            GROUP BY tablica_id, razred_id
+        ) irv
+            ON ir.tablica_id = irv.tablica_id AND ir.razred_id = irv.razred_id AND ir.id = irv.id
+        INNER JOIN general_razred gr
+            ON gr.id = ir.razred_id	
+        WHERE ir.tablica_id = ?
+        ORDER BY gr.ime ASC
+    `, [ tableId ]);
+    
+    if (info.length === 0)
+        throw new errors.NotFoundError('Given table does not exist');
+    
+    return {
+        ...(info[0]),
+        classes: changes,
+    };
+}
+
+exports.setChange = async (data) => {
+
+    const result = await promiseQuery(`
+        SELECT COUNT(*) AS changeExists
+        FROM izmjene_tablica
+        WHERE id = ?
+    `, [ data.id ]);
+
+    if (!result[0].changeExists)
+        throw new errors.NotFoundError('Failed to save changes, given change table does not exist');
+
+    // Dobavi zadnju verziju sadržaja tablice
+    const changes = await promiseQuery(`
+        SELECT ir.id, ir.datum AS changeDate, ir.razred_id AS classId,
+            gr.ime AS className, gr.smjena AS classShift, ir.sat1, ir.sat2, 
+            ir.sat3, ir.sat4, ir.sat5, ir.sat6, ir.sat7, ir.sat8, ir.sat9
+        FROM izmjene_razred ir
+        INNER JOIN (
+            SELECT tablica_id, razred_id, MAX(id) AS id
+            FROM izmjene_razred
+            GROUP BY tablica_id, razred_id
+        ) irv
+            ON ir.tablica_id = irv.tablica_id AND ir.razred_id = irv.razred_id AND ir.id = irv.id
+        INNER JOIN general_razred gr
+            ON gr.id = ir.razred_id	
+            
+        WHERE ir.tablica_id = ?
+    `, [ data.id ]);
+    
+    const newChange = new Map();
+    for (const cls of data.classes)
+        newChange.set(cls.classId, cls);
+
+    const insertChanges = [];
+
+    for (const cls of changes) {
+        
+        const newCls = newChange.get(cls.classId);
+
+        if (!newCls)
+            continue;
+
+        for (let i = 1; i <= 9; i++)
+            if (newCls[`sat${i}`] !== cls[`sat${i}`]) {
+                insertChanges.push(
+                    [ cls.classId, data.id, (new Date()), newCls.sat1, newCls.sat2, newCls.sat3, newCls.sat4, newCls.sat5, newCls.sat6, newCls.sat7, newCls.sat8, newCls.sat9 ]
+                );
+                break;
+            }  
+
+        newChange.delete(cls.classId);
+    }
+
+    for (const cls of newChange.values()) {
+        insertChanges.push(
+            [ cls.classId, data.id, (new Date()), cls.sat1, cls.sat2, cls.sat3, cls.sat4, cls.sat5, cls.sat6, cls.sat7, cls.sat8, cls.sat9 ]
+        );
+    }
+
+    if (insertChanges.length > 0)
+        await promiseQuery(
+            'INSERT INTO izmjene_razred (razred_id, tablica_id, datum, sat1, sat2, sat3, sat4, sat5, sat6, sat7, sat8, sat9) VALUES ?',
+            [ insertChanges ]
+        );
+}
+
+
+
+// -------------------------------------------------------------------------- //
+//                       Funkcije za sistemske postavke                       //
+// -------------------------------------------------------------------------- //
+
+// Vraća vrijednost optiona iz baze iz dane tablice ili null ako option
+// nije definiran, tablica mora biti oblika settings tablica krairanih
+// pri inicijalizaciji baze
+exports.getOption = async (tableName, option) => {
+    const query = `SELECT * FROM ${tableName} WHERE option = '${option}'`;
+    let result = await promiseQuery(query);
+    let value;
+    if(result.length === 0) {
+        value = null;
+    } else {
+        value = result[0].value;
+    }
+    return value;
+}
+
+// Postavlja vrijednost optiona u bazi ili ga kreira ako ne postoji u danoj tablici,
+// tablica mora biti oblika settings tablica kreiranih pri inicijalizaciji baze
+exports.setOption = async (tableName, option, value) => {
+    const check = await exports.getOption(tableName, option);
+    let query;
+    if(check !== null) {
+        query = `UPDATE ${tableName} SET value = '${value}' WHERE option = '${option}'`;
+    } else {
+        query = `INSERT INTO ${tableName} (option, value) VALUES ('${option}', '${value}')`;
+    }
+    await promiseQuery(query);
+    return 'done';
+}
+
+// Briše danu postavku (option) is dane tablice sa postavkama
+exports.deleteOption = async (tableName, option) => {
+    const query = `DELETE FROM ${tableName} WHERE option = '${option}'`;
+    await promiseQuery(query);
+    return 'done';
+}
+
+// Provjerava jesu li svi potrebni optioni iz liste kreirani u danoj tablici,
+// lista je lista objekata { name: 'ime', value: 'vrijednost', defaultOk: true }
+// čija svojstva su ime optiona, vrijednost optiona, i je li u redu ako je vrijednost
+// optiona jednaka zadanoj vrijednosti optiona
+// Funkcija vraća true ako je sve u redu, a false ako neki optioni imaju zadanu vrijednost
+// iako nebi smjeli
+// logFunction je pozvana za ispis opisa trenutne operacije
+exports.checkOptions = async (tableName, optionsList, logFunction) => {
+    let allOk = true;
+
+    for (let i in optionsList) {
+        const value = await this.getOption(tableName, optionsList[i].name);
+
+        if (value === null) {
+            if (logFunction)
+                logFunction(
+                    `Record "${optionsList[i].name}" not found in table ` +
+                    `"${tableName}" inserting record and setting it to "${optionsList[i].value}"`
+                );
+            await this.setOption(tableName, optionsList[i].name, optionsList[i].value);
+            if (!optionsList[i].defaultOk)
+                allOk = false;
+        } else if (value === optionsList[i].value && !optionsList[i].defaultOk) {
+            allOk = false;
+        }
+    }
+
+    return allOk;
+}
+
+
+
+// -------------------------------------------------------------------------- //
+//                       Funkcije za razrede i smjene                         //
+// -------------------------------------------------------------------------- //
+
 // Kreiraj funkciju koja vraća podatke za traženi razred po ID-u
 exports.dajRazredById = (razred_id) => {
     return new Promise((resolve, reject) => {
@@ -267,69 +501,6 @@ exports.dajRazredByName = (razred_ime) => {
     });
 }
 
-// Vraća vrijednost optiona iz baze iz dane tablice ili null ako option
-// nije definiran, tablica mora biti oblika settings tablica krairanih
-// pri inicijalizaciji baze
-exports.getOption = async (tableName, option) => {
-    const query = `SELECT * FROM ${tableName} WHERE option = '${option}'`;
-    let result = await promiseQuery(query);
-    let value;
-    if(result.length === 0) {
-        value = null;
-    } else {
-        value = result[0].value;
-    }
-    return value;
-}
-
-// Postavlja vrijednost optiona u bazi ili ga kreira ako ne postoji u danoj tablici,
-// tablica mora biti oblika settings tablica kreiranih pri inicijalizaciji baze
-exports.setOption = async (tableName, option, value) => {
-    const check = await exports.getOption(tableName, option);
-    let query;
-    if(check !== null) {
-        query = `UPDATE ${tableName} SET value = '${value}' WHERE option = '${option}'`;
-    } else {
-        query = `INSERT INTO ${tableName} (option, value) VALUES ('${option}', '${value}')`;
-    }
-    await promiseQuery(query);
-    return 'done';
-}
-
-// Briše danu postavku (option) is dane tablice sa postavkama
-exports.deleteOption = async (tableName, option) => {
-    const query = `DELETE FROM ${tableName} WHERE option = '${option}'`;
-    await promiseQuery(query);
-    return 'done';
-}
-
-// Provjerava jesu li svi potrebni optioni iz liste kreirani u danoj tablici,
-// lista je lista objekata { name: 'ime', value: 'vrijednost', defaultOk: true }
-// čija svojstva su ime optiona, vrijednost optiona, i je li u redu ako je vrijednost
-// optiona jednaka zadanoj vrijednosti optiona
-// Funkcija vraća true ako je sve u redu, a false ako neki optioni imaju zadanu vrijednost
-// iako nebi smjeli
-// logFunction je pozvana za ispis opisa trenutne operacije
-exports.checkOptions = async (tableName, optionsList, logFunction) => {
-    let allOk = true;
-
-    for (let i in optionsList) {
-        const value = await this.getOption(tableName, optionsList[i].name);
-
-        if (value === null) {
-            if (logFunction)
-                logFunction(`Record "${optionsList[i].name}" not found in table "${tableName}" inserting record and setting it to "${optionsList[i].value}"`);
-            await this.setOption(tableName, optionsList[i].name, optionsList[i].value);
-            if (!optionsList[i].defaultOk)
-                allOk = false;
-        } else if (value === optionsList[i].value && !optionsList[i].defaultOk) {
-            allOk = false;
-        }
-    }
-
-    return allOk;
-}
-
 // Kreiraj funkciju koja vraća listu svih razreda iz baze
 exports.dajRazrede = async () => {
     const result = await promiseQuery('SELECT * FROM general_razred ORDER BY ime ASC');
@@ -370,3 +541,56 @@ exports.dajAktivneRazrede = async () => {
 }
 
 exports.dajRazred = this.dajRazredById;
+
+// Dohvati sve postojeće smjene iz baze
+exports.dajShifts = async () => {
+    // Dobavi sve smjene iz baze
+    const result = await promiseQuery(`
+        SELECT DISTINCT smjena FROM general_razred
+        WHERE aktivan = 1
+    `);
+    // Posloži ih u array
+    const smjene = result.map((s) => s.smjena);
+    // Vrati smjene
+    return smjene;
+}
+
+// Dohvati sve razrede u odabranoj smjeni
+exports.dajRazredByShift = async (smjena) => {
+    // Dobavi sve razrede koji su dio dane smjene
+    const result = await promiseQuery(`
+        SELECT id, ime AS name FROM general_razred
+        WHERE aktivan = TRUE AND smjena = ?
+        ORDER BY ime ASC
+    `, [ smjena ]);
+
+    return result
+}
+
+// Unesi dani razred
+exports.insertRazred = async (data) => {
+    // Provjeri postoji li već aktivan razred s danim imenom
+    const results = await promiseQuery(`
+        SELECT COUNT(*) AS razredExists
+        FROM general_razred
+        WHERE aktivan = TRUE AND ime = ?
+    `, [ data.name ]);
+    // AKo postoji javi grešku
+    if (results[0].razredExists)
+        throw new errors.ConflictError('Failed to create class, because class with the same name already exists');
+    // U suprotnom ga upiši
+    const result = await promiseQuery(
+        'INSERT INTO general_razred (ime, smjena, aktivan) VALUES ?',
+        [[[ data.name, data.shift, true ]]]
+    );
+
+    return result.insertId;
+}
+
+// Pobriši dani razred prema ID-u
+exports.deleteRazred = async (id) => {
+    await promiseQuery(
+        'DELETE FROM general_razred WHERE id = ?',
+        [ id ]
+    );
+}

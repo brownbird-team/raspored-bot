@@ -1,4 +1,4 @@
-const db = require('./../../../../databaseQueries.js');
+const db = require('../../../../databaseQueries.js');
 
 module.exports = async () => {
     const classes = await db.dajAktivneRazrede(); 

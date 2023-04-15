@@ -64,6 +64,17 @@ class ValidationError extends Error {
 }
 exports.ValidationError = ValidationError
 
+// Nije moguće kreirati entitet jer već postoji
+class ConflictError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'ConflictError'
+        this.httpErrorCode = 409;
+        this.nonFatal = true;
+    }
+}
+exports.ConflictError = ConflictError
+
 // Došlo je do pogreške na strani servera
 class InternalServerError extends Error {
     constructor(message) {

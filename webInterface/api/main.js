@@ -5,6 +5,8 @@ const errorHandler = require('./middleware/errorsHandler.js');
 
 const router = express.Router();
 
+router.use(express.json());
+
 router.use('/email', email);
 router.use('/general', general);
 router.use(errorHandler.handle);
