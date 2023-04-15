@@ -9,21 +9,23 @@ const inviteLinkService = require('./../services/general/inviteLink.js');
 exports.classes = async (req, res, next) => {
     const result = await allClassesService();
 
-    result.status = 'ok';
-    result.code = 200;
-    result.description = 'Classes successfully fetched from database';
-
-    res.status(200).json(result);
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Classes successfully fetched from database',
+        classes: result
+    });
 }
 
 exports.activeClasses = async (req, res, next) => {
     const result = await activeClassesService();
 
-    result.status = 'ok';
-    result.code = 200;
-    result.description = 'Classes successfully fetched from database';
-
-    res.status(200).json(result);
+    res.status(200).json({
+        status: 'ok',
+        code: 200,
+        description: 'Classes successfully fetched from database',
+        classes: result
+    });
 }
 
 exports.deleteClass = async (req, res, next) => {
@@ -58,7 +60,7 @@ exports.allShifts = async (req, res, next) => {
     res.status(200).json({
         status: 'ok',
         code: 200,
-        description: 'Shifts successfully inserted into database',
+        description: 'Shifts successfully fetched from database',
         shifts: shifts,
     });
 }

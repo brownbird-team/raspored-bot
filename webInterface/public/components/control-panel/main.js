@@ -136,13 +136,13 @@ export const createControlPanel = (userData) => {
     buttons.appendChild(saveSettings);
 
 
-    classContainer.addEventListener("click", () => {
+    classContainer.addEventListener("click", async () => {
         if (document.querySelector(".select-class") != null) {
             return;
         }
 
         service.blurElement(root);
-        selectClass();
+        await selectClass();
         for (let cl of document.getElementsByClassName("select-class-container")) {
             cl.addEventListener("click", () => {
                 saveSettings.disabled = false;
