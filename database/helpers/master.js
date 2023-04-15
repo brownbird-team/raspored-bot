@@ -9,6 +9,11 @@ exports.getVersion = async (con, masterId) => {
     return con.results.insertId;
 }
 
+exports.getCurrentVersion = async (con, masterId) => {
+    await con.query('SELECT MAX(version) AS version FROM ras_master_version WHERE master_id = ?', [ masterId ]);
+    return con.results[0].version;
+}
+
 // Provjeri postoji li tablica sa danim master IDjem ili ako master ID
 // nije definiran dobavi ID trenutne master tablice
 exports.getId = async (con, masterId) => {

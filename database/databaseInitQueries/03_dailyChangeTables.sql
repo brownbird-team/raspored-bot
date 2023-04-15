@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS ras_subject_change_field (
     PRIMARY KEY (id),
     UNIQUE (id, field_type),
     UNIQUE (id, master_id),
+    UNIQUE (change_id, period_id, group_id, change_version_id),
     CONSTRAINT valid_field_type CHECK (field_type IN ('lesson', 'text', 'rel', 'empty', 'normal')),
     FOREIGN KEY (change_id, master_id)         REFERENCES ras_subject_change(change_id, master_id),
     FOREIGN KEY (change_id, change_version_id) REFERENCES ras_change_version(change_id, id),

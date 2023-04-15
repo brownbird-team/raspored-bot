@@ -217,12 +217,16 @@ const ascTimetableToJS = (xml) => {
         };
 
         // Ako ovaj tip lessona nije dodan u mapu dodaj ga
-        if (!lessonMap.has(lessonIdentifier)) {
-            lessonMap.set(lessonIdentifier, attrib);
-        }
+        if (!lessonMap.has(JSON.stringify(lessonIdentifier))) {
+            lessonMap.set(JSON.stringify(lessonIdentifier), attrib);
 
-        // Mapiraj lessonid na interni ID
-        lessonTempMap.set(attrib.id, attrib.__internalId);
+            // Mapiraj lessonid na interni ID
+            lessonTempMap.set(attrib.id, attrib.__internalId);
+
+        } else {
+            // Ako ovakav lesson već postoji mapiraj na interni ID tog lessona
+            lessonTempMap.set(attrib.id, lessonMap.get(JSON.stringify(lessonIdentifier)).__internalId);
+        }
     }
 
     // Popuni mapu sa cardovima
