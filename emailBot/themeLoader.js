@@ -27,6 +27,3 @@ const getThemePropertiesByName = (ThemeName) => {
   return result;
 };
 module.exports = { getAllThemeNames, getThemePropertiesByName };
-
-console.log(getAllThemeNames());
-console.log(getThemePropertiesByName("Template"));
