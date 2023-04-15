@@ -3,3 +3,4 @@
 /config.json
 /.wwebjs_auth
 /emailBot/routeNames.json
+/emailBot/templates/test.js

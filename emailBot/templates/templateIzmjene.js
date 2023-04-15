@@ -1,5 +1,7 @@
 // Uključi funkciju koja pretvara objekt stilova u inline stilove
 const convertToInlineStyles = require('./convertToInlineStyles.js');
+const themeFunctions = require('../themeLoader.js');
+
 
 /* Email Template -- izmjene u rasporedu
  *
@@ -24,57 +26,14 @@ const convertToInlineStyles = require('./convertToInlineStyles.js');
 
 module.exports = (arguments) => {
     
-    const colors = {};
-
-    switch (arguments.theme) {
-        // Definiraj boje za svjetlu temu
-        case "light":
-            // Boja poveznica
-            colors.linkColor = "#494747" //+
-            // Boja pozadine dokumenta i zadana boja teksta
-            colors.bodyColor = "#494747"; //+
-            colors.bodyBackground = "#FFFFFF"; //+
-            // Boja pozadine i teksta u zaglavlju tablice
-            colors.tableHeadingColor = "#494747";
-            colors.tableHeadingBackground = "#ffdf2b";
-            // Boja pozadine redaka tablice
-            colors.rowBackground = "#EEEEEE";
-            // Boja granice elementa
-            colors.rowBorder = "#C3C3C3";
-            // Boja pozadine i teksta retka tablice u kojem je izmjena
-            colors.notEmptyColor = "#494747";
-            colors.notEmptyBackground = "#ffdf2b";
-            // Boja teksta u footer-u
-            colors.footerColor = "#595959"; //+
-            break;
-
-        // Definiraj boje za tamnu temu
-        case "dark":
-            // Boja poveznica
-            colors.linkColor = "#ffdf2b"
-            // Boja pozadine dokumenta i zadana boja teksta
-            colors.bodyColor = "#FFFFFF";
-            colors.bodyBackground = "#202225";
-            // Boja pozadine i teksta u zaglavlju tablice
-            colors.tableHeadingColor = "#36393F";
-            colors.tableHeadingBackground = "#ffdf2b";
-            // Boja pozadine redaka tablice
-            colors.rowBackground = "#36393F";
-            // Boja granice elementa
-            colors.rowBorder = "#1f2022";
-            // Boja pozadine i teksta retka tablice u kojem je izmjena
-            colors.notEmptyColor = "#36393F";
-            colors.notEmptyBackground = "#ffdf2b";
-            // Boja teksta u footer-u
-            colors.footerColor = "#ddd";
-            break;
-    }
+    // Dobivanje boja u zadanoj temi
+    const colors =  themeFunctions.getThemePropertiesByName(arguments.theme); 
 
     const styles = [
         {
             selectors: [ 'caption' ],
             style: `
-                color: ${colors.bodyColor};
+                color: ${colors.paragraphTextColor};
                 font-weight: bold;
                 font-size: 16px;
                 padding-bottom: 10px;
@@ -83,8 +42,8 @@ module.exports = (arguments) => {
         },{
             selectors: [ 'body' ],
             style: `
-                color: ${colors.bodyColor};
-                background-color: ${colors.bodyBackground};
+                color: ${colors.paragraphTextColor};
+                background-color: ${colors.bodyBackgroundColor};
                 padding: 50px;
                 font-family: Helvetica, Arial, sans-serif;
                 font-weight: 400;
@@ -92,7 +51,7 @@ module.exports = (arguments) => {
         },{
             selectors: [ 'a' ],
             style: `
-                color: ${colors.linkColor};
+                color: ${colors.linkTextColor};
                 font-weight: bolder;
             `,
         },{
@@ -113,22 +72,22 @@ module.exports = (arguments) => {
         },{
             selectors: [ 'tr' ],
             style: `
-                background-color: ${colors.rowBackground};
-                border-bottom: thin solid ${colors.rowBorder};
+                background-color: ${colors.rowBackgroundColor};
+                border-bottom: thin solid ${colors.rowBorderColor};
             `,
         },{
             selectors: [ '.table-heading' ],
             style: `
-                color: ${colors.tableHeadingColor};
-                background-color: ${colors.tableHeadingBackground};
+                color: ${colors.tableHeadingTextColor};
+                background-color: ${colors.tableHeadingBackgroundColor};
                 border: none;
                 font-weight: bold;    
             `,
         },{
             selectors: [ '.not-empty' ],
             style: `
-                color: ${colors.notEmptyColor};
-                background-color: ${colors.notEmptyBackground};
+                color: ${colors.notEmptyTextColor};
+                background-color: ${colors.notEmptyBackgroundColor};
                 font-weight: bold;    
             `,
         },{
@@ -142,7 +101,7 @@ module.exports = (arguments) => {
         },{
             selectors: [ '.footer-p' ],
             style: `
-            color: ${colors.footerColor};
+            color: ${colors.footerTextColor};
                 margin-bottom: 25px;
             `,
         },

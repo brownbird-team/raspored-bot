@@ -1,5 +1,8 @@
 // Uključi funkciju koja pretvara objekt stilova u inline stilove
 const convertToInlineStyles = require('./convertToInlineStyles.js');
+const themeFunctions = require('../themeLoader.js');
+// Status: Gotov
+
 
 /* Email Template -- dobrodošlica
  *
@@ -12,34 +15,14 @@ const convertToInlineStyles = require('./convertToInlineStyles.js');
 
 module.exports = (arguments) => {
 
-    const colors = {};
-
-    switch (arguments.theme) {
-        // Definiraj boje za svjetlu temu
-        case "light":
-            // Boja pozadine dokumenta i zadana boja teksta
-            colors.bodyColor = "#494747";
-            colors.bodyBackground = "#FFFFFF";
-            // Boja teksta u footer-u
-            colors.footerColor = "#595959";
-            break;
-
-        // Definiraj boje za tamnu temu
-        case "dark":
-            // Boja pozadine dokumenta i zadana boja teksta
-            colors.bodyColor = "#FFFFFF";
-            colors.bodyBackground = "#202225";
-            // Boja teksta u footer-u
-            colors.footerColor = "#ddd";
-            break;
-    }
+    // Dobivanje boja u zadanoj temi
+    const colors =  themeFunctions.getThemePropertiesByName(arguments.theme); 
 
     const styles = [
         {
             selectors: [ 'body' ],
             style: `
-                color: ${colors.bodyColor};
-                background-color: ${colors.bodyBackground};
+                background-color: ${colors.bodyBackgroundColor};
                 padding: 50px;
                 font-size: 16px;
                 font-family: Helvetica, Arial, sans-serif;
@@ -47,14 +30,14 @@ module.exports = (arguments) => {
         },{
             selectors: [ 'p' ],
             style: `
-                color: inherit;
+                color: ${colors.paragraphTextColor};
                 margin: 25px 0px;
                 max-width: 1000px;
             `,
         },{
             selectors: [ 'footer' ],
             style: `
-                color: ${colors.footerColor};
+                color: ${colors.footerTextColor};
                 font-size: 12px;
             `,
         }
@@ -75,9 +58,8 @@ module.exports = (arguments) => {
                     uspješno ste potvrdili svoju pretplatu na Raspored Bota.
                 </p>
                 <p>
-                    Ne zaboravite odabrati razred na kontrolnoj ploči jer u suprotnom nećete primati izmjene
-                    u rasporedu. U bilo kojem trenutku ukoliko želite možete poništiti svoju pretplatu,
-                    također putem kontrolne ploče i time obrisati sve podatke o Vama iz naše baze podataka.
+                    U bilo kojem trenutku možete poništiti svoju pretplatu
+                    putem kontrolne ploče i time obrisati sve podatke o Vama iz naše baze podataka.
                 </p>
                 <p>
                     Za sva dodatna pitanja ili prijave greške možete nas kontaktirati na naš email <b>${arguments.supportMail}</b>.
