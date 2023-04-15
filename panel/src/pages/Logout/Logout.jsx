@@ -1,9 +1,7 @@
 import React from "react";
 import "./Logout.css";
 import MainLayout from "../../layouts/MainLayout";
-import ComponentHeader from "../../components/ComponentHeader";
-import ComponentFooter from "../../components/ComponentFooter";
-import PrimaryButton from "../../components/PrimaryButton";
+import * as Component from "../../components";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../features/login";
 
@@ -16,12 +14,12 @@ const Logout = () => {
 
     return <MainLayout pageItems={["Odjava"]}>
         <div className="logout-main">
-            <ComponentHeader>
+            <Component.Header>
                 <span>Želite li se odjaviti ?</span>
-            </ComponentHeader>
-            <ComponentFooter>
-                <PrimaryButton type="button" onClick={handleSetLogout}>Odjava</PrimaryButton>
-            </ComponentFooter>
+            </Component.Header>
+            <Component.Footer>
+                <Component.PrimaryButton type="button" onClick={handleSetLogout}>Odjava</Component.PrimaryButton>
+            </Component.Footer>
         </div>
     </MainLayout>;
 };

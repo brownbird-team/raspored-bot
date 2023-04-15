@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import "./Classes.css";
 import MainLayout from "../../layouts/MainLayout";
-import ComponentHeader from "../../components/ComponentHeader";
-import ComponentBody from "../../components/ComponentBody";
-import ComponentFooter from "../../components/ComponentFooter";
-import PrimaryButton from "../../components/PrimaryButton";
+import * as Component from "../../components";
 import CreateClass from "./utils/CreateClass";
-import Alert from "../../components/Alert";
 import { NotificationSuccess, NotificationWarning } from "../../services/Notification";
 import { useClasses } from "../../store/hooks"; 
 import { MdDelete } from "react-icons/md"
@@ -35,12 +31,12 @@ const Classes = () => {
     return (
         <MainLayout pageItems={["Razredi"]}>
             <div className="layout-space classes-main">
-                {alert ? <Alert type={alert.type} onClose={() => setAlert(null)}>{alert.message}</Alert> : null}
+                {alert ? <Component.Alert type={alert.type} onClose={() => setAlert(null)}>{alert.message}</Component.Alert> : null}
                 <div className="classes-create">
-                    <ComponentHeader>
+                    <Component.Header>
                         <span>Dodaj novi razred</span>
-                    </ComponentHeader>
-                    <ComponentBody className="classes-create-body">
+                    </Component.Header>
+                    <Component.Body className="classes-create-body">
                         <input 
                             type="text" 
                             placeholder="Naziv razreda" 
@@ -55,17 +51,17 @@ const Classes = () => {
                             onChange={(event) => handleAddShift(event.target.value)}
                             required 
                         />
-                    </ComponentBody>
-                    <ComponentFooter>
-                        <PrimaryButton type="button" onClick={handleOnAddClass}>Dodaj</PrimaryButton>
-                    </ComponentFooter>
+                    </Component.Body>
+                    <Component.Footer>
+                        <Component.PrimaryButton type="button" onClick={handleOnAddClass}>Dodaj</Component.PrimaryButton>
+                    </Component.Footer>
                 </div>
 
                 <div className="classes-view">
-                    <ComponentHeader>
+                    <Component.Header>
                         <span>Pregled svih razreda</span>
-                    </ComponentHeader>
-                    <ComponentBody className="classes-view-body">
+                    </Component.Header>
+                    <Component.Body className="classes-view-body">
                         {classes.length > 0 ? (
                             <table className="custom-table classes-table">
                                 <thead className="classes-table-head">
@@ -88,7 +84,7 @@ const Classes = () => {
                         ) : (
                             <div className="class-view-item">Nije dodan niti jedan razred</div>
                         )}
-                    </ComponentBody>
+                    </Component.Body>
                 </div>
             </div>
         </MainLayout>

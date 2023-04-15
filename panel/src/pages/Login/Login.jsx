@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import "./Login.css";
-import ComponentHeader from "../../components/ComponentHeader";
-import ComponentBody from "../../components/ComponentBody";
-import ComponentFooter from "../../components/ComponentFooter";
-import PrimaryButton from "../../components/PrimaryButton";
+import * as Component from "../../components";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../features/login";
 import { useNavigate } from "react-router-dom";
@@ -33,10 +30,10 @@ const Login = () => {
 
     return (
         <div className="login-main">
-            <ComponentHeader>
+            <Component.Header>
                 <span>Prijavi se</span>
-            </ComponentHeader>
-			<ComponentBody className="login-body">
+            </Component.Header>
+			<Component.Body className="login-body">
 				<input 
 					type="text" 
 					className="custom-input-box" 
@@ -51,10 +48,10 @@ const Login = () => {
 					onChange={(e) => handleSetPassword(e.target.value)}
 					required 
 				/>
-			</ComponentBody>
-			<ComponentFooter>
-				<PrimaryButton type="button" onClick={handleOnLogin}>Prijavi se</PrimaryButton>
-			</ComponentFooter>
+			</Component.Body>
+			<Component.Footer>
+				<Component.PrimaryButton type="button" onClick={handleOnLogin}>Prijavi se</Component.PrimaryButton>
+			</Component.Footer>
         </div>
     );
 };
