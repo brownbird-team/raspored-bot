@@ -1,13 +1,13 @@
 export default class CreateClass {
 
-	constructor(className=null, shift=null) {
-		this.className = className;
+	constructor(name=null, shift=null) {
+		this.name = name;
 		this.shift = shift;
 	}
 
-	setClassName(value) {
-		this.className = value;
-		this.trimClassName();
+	setName(value) {
+		this.name = value;
+		this.trimName();
 		return this;
 	} 
 
@@ -16,22 +16,27 @@ export default class CreateClass {
 		return this;
 	}
 
-	getClassName() {
-		return this.className;
+	getName() {
+		return this.name;
 	}
 
 	getShift() {
 		return this.shift;
 	}
 
-	trimClassName() {
+	trimName() {
 		const regexPattern = /\s+/g;
-		this.className = this.className.replace(regexPattern, "");
+		this.name = this.name.replace(regexPattern, "");
 		return this;
 	}
  
 	validate() {
-		if (!this.className || !this.shift) return false;
+		if (this.name === null || this.shift === null) return false;
 		return true;
+	}
+
+	reset() {
+		this.name = "";
+		this.shift = "";
 	}
 }

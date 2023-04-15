@@ -13,5 +13,5 @@ export const useLeftsidebar = () => {
 }
 
 export const useClasses = () => {
-	return useSelector((state) => state.classes.value);
+	return useSelector((state) => state.classes.classes);
 }
