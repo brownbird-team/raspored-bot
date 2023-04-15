@@ -1,0 +1,19 @@
+{
+    "changes": {
+        "path": "/changes"
+    },
+
+    "settings": {
+        "classes": {
+            "path": "/settings/classes"
+        }
+    },
+
+    "logout": {
+        "path": "/logout"
+    },
+
+    "login": {
+        "path": "/login"
+    }
+}

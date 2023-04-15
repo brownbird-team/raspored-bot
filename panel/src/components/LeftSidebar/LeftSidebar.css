@@ -1,0 +1,157 @@
+.left-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 6rem;
+    padding: 1.5rem;
+    overflow-y: unset;
+    z-index: 1;
+    background-color: var(--component-primary);
+    color: var(--text-primary);
+}
+
+.left-sidebar .left-sidebar-heading h4,
+.left-sidebar .sidebar-admin,
+.left-sidebar .left-sidebar-item button span {
+    display: none;
+}
+
+.left-sidebar-heading {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar-icon {
+    cursor: pointer;
+}
+
+.left-sidebar-item {
+    width: 100%;
+}
+
+.left-sidebar-parent {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+    transition: none;
+}
+
+.left-sidebar-parent:hover {
+    background-color: var(--border-primary);
+    border-radius: 0.5rem;
+}
+
+.left-sidebar-parent button span {
+    font-size: 1.2rem;
+}
+
+.item-tooltip {
+    position: absolute;
+    background-color: var(--border-primary);
+    padding: 1rem 1.5rem;
+    transform: translate(8rem, 0rem);
+    width: 7rem;
+    border-radius: 0.5rem;
+    display: none;
+}
+
+.left-sidebar .left-sidebar-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 3rem;
+}
+
+.left-sidebar .left-sidebar-parent:hover .item-tooltip {
+    display: flex;
+    justify-content: center;
+}
+
+.left-sidebar.active {
+    width: 18rem;
+    overflow-y: auto;
+}
+
+.left-sidebar.active.small-screen {
+    width: 100%;
+}
+
+.left-sidebar.active .left-sidebar-heading h4,
+.left-sidebar.active .sidebar-admin,
+.left-sidebar.active .left-sidebar-parent button span {
+    display: block;
+}
+
+.left-sidebar.active .item-tooltip,
+.left-sidebar.active .left-sidebar-parent:hover .item-tooltip {
+    display: none;
+}
+
+.left-sidebar.active .left-sidebar-heading {
+    justify-content: space-between;
+}
+
+.left-sidebar.active .left-sidebar-items {
+    align-items: flex-start;
+}
+
+.left-sidebar.active .left-sidebar-parent button {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+/*  CSS za item children (podizbornik) */
+
+.left-sidebar-children {
+    width: 100%;
+    cursor: pointer;
+}
+
+.left-sidebar-children {
+    padding-left: 1rem;
+}
+
+.left-sidebar-item .left-sidebar-children {
+    display: none;
+}
+
+.left-sidebar-item.open .left-sidebar-children {
+    display: block;
+}
+
+.left-sidebar .left-sidebar-item.open .left-sidebar-children {
+    display: none;
+}
+
+.left-sidebar.active .left-sidebar-item.open > .left-sidebar-children {
+    display: block;
+}
+
+/*  CSS za arrow down/up  */
+
+.arrow {
+    position: absolute;
+    right: 0;
+    transition: all 0.25s ease;
+}
+
+.arrow.up {
+    transform: rotate(180deg);
+}
+
+.left-sidebar .left-sidebar-item .arrow {
+    display: none;
+}
+
+.left-sidebar.active .left-sidebar-item .arrow {
+    display: block;
+}

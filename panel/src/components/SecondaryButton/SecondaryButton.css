@@ -1,0 +1,12 @@
+.secondary-button {
+    width: fit-content;
+    min-width: 10rem;
+    padding: 1rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: var(--button-secondary);
+    color: var(--button-text-secondary);
+}
+
+.secondary-button:hover {
+    background-color: var(--button-secondary-hover);
+}

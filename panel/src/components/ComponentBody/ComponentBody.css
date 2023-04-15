@@ -1,0 +1,5 @@
+.component-body {
+    width: 100%;
+    /* padding: 1rem; */
+    background-color: var(--component-primary);
+}

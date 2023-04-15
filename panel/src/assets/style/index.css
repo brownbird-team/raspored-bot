@@ -1,0 +1,132 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    transition: all 0.5s ease;
+
+    /* Defined fonts for application */
+    font-family: "Roboto", sans-serif;
+}
+
+:root {
+    /* Defined colors for background */
+    --background-primary: #ffffff;
+
+    /* Defined colors for component */
+    --component-primary: #f3f5f7;
+    --component-header: #2f5292;
+
+    /* Defined colors for border */
+    --border-primary: #e1e3e4;
+
+    /* Defined colors for text */
+    --text-primary: #414349;
+
+    /* Defined colors for on hover */
+    --on-hover: #e5e5e7;
+
+    /* Defined colors for button */
+    --button-primary: #2f5292;
+    --button-primary-hover: #365b9f;
+    --button-secondary: #d8dadd;
+    --button-secondary-hover: #dfe6ed;
+    --button-text-primary: #f3f5f7;
+    --button-text-secondary: #414349;
+
+    /* Defined colors for box shadow */
+    --box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+    /* Defined colors for table */
+    --table-heading: #dbdcde;
+}
+
+[data-theme="dark"] {
+    /* Defined colors for background */
+    --background-primary: #111317;
+
+    /* Defined colors for component */
+    --component-primary: #1d2129;
+    --component-header: #315b9f;
+
+    /* Defined colors for border */
+    --border-primary: #3f4145;
+
+    /* Defined colors for text */
+    --text-primary: #f3f5f7;
+
+    /* Defined colors for on hover */
+    --on-hover: #15181d;
+
+    /* Defined colors for button */
+    --button-primary: #8ab6e9;
+    --button-primary-hover: #94c1f5;
+    --button-secondary: #454654;
+    --button-secondary-hover: #545565;
+    --button-text-primary: #111317;
+    --button-text-secondary: #f3f5f7;
+
+    /* Defined colors for box shadow */
+    --box-shadow: rgba(0, 0, 0, 0.32) 0px 1px 4px;
+
+    /* Defined colors for table */
+    --table-heading: #252a33;
+}
+
+body {
+    color: var(--text-primary) !important;
+}
+
+button {
+    outline: none;
+    border: none;
+    background: none;
+    color: var(--text-primary);
+}
+
+.custom-input-box {
+    width: 50%;
+    outline: none;
+    border: 0;
+    border-radius: 0.25rem;
+    padding-left: 1rem;
+    border: 1px solid var(--button-secondary);
+    border-left: 5px solid var(--button-primary);
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+}
+
+.custom-select {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    color: var(--text-primary);
+    background-color: var(--button-secondary);
+}
+
+.custom-datepicker {
+    outline: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    color: var(--text-primary);
+    background-color: var(--button-secondary);
+}
+
+.custom-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    color: var(--text-primary);
+    background-color: var(--border-primary);
+}
+
+.icon {
+    cursor: pointer;
+}
+
+.icon.up {
+    transform: rotate(180deg);
+}
+
+.highlight {
+    color: var(--button-primary);
+}

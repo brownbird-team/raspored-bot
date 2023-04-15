@@ -1,0 +1,11 @@
+.component-header {
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    background-color: var(--component-header);
+    color: #f3f5f7;
+}
