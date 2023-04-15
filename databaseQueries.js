@@ -220,15 +220,18 @@ exports.insertChangeTable = async (data) => {
     if (!result[0].shiftExists)
         throw new errors.ValidationError('Given shift does not exist');
     
-    await promiseQuery(
-        'INSERT INTO izmjene_tablica (naslov, smjena, prijepodne) ?',
+    const res = await promiseQuery(
+        'INSERT INTO izmjene_tablica (naslov, smjena, prijepodne) VALUES ?',
         [[[ data.heading, data.shift, !!data.morning ]]]
     );
+
+    return res.insertId;
 }
 
 // Izmjeni već postojeću tablicu izmjena
 exports.updateChangeTable = async (data) => {
     const updateObject = {};
+    console.log('----------- TEST -------------');
 
     if (typeof(data.heading) === 'string')
         updateObject.naslov = data.heading;
@@ -236,9 +239,12 @@ exports.updateChangeTable = async (data) => {
         updateObject.smjena = data.shift;
     if (typeof(data.morning) === 'boolean')
         updateObject.prijepodne = data.morning;
+    
+    if (Object.keys(updateObject).length === 0)
+        return;
 
     await promiseQuery(
-        'UPDATE izmjene_tablica SET ? WHERE id = ?'
+        'UPDATE izmjene_tablica SET ? WHERE id = ?',
         [ updateObject, data.id ]
     );
 }
@@ -590,7 +596,7 @@ exports.insertRazred = async (data) => {
 // Pobriši dani razred prema ID-u
 exports.deleteRazred = async (id) => {
     await promiseQuery(
-        'DELETE FROM general_razred WHERE id = ?',
+        'UPDATE general_razred SET aktivan = FALSE WHERE id = ?',
         [ id ]
     );
 }

@@ -140,8 +140,8 @@ exports.databaseInit = async () => {
         await pureQuery(con, `
             CREATE TABLE general_razred (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                ime VARCHAR(10) NOT NULL,
-                smjena VARCHAR(1) NOT NULL,
+                ime VARCHAR(128) NOT NULL,
+                smjena VARCHAR(128) NOT NULL,
                 aktivan BOOL NOT NULL DEFAULT true
             );
             INSERT INTO general_razred (ime, smjena) VALUES
@@ -174,7 +174,7 @@ exports.databaseInit = async () => {
             CREATE TABLE izmjene_tablica (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 naslov TEXT,
-                smjena VARCHAR(1) NOT NULL,
+                smjena VARCHAR(128) NOT NULL,
                 prijepodne BOOL NOT NULL,
                 INDEX (id)
             )
