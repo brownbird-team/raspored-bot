@@ -1,22 +1,22 @@
 {
     "changes": {
-        "path": "/changes"
+        "path": "/panel/changes"
     },
 
     "settings": {
         "classes": {
-            "path": "/settings/classes"
+            "path": "/panel/settings/classes"
         },
         "accounts": {
-            "path": "/settings/accounts"
+            "path": "/panel/settings/accounts"
         }
     },
 
     "logout": {
-        "path": "/logout"
+        "path": "/panel/logout"
     },
 
     "login": {
-        "path": "/login"
+        "path": "/panel/login"
     }
 }
