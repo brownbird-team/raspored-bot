@@ -84,7 +84,7 @@ module.exports = {
                     await baza.updateKanal({
                         id: message.channelId,
                         razred: razred.id,
-                        zadnja_poslana: zadnja.id
+                        zadnja_poslana: (zadnja) ? zadnja.id : null
                     });
                     embed = await normalEmbed(
                         'Mijenjam zadani razred',
@@ -149,7 +149,7 @@ module.exports = {
                 await baza.updateKanal({
                     id: message.channelId,
                     mute: false,
-                    zadnja_poslana: zadnja_poslana.id
+                    zadnja_poslana: (zadnja_poslana) ? zadnja_poslana.id : null
                 });
                 embed = await normalEmbed(
                     'Izmjena postavki za slanje izmjena',

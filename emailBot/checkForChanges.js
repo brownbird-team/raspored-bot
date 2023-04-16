@@ -29,7 +29,7 @@ exports.check = async () => {
         if (!userData.verified || userData.mute || !userData.razred) continue;
 
         // Dohvati nove izmjene iz baze (koje su se dogodile od zadnje poslane)
-        let noveIzmjene = await izmjene.dajIzmjene(userData.razred.id, userData.zadnjaPoslana);
+        let noveIzmjene = await izmjene.dajIzmjene(userData.razred.id, userData.zadnjaPoslana ?? 0);
         const zadnjaIzmjena = noveIzmjene[0];
 
         // Filtriraj izmjene tako da izbaciš sve nepotrebne prazne izmjene za korisnike
@@ -43,7 +43,7 @@ exports.check = async () => {
             const izmjenPrijeOve = await izmjene.dajPovijest(userData.razred.id, 2, izmjena.id);
 
             // Ako je izmjena prije ove bila u istoj tablici i nije bila prazna, pošalji praznu
-            if (izmjena.naslov === izmjenPrijeOve.izmjena.naslov && !izmjenPrijeOve.izmjena.sve_null)
+            if (izmjenPrijeOve.izmjena && izmjena.naslov === izmjenPrijeOve.izmjena.naslov && !izmjenPrijeOve.izmjena.sve_null)
                 return true;
 
             // Inače izbaci izmjenu iz arraya
