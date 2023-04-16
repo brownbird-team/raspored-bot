@@ -22,6 +22,7 @@ exports.checkOptions = async () => {
     ], this.webLog);
 }
 
+// Provjeri je li email ispravan
 exports.emailValid = (email) => {
     if (typeof(email) !== 'string')
         return false;
@@ -31,6 +32,7 @@ exports.emailValid = (email) => {
     return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email.toLowerCase());
 }
 
+// Formatiraj datum za ispis
 exports.formatDate = (dateObject) => {
     const day = String(dateObject.getDate()).padStart(2, '0');
     const month = String(dateObject.getMonth() + 1).padStart(2, '0');

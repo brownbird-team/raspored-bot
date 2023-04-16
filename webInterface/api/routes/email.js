@@ -5,6 +5,8 @@ const { use } = require('./../../helperFunctionsWeb.js');
 
 const router = express.Router();
 
+// Rute skupine email, koriste se za upravljanje email korisnicima
+
 router.post('/auth/register', use(emailController.register));
 router.post('/auth/login', use(emailController.login));
 

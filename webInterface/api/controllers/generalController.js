@@ -6,7 +6,7 @@ const allShiftsService = require('../services/classes/shifts.js');
 const shiftClassesService = require('../services/classes/shift.js');
 const inviteLinkService = require('./../services/general/inviteLink.js');
 
-
+// Dobavi sve razrede koji postoje sada ili su postojali
 exports.classes = async (req, res, next) => {
     const result = await allClassesService();
 
@@ -18,6 +18,7 @@ exports.classes = async (req, res, next) => {
     });
 }
 
+// Dobavi razrede koji trenutno postoje
 exports.activeClasses = async (req, res, next) => {
     const result = await activeClassesService();
 
@@ -29,6 +30,7 @@ exports.activeClasses = async (req, res, next) => {
     });
 }
 
+// Obriši razred (napravi ga neaktivnim)
 exports.deleteClass = async (req, res, next) => {
     await deleteClassService({
         id: req.query.id
@@ -41,6 +43,7 @@ exports.deleteClass = async (req, res, next) => {
     });
 }
 
+// Upiši novi razred
 exports.insertClass = async (req, res, next) => {
     const newId = await insertClassService({
         name: req.body.name,
@@ -55,6 +58,7 @@ exports.insertClass = async (req, res, next) => {
     });
 }
 
+// Dobavi sve smjene koje su definirane u bazi
 exports.allShifts = async (req, res, next) => {
     const shifts = await allShiftsService();
 
@@ -66,6 +70,7 @@ exports.allShifts = async (req, res, next) => {
     });
 }
 
+// Dobavi sve razrede koji se nalaze u danoj smjeni
 exports.shift = async (req, res, next) => {
     const classes = await shiftClassesService({
         shift: req.query.name,
@@ -79,6 +84,7 @@ exports.shift = async (req, res, next) => {
     });
 }
 
+// Dobavi invite link discord bota koji je definiran u bazi
 exports.inviteLink = async (req, res, next) => {
     const result = await inviteLinkService();
 

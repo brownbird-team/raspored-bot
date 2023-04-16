@@ -5,9 +5,12 @@ const { use } = require('./../../helperFunctionsWeb.js');
 
 const router = express.Router();
 
+// Rute skupine change, koriste se za upravljanje dnevnim izmjenama u rasporedu
+
 router.get('/', use(changeController.get));
 router.put('/', auth.tokenAuth, use(changeController.update));
 router.post('/', auth.tokenAuth, use(changeController.create));
+
 router.get('/content', use(changeController.getContent));
 router.post('/content', auth.tokenAuth, use(changeController.setContent));
 

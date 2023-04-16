@@ -5,6 +5,8 @@ const auth = require('./../middleware/authorizationAdmin');
 
 const router = express.Router();
 
+// Rute skupine general, koriste se primarno za razrede i smjene
+
 router.get('/classes/all', use(generalController.classes));
 router.get('/classes/active', use(generalController.activeClasses));
 router.delete('/class', auth.tokenAuth, use(generalController.deleteClass));
