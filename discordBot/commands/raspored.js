@@ -180,7 +180,8 @@ module.exports = {
                 allowedMentions: { repliedUser: false }
             });
         } catch (err) {
-            // Do nothing
+            if (err.name !== 'DiscordAPIError')
+                throw err;
         }
 
         const filter = i => JSON.parse(i.customId).id === message.id;
