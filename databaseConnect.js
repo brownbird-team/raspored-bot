@@ -244,19 +244,6 @@ exports.databaseInit = async () => {
             )
         `);
     }
-    if (!tables.includes("disc_korisnici")) {
-        databaseLog("Kreiram tablicu disc_korisnici");
-        await pureQuery(con, `
-            CREATE TABLE disc_korisnici (
-                user_id VARCHAR(50) PRIMARY KEY,
-                access_token VARCHAR(100),
-                refresh_token VARCHAR(100),
-                web_theme VARCHAR(15) NOT NULL DEFAULT 'light',
-                web_token VARCHAR(100) UNIQUE,
-                web_token_created DATETIME
-            )
-        `);
-    }
     // Kreiraj tablice skupine email ako ne postoje
     if (!tables.includes("email_settings")) {
         databaseLog("Kreiram tablicu email_settings");
@@ -299,6 +286,18 @@ exports.databaseInit = async () => {
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 option VARCHAR(30) NOT NULL UNIQUE,
                 value TEXT
+            )
+        `);
+    }
+    if (!tables.includes("web_admin")) {
+        databaseLog("Kreiram tablicu web_admin");
+        await pureQuery(con, `
+            CREATE TABLE web_admin (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                username VARCHAR(128) UNIQUE,
+                password VARCHAR(256),
+                web_token VARCHAR(128) UNIQUE,
+                web_token_created DATETIME
             )
         `);
     }

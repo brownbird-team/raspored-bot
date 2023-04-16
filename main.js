@@ -12,6 +12,8 @@ const config = require('./loadConfig.js').getData();
 
 const dbq = require('./databaseQueries.js');
 
+const dbWeb = require('./webInterface/databaseQueriesWeb.js');
+
 const start = async () => {
     // Napravi check za bazu
     await database.databaseInit();
@@ -74,6 +76,14 @@ const start = async () => {
             { classId: 33, sat1: 'T', sat2: 'T', sat3: 'T', sat4: 'T', sat5: 'T', sat6: 'T', sat7: 'T', sat8: 'T', sat9: 'T',}
         ]
     });*/
+
+    const r = await dbWeb.getUsers({
+
+        username: 'admin',
+        password: 'p'
+
+    });
+    console.log(r);
 }
 
 start();

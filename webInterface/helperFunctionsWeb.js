@@ -17,6 +17,7 @@ exports.checkOptions = async () => {
         
         { name: 'tempTokenLifetime',    value: '1200',        defaultOk: true  },
         { name: 'permTokenLifetime',    value: '2592000',     defaultOk: true  },
+        { name: 'adminTokenLifetime',   value: '2592000',     defaultOk: true  },
 
     ], this.webLog);
 }
