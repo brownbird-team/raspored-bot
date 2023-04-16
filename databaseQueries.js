@@ -534,7 +534,7 @@ exports.dajRazredByName = (razred_ime) => {
         query(`
             SELECT *
             FROM general_razred
-            WHERE ime = '${exports.prepareForSQL(razred_ime.toUpperCase())}'
+            WHERE aktivan = TRUE AND ime = '${exports.prepareForSQL(razred_ime.toUpperCase())}'
         `, (err, result) => {
             if (err) { reject(err); return; }
 
@@ -576,7 +576,7 @@ exports.dajRazrede = async () => {
 
 // Kreiraj funkciju koja vraća listu svih razreda iz baze
 exports.dajAktivneRazrede = async () => {
-    const result = await promiseQuery('SELECT * FROM general_razred WHERE aktivan = 1 ORDER BY ime ASC');
+    const result = await promiseQuery('SELECT * FROM general_razred WHERE aktivan = TRUE ORDER BY ime ASC');
     const resultsFormated = [];
 
     if (!result)
@@ -600,7 +600,7 @@ exports.dajShifts = async () => {
     // Dobavi sve smjene iz baze
     const result = await promiseQuery(`
         SELECT DISTINCT smjena FROM general_razred
-        WHERE aktivan = 1
+        WHERE aktivan = TRUE
     `);
     // Posloži ih u array
     const smjene = result.map((s) => s.smjena);

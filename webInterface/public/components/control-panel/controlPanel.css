@@ -157,6 +157,7 @@
 
 .select-class-main-container {
     overflow-y: auto;
+    width: 100%;
 }
 
 .select-class-container {
