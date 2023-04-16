@@ -20,12 +20,6 @@ const Changes = () => {
 
     const shifts = useShifts();
 
-    const [change, setChange] = useState(new CreateChange("Izmjene u rasporedu sati", new Date(), shifts[0], true));
-    const [updateTrigger, setUpdateTrigger] = useState(false);
-    const [alert, setAlert] = useState(null);
-    const [showChangeTable, setShowChangeTable] = useState(null);
-
-
     useEffect(() => {
         const getShifts = async() => {
             const res = await fetch(`${API_HOST}/api/general/shifts`, {
@@ -45,6 +39,11 @@ const Changes = () => {
 
     const changes = useChanges();
 
+    const [change, setChange] = useState(new CreateChange("Izmjene u rasporedu sati", new Date(), shifts[0], true));
+    const [updateTrigger, setUpdateTrigger] = useState(false);
+    const [alert, setAlert] = useState(null);
+    const [showChangeTable, setShowChangeTable] = useState(null);
+
     useEffect(() => {
         const getTableChanges = async() => {
             const res = await fetch(`${API_HOST}/api/change`, {
@@ -61,7 +60,6 @@ const Changes = () => {
 
         getTableChanges();
     }, [updateTrigger]);
-
 
     // Handler koji promijeni naziv tablice izmjena
     const handleOnChangeName = (value) => setChange(change.setName(value));
