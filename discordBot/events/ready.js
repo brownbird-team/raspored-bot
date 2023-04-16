@@ -26,7 +26,7 @@ module.exports = {
         client.guilds.cache.forEach( async (value, key) => {
             server = await baza.getServer(key);
             if (!server) {
-                func.discordLog(`Dodajem server [${value.name}] u bazu`);
+                func.discordLog(`Adding server [${value.name}] into database`);
                 await baza.addServer(key);
             }
         });

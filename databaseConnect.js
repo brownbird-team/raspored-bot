@@ -143,7 +143,9 @@ exports.databaseInit = async () => {
                 ime VARCHAR(128) NOT NULL,
                 smjena VARCHAR(128) NOT NULL,
                 aktivan BOOL NOT NULL DEFAULT true
-            );
+            );`
+            /*     // Ovo nema smisla insertat osim za RUĐER
+            + `
             INSERT INTO general_razred (ime, smjena) VALUES
                 ('1.A', 'A'), ('1.B', 'A'), ('1.C', 'A'), ('1.D', 'A'),
                 ('1.O', 'A'), ('2.A', 'A'), ('2.B', 'A'), ('2.C', 'A'),
@@ -154,8 +156,8 @@ exports.databaseInit = async () => {
                 ('1.N', 'B'), ('2.E', 'B'), ('2.F', 'B'), ('2.G', 'B'),
                 ('2.M', 'B'), ('2.N', 'B'), ('3.E', 'B'), ('3.F', 'B'),
                 ('3.G', 'B'), ('3.M', 'B'), ('3.N', 'B'), ('4.F', 'B'),
-                ('4.G', 'B'), ('4.E', 'B'), ('4.M', 'B'), ('4.N', 'B');
-        `);
+                ('4.G', 'B'), ('4.E', 'B'), ('4.M', 'B'), ('4.N', 'B');`*/
+            );
     }
     // Kreiraj tablice skupine izmjene ako ne postoje
     if (!tables.includes("izmjene_settings")) {

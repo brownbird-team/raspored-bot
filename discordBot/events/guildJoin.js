@@ -7,7 +7,7 @@ module.exports = {
     async execute(guild) {
         const server = await baza.getServer(guild.id);
         if (!server) {
-            func.discordLog(`Dodajem server [${guild.name}] u bazu`);
+            func.discordLog(`Adding server [${guild.name}] into database`);
             baza.addServer(guild.id);
         }
     }
