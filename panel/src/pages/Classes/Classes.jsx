@@ -66,13 +66,17 @@ const Classes = () => {
             const result = await res.json();
             setUpdateTrigger(!updateTrigger);
             
-            switch (result.status) {
-                case "error": {
-                    setAlert(new NotificationWarning(<>Došlo je do pogreške prilikom dodavanja novog razreda</>));
+            switch (result.code) {
+                case 409: {
+                    setAlert(new NotificationWarning(<>Razred <b className="highlight">{newClass.getName()}</b> već postoji</>))
                     break;
                 }
-                case "ok": {
+                case 200: {
                     setAlert(new NotificationSuccess(<>Uspješno je dodan novi razred <b className="highlight">{newClass.getName()}</b></>));
+                    break;
+                }
+                default: {
+                    setAlert(new NotificationWarning(<>Došlo je do pogreške prilikom dodavanja novog razreda</>));
                     break;
                 }
             }
