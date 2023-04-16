@@ -75,8 +75,8 @@ exports.check = async () => {
         }
         // Ako je kanal u serveru i ima bar jednu izmjenu pošalji embeds array
         if (channelData.server && embeds.length !== 0) {
-            const channel = await discord.client.channels.fetch(channelData.id);
             try {
+                const channel = await discord.client.channels.fetch(channelData.id);
                 await channel.send({
                     embeds: embeds
                 });
