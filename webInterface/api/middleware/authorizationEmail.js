@@ -2,6 +2,7 @@ const errors = require('./../../../errors.js');
 const dbEmail = require('./../../../emailBot/databaseQueriesEmail.js');
 const dbWeb = require('./../../databaseQueriesWeb.js');
 
+// Izvrši autorizaciju pomoću trajnog tokena
 exports.permTokenAuth = async (req, res, next) => {
     try {
         // Izvadi authorization header is requesta
@@ -46,6 +47,7 @@ exports.permTokenAuth = async (req, res, next) => {
     }
 }
 
+// Izvrši autorizaciju pomoću temp tokena
 exports.tempTokenAuth = async (req, res, next) => {
     try {
         // Izvadi authorization header is requesta

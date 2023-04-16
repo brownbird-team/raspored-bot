@@ -1,6 +1,7 @@
 const errors = require('./../../../errors.js');
 const dbWeb = require('./../../databaseQueriesWeb.js');
 
+// Izvrši autorizaciju pomoću pristupnog tokena
 exports.tokenAuth = async (req, res, next) => {
     try {
         // Izvadi authorization header is requesta

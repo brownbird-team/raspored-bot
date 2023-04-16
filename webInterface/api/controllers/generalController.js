@@ -6,6 +6,7 @@ const allShiftsService = require('../services/classes/shifts.js');
 const shiftClassesService = require('../services/classes/shift.js');
 const inviteLinkService = require('./../services/general/inviteLink.js');
 
+
 exports.classes = async (req, res, next) => {
     const result = await allClassesService();
 

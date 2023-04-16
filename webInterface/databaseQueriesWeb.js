@@ -51,7 +51,7 @@ exports.getUsers = async () => {
 // Obriši danog korisnika
 exports.deleteUser = async (userId) => {
     const result = await promiseQuery(
-        'DELETE FROM web_admin WHERE id = ?'
+        'DELETE FROM web_admin WHERE id = ?',
         [ userId ]
     );
 

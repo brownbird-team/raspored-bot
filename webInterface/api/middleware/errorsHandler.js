@@ -1,5 +1,6 @@
 const notifier = require('./../../../globalErrorNotifier.js');
 
+// Uhvati API greške
 exports.handle = async (error, req, res, next) => {
     
     const statusCode = (error.httpErrorCode) ? error.httpErrorCode : 500;

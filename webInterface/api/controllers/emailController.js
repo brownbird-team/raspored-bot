@@ -6,6 +6,7 @@ const registerService = require('./../services/email/register.js');
 const updateService = require('./../services/email/update.js');
 const logoutService = require('./../services/email/logout.js');
 
+// Obriši email korisnika iz baze podataka
 exports.delete = async (req, res, next) => {
     await deleteService({
         token: req.accessToken
@@ -18,6 +19,7 @@ exports.delete = async (req, res, next) => {
     });
 }
 
+// Dobavi podatke za korisnika iz baze podataka
 exports.get = async (req, res, next) => {
     const userData = await getService({
         token: req.accessToken
@@ -30,6 +32,7 @@ exports.get = async (req, res, next) => {
     res.status(200).json(userData);
 }
 
+// Zatraži slanje mail-a sa login linkom
 exports.login = async (req, res, next) => {
     await loginService({
         email: req.body.email
@@ -42,6 +45,8 @@ exports.login = async (req, res, next) => {
     });
 }
 
+// Na osnovu privremenog tokena iz emaila
+// dobavi trajni token
 exports.permanent = async (req, res, next) => {
     const tokenData = await permanentService({
         tempToken: req.tempAccessToken
@@ -55,6 +60,7 @@ exports.permanent = async (req, res, next) => {
     });
 }
 
+// Zatraži slanje emaila za registraciju
 exports.register = async (req, res, next) => {
     await registerService({
         email: req.body.email,
@@ -71,6 +77,7 @@ exports.register = async (req, res, next) => {
     });
 }
 
+// Izmjeni postavke korisničkog računa
 exports.update = async (req, res, next) => {
     await updateService({
         token: req.accessToken,
@@ -87,6 +94,7 @@ exports.update = async (req, res, next) => {
     });
 }
 
+// Opozovi pristupni token korisničkog računa
 exports.logout = async (req, res, next) => {
     await logoutService({
         token: req.accessToken
