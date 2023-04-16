@@ -52,7 +52,7 @@ const Login = ({ login }) => {
 				}
 				case 200: {
 					login();
-					dispatch(saveLoginData({ token: result.token, username: loginData.getUsername() }));
+					dispatch(saveLoginData({ token: result.token, username: result.username, userId: result.userId }));
 					navigate(routes.changes.path);
 					break;
 				}

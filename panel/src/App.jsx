@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import "./assets/style/App.css";
 import LeftSidebar from "./components/LeftSidebar";
-import Classes from "./pages/Classes";
 import Changes from "./pages/Changes";
+import Classes from "./pages/Classes";
+import Accounts from "./pages/Accounts";
 import Logout from "./pages/Logout";
 import Login from "./pages/Login";
 import routes from "./data/routes.json";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useToken, useTheme, useLeftsidebar } from "./store/hooks";
+import { useDispatch } from "react-redux";
+import { saveLoginData } from "./features/login";
 import API_HOST from "./data/api";
 
+
 const App = () => {
+
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const theme = useTheme();
     const token = useToken();
@@ -43,10 +49,10 @@ const App = () => {
                 method: "GET",
             });
 
-            const user = await res.json();
-
-            if (user.code === 200) {
+            const { code, username, userId } = await res.json();
+            if (code === 200) {
                 setLogin(true);
+                dispatch(saveLoginData({ token, username, userId }));
                 navigate(routes.changes.path, { replace: true});
             }
         }
@@ -63,12 +69,16 @@ const App = () => {
                         element={ login ? <Navigate to={routes.changes.path} replace /> : <Login login={() => setLogin(true)} /> } 
                     />
 
+                    <Route path={routes.changes.path} 
+                        element={ login ? <Changes /> : <Navigate to={routes.login.path} replace /> } 
+                    />
+
                     <Route path={routes.settings.classes.path} 
                         element={ login ? <Classes /> : <Navigate to={routes.login.path} replace /> } 
                     />
 
-                    <Route path={routes.changes.path} 
-                        element={ login ? <Changes /> : <Navigate to={routes.login.path} replace /> } 
+                    <Route path={routes.settings.accounts.path} 
+                        element={ login ? <Accounts /> : <Navigate to={routes.login.path} replace /> } 
                     />
 
                     <Route path={routes.logout.path} 

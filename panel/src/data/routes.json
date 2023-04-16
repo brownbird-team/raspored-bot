@@ -6,6 +6,9 @@
     "settings": {
         "classes": {
             "path": "/settings/classes"
+        },
+        "accounts": {
+            "path": "/settings/accounts"
         }
     },
 

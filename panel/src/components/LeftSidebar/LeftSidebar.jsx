@@ -4,13 +4,13 @@ import { IoIosClose, RxHamburgerMenu } from "react-icons/all";
 import LeftSidebarItem from "./LeftSidebarItem";
 import items from "./items";
 import { useDispatch } from "react-redux";
-import { useUsername, useLeftsidebar } from "../../store/hooks"; 
+import { useUserActive, useLeftsidebar } from "../../store/hooks"; 
 import { setOpen, setClose } from "../../features/leftSidebar";
 
 const LeftSidebar = ({ smallScreen = "" }) => {
     const dispatch = useDispatch();
     const isOpen = useLeftsidebar();
-    const admin = useUsername();
+    const admin = useUserActive();
 
     const handleOnOpen = () => dispatch(setOpen());
     
@@ -33,7 +33,7 @@ const LeftSidebar = ({ smallScreen = "" }) => {
                     <RxHamburgerMenu size={30} onClick={handleOnOpen} className="sidebar-icon" />
                 )}
             </div>
-            <h6 className="sidebar-admin">{admin}</h6>
+            <h6 className="sidebar-admin">{admin.username}</h6>
             <div className="left-sidebar-items">
                 {items.map((item) => (
                     <LeftSidebarItem key={item.title} item={item} />

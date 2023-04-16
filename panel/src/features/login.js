@@ -10,7 +10,7 @@ const getLogin = () => {
 
 const initialState = {
     token: getLogin(),
-	username: null,
+	userActive: { userId: null, username: null }
 };
 
 export const loginSlice = createSlice({
@@ -18,13 +18,14 @@ export const loginSlice = createSlice({
     initialState: initialState,
     reducers: {
 		saveLoginData: (state, action) => {
-			state.token = action.payload.token;
-			state.username = action.payload.username;
-			localStorage.setItem("token", action.payload.token);
+			const { token, userId, username} = action.payload;
+			state.token = token;
+			state.userActive = { userId: userId, username: username}
+			localStorage.setItem("token", token);
 		},
 		removeLoginData: (state) => {
 			state.token = null;
-			state.username = null;
+			state.userActive = initialState.userActive;
 			localStorage.setItem("token", null);
 		}
     },

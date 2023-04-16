@@ -16,6 +16,10 @@ const items = [
             {
                 title: "Razredi",
                 path: routes.settings.classes.path,
+            },
+            {
+                title: "Korisnički računi",
+                path: routes.settings.accounts.path
             }
         ],
     },

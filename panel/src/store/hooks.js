@@ -8,8 +8,8 @@ export const useToken = () => {
 	return useSelector((state) => state.login.token);
 }
 
-export const useUsername = () => {
-	return useSelector((state) => state.login.username);
+export const useUserActive = () => {
+	return useSelector((state) => state.login.userActive);
 }
 
 export const useTheme = () => {
@@ -50,4 +50,8 @@ export const useChangeShift = () => {
 
 export const useChangeEdit = () => {
 	return useSelector((state) => state.change.changeEdit);
+}
+
+export const useUsers = () => {
+	return useSelector((state) => state.users.users);
 }
