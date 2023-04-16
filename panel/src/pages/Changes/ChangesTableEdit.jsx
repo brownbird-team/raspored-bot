@@ -1,50 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./ChangesTable.css";
 import * as Component from "../../components";
 import TableContent from "./utils/TableContent";
 import { NotificationSuccess, NotificationWarning } from "../../services/Notification";
-import { useClassesShift, useChangeId } from "../../store/hooks";
-import { addClassesByShift } from "../../features/classes";
-import { useDispatch } from "react-redux";
+import { useChangeEdit } from "../../store/hooks";
 import API_HOST from "../../data/api";
 
-const ChangesTable = ({ data, onBack, setAlert }) => {
+const ChangesTableEdit = ({ onBack, setAlert }) => {
 
-	const dispatch = useDispatch();
-
-	const { morning, shift } = data;
 	const periods = [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]; 
-	const changeId = useChangeId();
+	const change = useChangeEdit();
+	console.log(change)
 
-	const classesShift = useClassesShift();
-	
-	useEffect(() => {
-        const getClassesByShift = async() => {
-            const res = await fetch(`${API_HOST}/api/general/shift?name=${shift}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin" : `${API_HOST}:3000`,
-                },
-                method: "GET",
-            });
+	const changesTemplate = Array.from(change.classes, ({ classId, sat1, sat2, sat3, sat4, sat5, sat6, sat7, sat8, sat9 }) => ({ classId, sat1, sat2, sat3, sat4, sat5, sat6, sat7, sat8, sat9 }))
+	const newChange = new TableContent(change.id, changesTemplate);
 
-            const classesShift = await res.json();
-            dispatch(addClassesByShift(classesShift));
-        }
-
-        getClassesByShift();
-    }, []);
-
-	const changesTemplate = Array.from(classesShift, ({ id }) => ({ classId: id, sat1: "", sat2: "", sat3: "", sat4: "", sat5: "", sat6: "", sat7: "", sat8: "", sat9: "" }));
-
-	const change = new TableContent(changeId, changesTemplate);
-
+	// Handler koji promijeni vrijednost označene ćelije
 	const handleOnChange = (value, selectedClassId, selectedPeriod) => {
-		const newTableContent = change.getClasses();
+		const newTableContent = newChange.getClasses();
 		const row = newTableContent.find((cls) => cls.classId === selectedClassId);
 		row[`sat${selectedPeriod}`] = value;
 	}
 
+	// Handler koji objavi novu izmjenu
 	const handlePublishChange = async() => {
 
 		const postChange = async() => {
@@ -54,7 +32,7 @@ const ChangesTable = ({ data, onBack, setAlert }) => {
 					"Access-Control-Allow-Origin" : `${API_HOST}:3000`,
 				},
 				method: "POST",
-				body: JSON.stringify(change)
+				body: JSON.stringify(newChange)
 			});
 
 			const result = await res.json();
@@ -65,7 +43,7 @@ const ChangesTable = ({ data, onBack, setAlert }) => {
                     break;
                 }
                 case "ok": {
-                    setAlert(new NotificationSuccess(<>Uspješno je kreirana <b className="highlight">nova izmjena</b></>));
+                    setAlert(new NotificationSuccess(<>Uspješno je promijenjena <b className="highlight">nova izmjena</b></>));
                     break;
                 }
             }
@@ -79,16 +57,16 @@ const ChangesTable = ({ data, onBack, setAlert }) => {
 		<table className="change-table">
 			<thead>
 				<tr>
-					<th className="table-heading">{morning ? "Prijepodne" : "Poslijepodne"}</th>
+					<th className="table-heading">{change.morning ? "Prijepodne" : "Poslijepodne"}</th>
 					{periods.map((period, index) => (
-						<th key={index} className="table-heading">{morning ? period : period - 2}</th>
+						<th key={index} className="table-heading">{change.morning ? period : period - 2}</th>
 					))}
 				</tr>
 			</thead>
 			<tbody>
-				{classesShift.map((cls, cIndex) => (
+				{change.classes.map((cls, cIndex) => (
 					<tr key={cIndex}>
-						<td className="table-heading">{cls.name}</td>
+						<td className="table-heading">{cls.className}</td>
 
 						{periods.map((period, pIndex) => (
 							<td 
@@ -98,7 +76,8 @@ const ChangesTable = ({ data, onBack, setAlert }) => {
 								<input 
 									type="text" 
 									className="table-data-input" 
-									onChange={(event) => handleOnChange(event.target.value, cls.id, period) }
+									onChange={(event) => handleOnChange(event.target.value, cls.classId, period) }
+									defaultValue={cls[`sat${period}`]}
 								></input>
 							</td>
 
@@ -115,4 +94,4 @@ const ChangesTable = ({ data, onBack, setAlert }) => {
 	</div>;
 };
 
-export default ChangesTable;
+export default ChangesTableEdit;

@@ -1,5 +1,9 @@
 import { useSelector } from "react-redux";
 
+
+/* -- Definirani hooks za pristupanje vrijednostima stora -- */
+
+
 export const useLogin = () => {
 	return useSelector((state) => state.login.value);
 }
@@ -24,6 +28,22 @@ export const useShifts = () => {
 	return useSelector((state) => state.shifts.shifts);
 }
 
+export const useChanges = () => {
+	return useSelector((state) => state.change.changes);
+}
+
 export const useChangeId = () => {
 	return useSelector((state) => state.change.changeId);
+}
+
+export const useChangeMorning = () => {
+	return useSelector((state) => state.change.changeMorning);
+}
+
+export const useChangeShift = () => {
+	return useSelector((state) => state.change.changeShift);
+}
+
+export const useChangeEdit = () => {
+	return useSelector((state) => state.change.changeEdit);
 }
