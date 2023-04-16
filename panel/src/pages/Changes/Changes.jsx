@@ -20,6 +20,13 @@ const Changes = () => {
 
     const shifts = useShifts();
 
+    const changes = useChanges();
+
+    const [change, setChange] = useState(new CreateChange("Izmjene u rasporedu sati", new Date(), null, true));
+    const [updateTrigger, setUpdateTrigger] = useState(false);
+    const [alert, setAlert] = useState(null);
+    const [showChangeTable, setShowChangeTable] = useState(null);
+
     useEffect(() => {
         const getShifts = async() => {
             const res = await fetch(`${API_HOST}/api/general/shifts`, {
@@ -32,17 +39,11 @@ const Changes = () => {
 
             const shifts = await res.json();
             dispatch(addShifts(shifts));
+            setChange(change.setShift(shifts.shifts[0]));
         }
 
         getShifts();
     }, []);
-
-    const changes = useChanges();
-
-    const [change, setChange] = useState(new CreateChange("Izmjene u rasporedu sati", new Date(), shifts[0], true));
-    const [updateTrigger, setUpdateTrigger] = useState(false);
-    const [alert, setAlert] = useState(null);
-    const [showChangeTable, setShowChangeTable] = useState(null);
 
     useEffect(() => {
         const getTableChanges = async() => {
