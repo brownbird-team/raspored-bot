@@ -18,12 +18,13 @@ const Changes = () => {
     const dispatch = useDispatch();
     const token = useToken();
 
-    const [change, setChange] = useState(new CreateChange("Izmjene u rasporedu sati", new Date(), "A", true));
+    const shifts = useShifts();
+
+    const [change, setChange] = useState(new CreateChange("Izmjene u rasporedu sati", new Date(), shifts[0], true));
     const [updateTrigger, setUpdateTrigger] = useState(false);
     const [alert, setAlert] = useState(null);
     const [showChangeTable, setShowChangeTable] = useState(null);
 
-    const shifts = useShifts();
 
     useEffect(() => {
         const getShifts = async() => {
@@ -61,6 +62,7 @@ const Changes = () => {
         getTableChanges();
     }, [updateTrigger]);
 
+
     // Handler koji promijeni naziv tablice izmjena
     const handleOnChangeName = (value) => setChange(change.setName(value));
 
@@ -84,7 +86,7 @@ const Changes = () => {
             return setAlert(new NotificationWarning(<>Datum nove izmjene ne može biti u <b className="highlight">prošlosti</b></>))
 
         finishChange.setHeading();
-
+        console.log(finishChange);
         const postTable = async() => {
             const res = await fetch(`${API_HOST}/api/change`, {
                 headers: {
@@ -193,7 +195,7 @@ const Changes = () => {
                                     onChange={(event) => handleOnChangeShift(event.target.value)}
                                 >
                                     {shifts.map((shift, index) => (
-                                        <option key={index}>{shift}</option>
+                                        <option key={index} value={shift}>{shift}</option>
                                     ))}
                                 </select>
 
