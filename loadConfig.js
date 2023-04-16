@@ -5,6 +5,7 @@ const fs = require("fs");
 
 let configChecked = false;
 
+// Pokreni provjeru postojanja konfiguracijskog file-a
 exports.configCheck = () => {
     configChecked = true;
 
@@ -28,6 +29,7 @@ exports.configCheck = () => {
     }
 }
 
+// Dobavi podatke iz konfiguracijskog file-a
 exports.getData = () => {
     if (!configChecked)
         this.configCheck();
@@ -36,6 +38,7 @@ exports.getData = () => {
     return jsonData;
 }
 
+// Asikrono dobavi podatke iz konfiguracijskog file-a
 exports.promiseGetData = () => {
     return new Promise((resolve, reject) => {
         if (!configChecked)

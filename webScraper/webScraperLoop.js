@@ -8,10 +8,12 @@ const conf = config.getData();
 let interval = null;
 let resetTimeout = null;
 
+// Provjeri je li scraper pokrenut
 exports.active = () => {
     return interval !== null;
 }
 
+// Pokreni scraper
 exports.run = () => {
     let strugacInterval = 30;
 
@@ -38,6 +40,7 @@ exports.run = () => {
         }, conf.scraper.scraperInterval * 1000);
 }
 
+// Zaustavi scraper ako radi
 exports.stop = () => {
     if (interval)
         clearInterval(interval);

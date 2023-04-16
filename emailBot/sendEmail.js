@@ -31,6 +31,7 @@ exports.init = async () => {
     transporter = nodemailer.createTransport(senderSettings);
 }
 
+// Pošalji email
 exports.send = async (toAddress, mailSubject, mailHtmlContent, mailPlainTextContent) => {
     if (!toAddress)
         throw new errors.EmailError('Receiver address cannot be undefined');

@@ -27,6 +27,7 @@
     },
 
     "scraper": {
+        "startScraper": false,
         "scraperInterval": 30,
         "errorSleepTime": 600
     }
