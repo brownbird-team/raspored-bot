@@ -46,44 +46,6 @@ const start = async () => {
 
     // Pokreni discord Bota
     await discord.startDiscordBot();
-
-    const t = await dbq.getChange(10);
-    //console.log(t);
-
-    const changeTable = {
-        heading: 'Ovo je naslov',
-        shift: 'A',
-        morning: true
-    }
-
-    const change = {
-        id: 22,
-        classes: [
-            {
-                classId: 22,
-                sat1: '', sat2: '', sat3: '', sat4: '', sat5: '', sat6: '', sat7: '', sat8: '', sat9: ''
-            },
-            {
-                classId: 23,
-                sat1: '', sat2: '', sat3: '', sat4: '', sat5: '', sat6: '', sat7: '', sat8: '', sat9: ''
-            }
-        ]
-    }
-
-    /*await dbq.setChange({
-        id: 9,
-        classes: [
-            { classId: 33, sat1: 'T', sat2: 'T', sat3: 'T', sat4: 'T', sat5: 'T', sat6: 'T', sat7: 'T', sat8: 'T', sat9: 'T',}
-        ]
-    });*/
-
-    const r = await dbWeb.getUsers({
-
-        username: 'admin',
-        password: 'p'
-
-    });
-    console.log(r);
 }
 
 start();
