@@ -61,7 +61,7 @@ exports.check = async () => {
                 theme: userData.theme,
                 shift: (izmjena.ujutro) ? 'prijepodne' : 'poslijepodne',
                 tableHeading: izmjena.naslov,
-                class: userData.razred.ime,
+                className: userData.razred.ime,
                 dashboardUrl: dashboardUrl
             }
             // Dodaj sate u template props

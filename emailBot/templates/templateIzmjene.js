@@ -11,7 +11,7 @@ const themeFunctions = require('../themeLoader.js');
  *    theme         -- Tema, može biti dark ili light
  *    shift         -- Smjena prijepodne ili posljepodne
  *    tableHeading  -- Neki string koji će biti ispisan kao naslov izmjene
- *    class         -- String koji predstavlja ime razreda (npr 3.G)
+ *    className     -- String koji predstavlja ime razreda (npr 3.G)
  *    sat1          -- 1. sat ujutro ili -1. sat popodne
  *    sat2          -- 2. sat ujutro ili  0. sat popodne
  *    sat3          -- 3. sat ujutro ili  1. sat popodne
@@ -40,6 +40,13 @@ module.exports = (arguments) => {
                 text-align: center;
             `,
         },{
+            selectors: [ '.hdg-span' ],
+            style: `
+                font-weight: bold;
+                font-size: 16px;
+                color: ${colors.paragraphTextColor};
+            `,
+        },{
             selectors: [ 'body' ],
             style: `
                 color: ${colors.paragraphTextColor};
@@ -49,15 +56,17 @@ module.exports = (arguments) => {
                 font-weight: 400;
             `,
         },{
-            selectors: [ 'a' ],
+            selectors: [ 'a', '.email' ],
             style: `
                 color: ${colors.linkTextColor};
                 font-weight: bolder;
+                text-decoration: underline;
             `,
         },{
             selectors: [ 'table' ],
             style: `
-                width: 250px;
+                max-width: 250px;
+                width: 100%;
                 margin: auto;
                 border: none;
                 border-collapse: collapse;    
@@ -91,21 +100,21 @@ module.exports = (arguments) => {
                 font-weight: bold;    
             `,
         },{
-            selectors: [ '.footer' ],
+            selectors: [ '.ftr-content' ],
             style: `
                 font-size: 12px;
                 text-align: center;
                 margin: 30px auto 0px auto;
-                width: 350px;
+                max-width: 350px;
             `,
         },{
-            selectors: [ '.footer-p' ],
+            selectors: [ '.ftr-p' ],
             style: `
                 color: ${colors.footerTextColor};
                 margin-bottom: 25px;
                 text-align: center;
             `,
-        },
+        }
     ];
     
     // Kreiranje HTML-a
@@ -119,10 +128,12 @@ module.exports = (arguments) => {
                 <title>Izmjene u rasporedu sati za ${arguments.class}</title>
             </head>
             <body>
+                <div class="capdiv">
+                    <b><span class="hdg-span">${arguments.tableHeading}<b></span><br>
+                    <b><span class="hdg-span">Razred ${arguments.className}<b></span><br>
+                    <b><span class="hdg-span">${(arguments.shift == 'prijepodne') ? 'PRIJEPODNE' : 'POSLIJEPODNE'}</span></b>
+                </div>
                 <table>
-                    <div class="capdiv">
-                        <b>${arguments.tableHeading}<br>${(arguments.shift == 'prijepodne') ? 'PRIJEPODNE' : 'POSLIJEPODNE'}</b>
-                    </div>
                     <tr class="table-heading">
                         <th>Sat</th>
                         <th>Izmjena</th>
@@ -142,13 +153,13 @@ module.exports = (arguments) => {
     result += `
                 </table>
 
-                <div class="footer">
-                    <p class="footer-p">
-                        E-mail poruka poslana je ${arguments.email}. Ako ne želite primati e-mail poruke od Raspored bota
-                        u budučnosti, možete promijeniti postavke Vašeg profila ili prekinuti pretplatu na svojoj
+                <div class="ftr-content">
+                    <p class="ftr-p">
+                        E-mail poruka poslana je <a href="mailto:${arguments.email}">${arguments.email}</a>. Ako ne želite primati e-mail poruke od Raspored bota
+                        u budućnosti, možete promijeniti postavke Vašeg profila ili prekinuti pretplatu na svojoj
                         <b><a href="${arguments.dashboardUrl}" target="_blank">kontrolnoj ploči</a></b>.
                     </p>
-                    <p class="footer-p">
+                    <p class="ftr-p">
                         Srdačan pozdrav, <br>
                         &copy; BrownBird Team
                     </p>
