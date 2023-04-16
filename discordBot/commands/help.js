@@ -93,16 +93,20 @@ module.exports = {
                     });
                 }
             }
-
-            await inter.update({
-                content: 'Odaberi naredbu u izborniku',
-                embeds: [ embed ],
-                components: [ row ],
-                allowedMentions: { repliedUser: false }
-            });
+            try {
+                await inter.update({
+                    content: 'Odaberi naredbu u izborniku',
+                    embeds: [ embed ],
+                    components: [ row ],
+                    allowedMentions: { repliedUser: false }
+                });
+            } catch (err) {
+                if (err.name !== 'DiscordAPIError')
+                    throw err;
+            }
         });
 
-        collector.on('end', () => {
+        collector.on('end', async () => {
             const row = new MessageActionRow()
                 .addComponents(
                     new MessageSelectMenu()
@@ -115,13 +119,17 @@ module.exports = {
                         .addOptions(options)
                         .setDisabled(true)
                 );
-
-            sendMessage.edit({
-                content: `Prošlo je ${helpWaitingTime / 1000} s, gasim izbornik`,
-                embeds: [ embed ],
-                components: [ row ],
-                allowedMentions: { repliedUser: false }
-            });
+            try {
+                await sendMessage.edit({
+                    content: `Prošlo je ${helpWaitingTime / 1000} s, gasim izbornik`,
+                    embeds: [ embed ],
+                    components: [ row ],
+                    allowedMentions: { repliedUser: false }
+                });
+            } catch (err) {
+                if (err.name !== 'DiscordAPIError')
+                    throw err;
+            }
         });
 
         const sendMessage = await message.reply({

@@ -172,12 +172,16 @@ module.exports = {
 
         await wait(700);
 
-        await sentMessage.edit({
-            content: '> Pomoću tipki možete pregledavati stare izmjene',
-            embeds: [ embed ],
-            components: [ row ],
-            allowedMentions: { repliedUser: false }
-        });
+        try {
+            await sentMessage.edit({
+                content: '> Pomoću tipki možete pregledavati stare izmjene',
+                embeds: [ embed ],
+                components: [ row ],
+                allowedMentions: { repliedUser: false }
+            });
+        } catch (err) {
+            // Do nothing
+        }
 
         const filter = i => JSON.parse(i.customId).id === message.id;
         const collector = message.channel.createMessageComponentCollector({ filter: filter, time: embedWaitingTime });
@@ -248,13 +252,17 @@ module.exports = {
                 name: 'Koliko ste izmjena u prošlosti',
                 value: '```' + `[ ${trenutnoRikverc} / ${ukupnoIzmjena} ]` + '```'
             });
-
-            await inter.update({
-                content: '> Pomoću tipki možete pregledavati stare izmjene',
-                embeds: [ embed ],
-                components: [ row ],
-                allowedMentions: { repliedUser: false }
-            });
+            try {
+                await inter.update({
+                    content: '> Pomoću tipki možete pregledavati stare izmjene',
+                    embeds: [ embed ],
+                    components: [ row ],
+                    allowedMentions: { repliedUser: false }
+                });
+            } catch (err) {
+                if (err.name !== 'DiscordAPIError')
+                    throw err;
+            }
         });
 
         collector.on('end', async () => {
@@ -276,11 +284,16 @@ module.exports = {
                         .setStyle('SUCCESS')
                         .setDisabled(true)
                 );
-            await sentMessage.edit({
-                embeds: [ embed ],
-                components: [ row ],
-                allowedMentions: { repliedUser: false }
-            });
+            try {
+                await sentMessage.edit({
+                    embeds: [ embed ],
+                    components: [ row ],
+                    allowedMentions: { repliedUser: false }
+                });
+            } catch (err) {
+                if (err.name !== 'DiscordAPIError')
+                    throw err;
+            }
         });
     }
 }
