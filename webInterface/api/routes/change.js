@@ -1,13 +1,14 @@
 const express = require('express');
 const changeController = require('./../controllers/changeController.js');
+const auth = require('./../middleware/authorizationAdmin');
 const { use } = require('./../../helperFunctionsWeb.js');
 
 const router = express.Router();
 
 router.get('/', use(changeController.get));
-router.put('/', use(changeController.update));
-router.post('/', use(changeController.create));
+router.put('/', auth.tokenAuth, use(changeController.update));
+router.post('/', auth.tokenAuth, use(changeController.create));
 router.get('/content', use(changeController.getContent));
-router.post('/content', use(changeController.setContent));
+router.post('/content', auth.tokenAuth, use(changeController.setContent));
 
 module.exports = router;
