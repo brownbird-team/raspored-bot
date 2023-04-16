@@ -136,7 +136,7 @@ exports.databaseInit = async () => {
 
     // Kreiraj tablice skupine general ako ne postoje
     if (!tables.includes("general_razred")) {
-        databaseLog("Kreiram tablicu general_razred");
+        databaseLog("Creating database table general_razred");
         await pureQuery(con, `
             CREATE TABLE general_razred (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -159,7 +159,7 @@ exports.databaseInit = async () => {
     }
     // Kreiraj tablice skupine izmjene ako ne postoje
     if (!tables.includes("izmjene_settings")) {
-        databaseLog("Kreiram tablicu izmjene_settings");
+        databaseLog("Creating database table izmjene_settings");
         await pureQuery(con, `
             CREATE TABLE izmjene_settings (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -169,7 +169,7 @@ exports.databaseInit = async () => {
         `);
     }
     if(!tables.includes("izmjene_tablica")) {
-        databaseLog("Kreiram tablicu izmjene_tablica");
+        databaseLog("Creating database table izmjene_tablica");
         await pureQuery(con, `
             CREATE TABLE izmjene_tablica (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -181,7 +181,7 @@ exports.databaseInit = async () => {
         `);
     }
     if(!tables.includes("izmjene_razred")) {
-        databaseLog("Kreiram tablicu izmjene_razred");
+        databaseLog("Creating database table izmjene_razred");
         await pureQuery(con, `
             CREATE TABLE izmjene_razred (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -205,7 +205,7 @@ exports.databaseInit = async () => {
     }
     // Kreiraj tablice skupine disc ako ne postoje
     if (!tables.includes("disc_settings")) {
-        databaseLog("Kreiram tablicu disc_settings");
+        databaseLog("Creating database table disc_settings");
         await pureQuery(con, `
             CREATE TABLE disc_settings (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -215,7 +215,7 @@ exports.databaseInit = async () => {
         `);
     }
     if (!tables.includes("disc_serveri")) {
-        databaseLog("Kreiram tablicu disc_serveri");
+        databaseLog("Creating database table disc_serveri");
         await pureQuery(con, `
             CREATE TABLE disc_serveri (
                 server_id VARCHAR(50) PRIMARY KEY,
@@ -227,7 +227,7 @@ exports.databaseInit = async () => {
         `);
     }
     if (!tables.includes("disc_kanali")) {
-        databaseLog("Kreiram tablicu disc_kanali");
+        databaseLog("Creating database table disc_kanali");
         await pureQuery(con, `
             CREATE TABLE disc_kanali (
                 kanal_id VARCHAR(50) PRIMARY KEY,
@@ -246,7 +246,7 @@ exports.databaseInit = async () => {
     }
     // Kreiraj tablice skupine email ako ne postoje
     if (!tables.includes("email_settings")) {
-        databaseLog("Kreiram tablicu email_settings");
+        databaseLog("Creating database table email_settings");
         await pureQuery(con, `
             CREATE TABLE email_settings (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -256,7 +256,7 @@ exports.databaseInit = async () => {
         `);
     }
     if (!tables.includes("email_korisnici")) {
-        databaseLog("Kreiram tablicu email_korisnici");
+        databaseLog("Creating database table email_korisnici");
         await pureQuery(con, `
             CREATE TABLE email_korisnici (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -280,7 +280,7 @@ exports.databaseInit = async () => {
     }
     // Kreiraj tablice skupine web ako ne postoje
     if (!tables.includes("web_settings")) {
-        databaseLog("Kreiram tablicu web_settings");
+        databaseLog("Creating database table web_settings");
         await pureQuery(con, `
             CREATE TABLE web_settings (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -290,7 +290,7 @@ exports.databaseInit = async () => {
         `);
     }
     if (!tables.includes("web_admin")) {
-        databaseLog("Kreiram tablicu web_admin");
+        databaseLog("Creating database table web_admin");
         await pureQuery(con, `
             CREATE TABLE web_admin (
                 id INT PRIMARY KEY AUTO_INCREMENT,
@@ -300,8 +300,12 @@ exports.databaseInit = async () => {
                 web_token_created DATETIME
             )
         `);
-        databaseLog('Dodajem zadanog korisnika sa korisničkim imenom "admin" kojem je password "admin"');
-        databaseLog('Obavezno promijenite password zadanog korisnika !!!');
+        databaseLog('Adding default admin user with username "admin" and password "admin"');
+        databaseLog('');
+        databaseLog('  +-------------------------------------------------------+');
+        databaseLog('  |    Be sure to change password for default user !!!    |');
+        databaseLog('  +-------------------------------------------------------+');
+        databaseLog('');
         await pureQuery(
             con, 'INSERT INTO web_admin (username, password) VALUES ?',
             [[[ 'admin', '$2b$10$JwyHfQBv0NK2TlUIuIeTe.l.SFqCNfWxxdQP6UnnVLVuWhONYMxY6' ]]]
