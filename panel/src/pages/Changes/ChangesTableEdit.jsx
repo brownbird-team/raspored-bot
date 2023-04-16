@@ -3,14 +3,14 @@ import "./ChangesTable.css";
 import * as Component from "../../components";
 import TableContent from "./utils/TableContent";
 import { NotificationSuccess, NotificationWarning } from "../../services/Notification";
-import { useChangeEdit } from "../../store/hooks";
+import { useChangeEdit, useToken } from "../../store/hooks";
 import API_HOST from "../../data/api";
 
 const ChangesTableEdit = ({ onBack, setAlert }) => {
 
+	const token = useToken();
 	const periods = [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]; 
 	const change = useChangeEdit();
-	console.log(change)
 
 	const changesTemplate = Array.from(change.classes, ({ classId, sat1, sat2, sat3, sat4, sat5, sat6, sat7, sat8, sat9 }) => ({ classId, sat1, sat2, sat3, sat4, sat5, sat6, sat7, sat8, sat9 }))
 	const newChange = new TableContent(change.id, changesTemplate);
@@ -30,6 +30,7 @@ const ChangesTableEdit = ({ onBack, setAlert }) => {
 				headers: {
 					"Content-Type": "application/json",
 					"Access-Control-Allow-Origin" : `${API_HOST}:3000`,
+					"Authorization" : `Bearer ${token}`
 				},
 				method: "POST",
 				body: JSON.stringify(newChange)

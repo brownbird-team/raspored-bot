@@ -6,7 +6,7 @@ import CreateChange from "./utils/CreateChange";
 import ChangesTableCreate from "./ChangesTableCreate";
 import ChangesTableEdit from "./ChangesTableEdit";
 import { NotificationSuccess, NotificationWarning } from "../../services/Notification";
-import { useShifts, useChanges } from "../../store/hooks";
+import { useShifts, useChanges, useToken } from "../../store/hooks";
 import { addShifts } from "../../features/shifts";
 import { addChanges, setChangeId, setChangeEdit, setChangeMorningAndShift } from "../../features/changes";
 import { useDispatch } from "react-redux"; 
@@ -16,6 +16,7 @@ import API_HOST from "../../data/api";
 const Changes = () => {
 
     const dispatch = useDispatch();
+    const token = useToken();
 
     const [change, setChange] = useState(new CreateChange("Izmjene u rasporedu sati", new Date(), "A", true));
     const [updateTrigger, setUpdateTrigger] = useState(false);
@@ -89,6 +90,7 @@ const Changes = () => {
                 headers: {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin" : `${API_HOST}`,
+                    "Authorization" : `Bearer ${token}`
                 },
                 method: "POST",
                 body: JSON.stringify(finishChange)

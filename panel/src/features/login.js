@@ -1,32 +1,35 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const getLogin = () => {
-    if (localStorage.hasOwnProperty("login")) {
-		const login = localStorage.getItem("login");
-		return login;
+    if (localStorage.hasOwnProperty("token")) {
+		const token = localStorage.getItem("token");
+		return token;
 	}
     return false;
 };
 
 const initialState = {
-    value: getLogin(),
+    token: getLogin(),
+	username: null,
 };
 
 export const loginSlice = createSlice({
     name: "login",
     initialState: initialState,
     reducers: {
-		setLogin: (state) => {
-			localStorage.setItem("login", "true");
-			state.value = "true";
+		saveLoginData: (state, action) => {
+			state.token = action.payload.token;
+			state.username = action.payload.username;
+			localStorage.setItem("token", action.payload.token);
 		},
-		setLogout: (state) => {
-			localStorage.setItem("login", "false");
-			state.value = "false";
+		removeLoginData: (state) => {
+			state.token = null;
+			state.username = null;
+			localStorage.setItem("token", null);
 		}
     },
 });
 
-export const { setLogin, setLogout } = loginSlice.actions;
+export const { saveLoginData, removeLoginData } = loginSlice.actions;
 
 export default loginSlice.reducer;

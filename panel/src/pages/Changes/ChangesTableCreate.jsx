@@ -3,7 +3,7 @@ import "./ChangesTable.css";
 import * as Component from "../../components";
 import TableContent from "./utils/TableContent";
 import { NotificationSuccess, NotificationWarning } from "../../services/Notification";
-import { useClassesShift, useChangeId, useChangeMorning, useChangeShift } from "../../store/hooks";
+import { useClassesShift, useChangeId, useChangeMorning, useChangeShift, useToken } from "../../store/hooks";
 import { addClassesByShift } from "../../features/classes";
 import { useDispatch } from "react-redux";
 import API_HOST from "../../data/api";
@@ -11,6 +11,7 @@ import API_HOST from "../../data/api";
 const ChangesTableCreate = ({ onBack, setAlert }) => {
 
 	const dispatch = useDispatch();
+	const token = useToken();
 
 	const morning = useChangeMorning();
 	const shift = useChangeShift();
@@ -55,6 +56,7 @@ const ChangesTableCreate = ({ onBack, setAlert }) => {
 				headers: {
 					"Content-Type": "application/json",
 					"Access-Control-Allow-Origin" : `${API_HOST}:3000`,
+					"Authorization" : `Bearer ${token}`
 				},
 				method: "POST",
 				body: JSON.stringify(change)

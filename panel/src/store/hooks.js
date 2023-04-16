@@ -4,8 +4,12 @@ import { useSelector } from "react-redux";
 /* -- Definirani hooks za pristupanje vrijednostima stora -- */
 
 
-export const useLogin = () => {
-	return useSelector((state) => state.login.value);
+export const useToken = () => {
+	return useSelector((state) => state.login.token);
+}
+
+export const useUsername = () => {
+	return useSelector((state) => state.login.username);
 }
 
 export const useTheme = () => {

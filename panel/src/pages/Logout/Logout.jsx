@@ -2,15 +2,41 @@ import React from "react";
 import "./Logout.css";
 import MainLayout from "../../layouts/MainLayout";
 import * as Component from "../../components";
+import routes from "../../data/routes.json";
 import { useDispatch } from "react-redux";
-import { setLogout } from "../../features/login";
+import { removeLoginData } from "../../features/login";
+import { useToken } from "../../store/hooks";
+import { useNavigate } from "react-router-dom";
+import API_HOST from "../../data/api";
 
-const Logout = () => {
+const Logout = ({ logout }) => {
     
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const token = useToken();
 
-    const handleSetLogout = () => {
-        dispatch(setLogout());
+    const handleSetLogout = async() => {
+
+        const postLogout = async() => {
+			const res = await fetch(`${API_HOST}/api/admin/logout`, {
+				headers: {
+					"Content-Type": "application/json",
+                    "Access-Control-Allow-Origin" : `${API_HOST}`,
+                    "Authorization" : `Bearer ${token}`
+				},
+				method: "POST"
+			});
+
+			const result = await res.json();
+
+            if (result.code === 200) {
+                logout();
+				dispatch(removeLoginData());
+				navigate(routes.login.path);
+            }
+		}
+
+		await postLogout();
     }
 
     return <MainLayout pageItems={["Odjava"]}>

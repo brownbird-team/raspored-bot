@@ -4,7 +4,7 @@ import MainLayout from "../../layouts/MainLayout";
 import * as Component from "../../components";
 import CreateClass from "./utils/CreateClass";
 import { NotificationSuccess, NotificationWarning } from "../../services/Notification";
-import { useClasses } from "../../store/hooks";
+import { useClasses, useToken } from "../../store/hooks";
 import { addClasses } from "../../features/classes";
 import { useDispatch } from "react-redux"; 
 import { MdDelete } from "react-icons/md"
@@ -13,6 +13,7 @@ import API_HOST from "../../data/api";
 const Classes = () => {
 
     const dispatch = useDispatch();
+    const token = useToken();
 
     const [newClass, setNewClass] = useState(new CreateClass());
     const [updateTrigger, setUpdateTrigger] = useState(false);
@@ -56,6 +57,7 @@ const Classes = () => {
                 headers: {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin" : `${API_HOST}`,
+                    "Authorization" : `Bearer ${token}`
                 },
                 method: "POST",
                 body: JSON.stringify(newClass)
@@ -64,7 +66,7 @@ const Classes = () => {
             const result = await res.json();
             setUpdateTrigger(!updateTrigger);
             
-            switch(result.status) {
+            switch (result.status) {
                 case "error": {
                     setAlert(new NotificationWarning(<>Došlo je do pogreške prilikom dodavanja novog razreda</>));
                     break;
@@ -91,6 +93,7 @@ const Classes = () => {
                 headers: {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin" : `${API_HOST}`,
+                    "Authorization" : `Bearer ${token}`
                 },
                 method: "DELETE",
             });

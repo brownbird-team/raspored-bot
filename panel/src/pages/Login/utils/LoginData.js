@@ -14,8 +14,12 @@ export default class LoginData {
 		return this;
 	}
 
+	getUsername() {
+		return this.username;
+	}
+
 	validate() {
-		if (!this.username || !this.password) return false;
+		if (this.username === "" || this.password === "") return false;
 		return true;
 	}
 }

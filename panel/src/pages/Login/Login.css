@@ -1,4 +1,11 @@
 .login-main {
+	padding-top: 2rem;
+	padding-right: 6rem;
+	width: 80%;
+	margin: 0 auto;
+}
+
+.login-box {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -19,4 +26,14 @@
 .login-body input {
 	height: 3rem;
 	width: 80%;
+}
+
+@media (max-width: 850px) {
+	.login-main {
+		width: 100%;
+	}
+
+	.login-box {
+		width: 20rem;
+	}
 }
