@@ -300,6 +300,12 @@ exports.databaseInit = async () => {
                 web_token_created DATETIME
             )
         `);
+        databaseLog('Dodajem zadanog korisnika sa korisničkim imenom "admin" kojem je password "admin"');
+        databaseLog('Obavezno promijenite password zadanog korisnika !!!');
+        await pureQuery(
+            con, 'INSERT INTO web_admin (username, password) VALUES ?',
+            [[[ 'admin', '$2b$10$JwyHfQBv0NK2TlUIuIeTe.l.SFqCNfWxxdQP6UnnVLVuWhONYMxY6' ]]]
+        );
     }
 
     return true;
