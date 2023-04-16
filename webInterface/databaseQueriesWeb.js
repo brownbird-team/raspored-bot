@@ -42,7 +42,7 @@ exports.getUser = async (dataObject) => {
 // Dobavi listu korisnika
 exports.getUsers = async () => {
     const results = await promiseQuery(
-        'SELECT id, username FROM web_admin'
+        'SELECT id AS userId, username FROM web_admin'
     );
 
     return results;

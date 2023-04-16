@@ -25,5 +25,5 @@ module.exports = async (dataObject) => {
         newTokenCreated: (new Date()),
     });
 
-    return { token: token };
+    return { userId: user.id, username: user.username, token: token };
 }

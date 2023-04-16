@@ -74,7 +74,7 @@ exports.login = async (req, res, next) => {
         status: 'ok',
         code: 200,
         description: 'Authentification ok, generated new access token successfully',
-        token: result.token,
+        ...result,
     });
 }
 
